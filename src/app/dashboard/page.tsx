@@ -75,7 +75,7 @@ export default async function DashboardPage() {
         {[
           { label: "RFQ publiés", value: rfqCount || 0, icon: "📋", color: "text-brand-blue", link: "/dashboard/rfq" },
           { label: "Matchs IA", value: matchCount || 0, icon: "🧠", color: "text-brand-purple", link: "/dashboard/matches" },
-          { label: "Vues profil", value: org?.profile_views || 0, icon: "👁", color: "text-brand-green", link: "/dashboard/analytics" },
+          { label: "Vues profil", value: (org?.profile_views as number) || 0, icon: "👁", color: "text-brand-green", link: "/dashboard/analytics" },
           { label: "Plan actuel", value: plan.toUpperCase(), icon: "💳", color: "text-brand-amber", link: "/dashboard/billing" },
         ].map((k) => (
           <Link key={k.label} href={k.link} className="card p-5 hover:border-surface-4 transition-colors group">
