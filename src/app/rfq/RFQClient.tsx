@@ -205,7 +205,7 @@ export default function RFQClient({ initialRFQs, totalCount, isLoggedIn }: Props
   });
 
   const visibleRFQs = isLoggedIn ? filtered : filtered.slice(0, PUBLIC_LIMIT);
-  const hiddenCount = isLoggedIn ? 0 : Math.max(0, total - PUBLIC_LIMIT);
+  const hiddenCount = isLoggedIn ? 0 : Math.max(0, filtered.length - PUBLIC_LIMIT);
 
   const hasAnyFilter = search || typeFilter || actorTypeFilter || regionFilter || budgetFilter || deadlineBefore || tagFilter;
 
@@ -372,8 +372,8 @@ export default function RFQClient({ initialRFQs, totalCount, isLoggedIn }: Props
               Inscrivez-vous gratuitement pour accéder à tous les appels d'offres
             </div>
             <div className="flex gap-3 justify-center">
-              <a href="/register" className="btn-primary">S'inscrire gratuitement →</a>
-              <a href="/login" className="btn-secondary">Se connecter</a>
+              <Link href="/register" className="btn-primary">S'inscrire gratuitement →</Link>
+              <Link href="/login" className="btn-secondary">Se connecter</Link>
             </div>
           </div>
         )}
