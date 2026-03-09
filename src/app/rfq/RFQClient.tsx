@@ -194,6 +194,11 @@ export default function RFQClient({ initialRFQs, totalCount, isLoggedIn }: Props
     return () => clearTimeout(t);
   }, [search, typeFilter, fetchRFQs]);
 
+  // Reset page when client-side filters change
+  useEffect(() => {
+    setPage(0);
+  }, [actorTypeFilter, regionFilter, budgetFilter, deadlineBefore, tagFilter]);
+
   // Filtres client appliqués après fetch
   const filtered = allRFQs.filter(rfq => {
     if (actorTypeFilter && !rfq.target_actor_types?.includes(actorTypeFilter)) return false;

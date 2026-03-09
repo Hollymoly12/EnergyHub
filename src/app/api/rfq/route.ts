@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
     .select(`
       *,
       organizations (id, name, logo_url, actor_type, city, is_verified, subscription_plan)
-    `)
+    `, { count: "exact" })
     .neq("status", "draft")
     .order("published_at", { ascending: false });
 
