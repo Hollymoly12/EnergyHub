@@ -117,6 +117,85 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ── POUR VOUS ── */}
+      <section className="max-w-6xl mx-auto px-6 py-20 border-t border-slate-800">
+        <div className="text-center mb-12">
+          <div className="section-tag mb-3">Pour vous</div>
+          <h2 className="text-2xl md:text-3xl font-bold text-white">
+            Conçu pour chaque acteur de l'énergie
+          </h2>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+          {/* Industriels */}
+          <div className="card p-6 border-yellow-500/20 hover:border-yellow-500/40 transition-colors">
+            <div className="text-3xl mb-4">⚡</div>
+            <div className="text-xs font-bold tracking-widest text-yellow-500 uppercase mb-2">Industriels</div>
+            <h3 className="font-semibold text-white mb-2">
+              Trouvez les bons prestataires, vite
+            </h3>
+            <p className="text-sm text-slate-400 mb-4 leading-relaxed">
+              Publiez vos appels d'offres et recevez des propositions qualifiées en quelques jours.
+            </p>
+            <ul className="space-y-2 mb-6">
+              {["Matching IA sur vos RFQ", "RFQ illimités (plan Pro)", "Annuaire de 100+ fournisseurs certifiés"].map(f => (
+                <li key={f} className="flex items-start gap-2 text-xs text-slate-400">
+                  <span className="text-yellow-500 shrink-0 mt-0.5">✓</span>{f}
+                </li>
+              ))}
+            </ul>
+            <Link href="/register?type=industrial" className="btn-primary text-xs py-2 w-full block text-center">
+              Publier un RFQ →
+            </Link>
+          </div>
+
+          {/* Installateurs */}
+          <div className="card p-6 border-slate-700 hover:border-slate-600 transition-colors">
+            <div className="text-3xl mb-4">🔧</div>
+            <div className="text-xs font-bold tracking-widest text-slate-400 uppercase mb-2">Installateurs</div>
+            <h3 className="font-semibold text-white mb-2">
+              Développez votre carnet de commandes
+            </h3>
+            <p className="text-sm text-slate-400 mb-4 leading-relaxed">
+              Accédez aux appels d'offres qualifiés qui correspondent à votre expertise technique.
+            </p>
+            <ul className="space-y-2 mb-6">
+              {["Alertes RFQ ciblées par région", "Profil certifié visible par tous", "Messagerie intégrée"].map(f => (
+                <li key={f} className="flex items-start gap-2 text-xs text-slate-400">
+                  <span className="text-green-400 shrink-0 mt-0.5">✓</span>{f}
+                </li>
+              ))}
+            </ul>
+            <Link href="/register?type=installer" className="btn-secondary text-xs py-2 w-full block text-center">
+              Créer mon profil →
+            </Link>
+          </div>
+
+          {/* Greentechs */}
+          <div className="card p-6 border-green-400/20 hover:border-green-400/40 transition-colors">
+            <div className="text-3xl mb-4">🌱</div>
+            <div className="text-xs font-bold tracking-widest text-green-400 uppercase mb-2">Greentechs</div>
+            <h3 className="font-semibold text-white mb-2">
+              Accédez aux grands comptes et aux investisseurs
+            </h3>
+            <p className="text-sm text-slate-400 mb-4 leading-relaxed">
+              Gagnez en visibilité B2B et connectez-vous aux fonds d'investissement belges.
+            </p>
+            <ul className="space-y-2 mb-6">
+              {["Accès au module investissement", "Deal flow avec fonds belges", "Visibilité premium B2B"].map(f => (
+                <li key={f} className="flex items-start gap-2 text-xs text-slate-400">
+                  <span className="text-green-400 shrink-0 mt-0.5">✓</span>{f}
+                </li>
+              ))}
+            </ul>
+            <Link href="/register?type=greentech" className="btn-secondary text-xs py-2 w-full block text-center">
+              Rejoindre EnergyHub →
+            </Link>
+          </div>
+
+        </div>
+      </section>
+
     </div>
   );
 }
