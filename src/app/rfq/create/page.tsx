@@ -19,7 +19,7 @@ export default async function RFQCreatePage() {
     .single();
 
   const org = member?.organizations as unknown as { subscription_plan: string } | null;
-  if (!org || org.subscription_plan === "free") {
+  if (!org || !["pro", "enterprise"].includes(org.subscription_plan)) {
     redirect("/pricing?reason=pro_required");
   }
 
