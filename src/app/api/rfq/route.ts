@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
     .from("rfqs")
     .select(`
       *,
-      organizations (id, name, logo_url, actor_type, city, is_verified, subscription_plan)
+      organizations (id, name, logo_url, actor_type, city, is_verified)
     `, { count: "exact" })
     .neq("status", "draft")
     .order("published_at", { ascending: false });
@@ -22,7 +22,6 @@ export async function GET(req: NextRequest) {
   // Filtres
   const type = searchParams.get("type");
   const status = searchParams.get("status");
-  const actorType = searchParams.get("actor_type");
   const search = searchParams.get("q");
   const limit = parseInt(searchParams.get("limit") || "20");
   const page = parseInt(searchParams.get("page") || "0");

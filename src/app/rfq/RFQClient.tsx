@@ -12,7 +12,6 @@ interface Organization {
   actor_type: string;
   city: string | null;
   is_verified: boolean;
-  subscription_plan: string;
 }
 
 interface RFQ {
@@ -79,7 +78,7 @@ function RFQCard({ rfq }: { rfq: RFQ }) {
           <div className="flex items-center gap-2 min-w-0">
             <div className="w-6 h-6 rounded bg-slate-800 flex items-center justify-center text-xs shrink-0 overflow-hidden">
               {org.logo_url
-                ? <img src={org.logo_url} alt="" className="w-full h-full object-contain" />
+                ? <img src={org.logo_url} alt={org.name} className="w-full h-full object-contain" />
                 : orgType?.icon || "🏢"}
             </div>
             <div className="min-w-0">
@@ -213,6 +212,7 @@ export default function RFQClient({ initialRFQs, totalCount, isLoggedIn }: Props
   const hiddenCount = isLoggedIn ? 0 : Math.max(0, filtered.length - PUBLIC_LIMIT);
 
   const hasAnyFilter = search || typeFilter || actorTypeFilter || regionFilter || budgetFilter || deadlineBefore || tagFilter;
+  const hasClientFilter = !!(actorTypeFilter || regionFilter || budgetFilter || deadlineBefore || tagFilter);
 
   return (
     <div className="flex gap-6 items-start">
@@ -383,7 +383,7 @@ export default function RFQClient({ initialRFQs, totalCount, isLoggedIn }: Props
           </div>
         )}
 
-        {isLoggedIn && total > PAGE_SIZE && (
+        {isLoggedIn && !hasClientFilter && total > PAGE_SIZE && (
           <div className="flex justify-center gap-2 mt-8">
             <button
               disabled={page === 0}
