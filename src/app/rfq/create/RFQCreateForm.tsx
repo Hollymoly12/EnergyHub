@@ -393,7 +393,7 @@ export default function RFQCreateForm() {
           <Row label="Technologies" value={form.target_technologies.join(", ")} />
         )}
         {form.budget_range && <Row label="Budget" value={form.budget_range} />}
-        {form.deadline && <Row label="Deadline" value={new Date(form.deadline).toLocaleDateString("fr-BE")} />}
+        {form.deadline && <Row label="Deadline" value={form.deadline.split("-").reverse().join("/")} />}
         {form.location && <Row label="Localisation" value={form.location} />}
         {form.tags.length > 0 && <Row label="Tags" value={form.tags.join(", ")} />}
       </div>
