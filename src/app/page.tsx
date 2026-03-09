@@ -196,6 +196,55 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ── CHIFFRES ── */}
+      <section className="border-t border-slate-800" style={{ background: "#0D1520" }}>
+        <div className="max-w-6xl mx-auto px-6 py-16">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            {[
+              { value: "7",       label: "Types d'acteurs",     sub: "connectés sur la plateforme" },
+              { value: "IA",      label: "Matching intelligent", sub: "en temps réel" },
+              { value: "3",       label: "Régions belges",       sub: "Wallonie · Flandre · BXL" },
+              { value: "Gratuit", label: "Pour démarrer",        sub: "Sans CB requise" },
+            ].map((s) => (
+              <div key={s.label}>
+                <div className="text-3xl font-bold text-yellow-500 mb-1">{s.value}</div>
+                <div className="text-sm font-semibold text-white">{s.label}</div>
+                <div className="text-xs text-slate-500 mt-0.5">{s.sub}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── CTA FINAL ── */}
+      <section className="max-w-6xl mx-auto px-6 py-24 text-center border-t border-slate-800">
+        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+          Rejoignez la marketplace de la<br />
+          <span className="text-yellow-500">transition énergétique belge</span>
+        </h2>
+        <p className="text-slate-400 mb-8 text-sm">
+          Inscription gratuite · Aucune CB requise · Déployé en Belgique
+        </p>
+        <Link href="/register" className="btn-primary px-10 py-3 text-base inline-block">
+          S'inscrire gratuitement →
+        </Link>
+      </section>
+
+      {/* ── FOOTER ── */}
+      <footer className="border-t border-slate-800">
+        <div className="max-w-6xl mx-auto px-6 py-8 flex items-center justify-between flex-wrap gap-4">
+          <div className="flex items-center gap-2">
+            <div className="w-5 h-5 rounded bg-gradient-to-br from-yellow-500 to-orange-500 flex items-center justify-center text-[10px] font-bold text-black">⚡</div>
+            <span className="text-sm text-slate-500">EnergyHub · Belgique</span>
+          </div>
+          <div className="flex gap-6">
+            <Link href="/directory" className="text-xs text-slate-600 hover:text-slate-400 transition-colors">Annuaire</Link>
+            <Link href="/rfq" className="text-xs text-slate-600 hover:text-slate-400 transition-colors">RFQ</Link>
+            <Link href="/pricing" className="text-xs text-slate-600 hover:text-slate-400 transition-colors">Tarifs</Link>
+          </div>
+        </div>
+      </footer>
+
     </div>
   );
 }
