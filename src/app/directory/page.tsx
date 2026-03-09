@@ -15,7 +15,7 @@ export default async function DirectoryPage() {
     `${process.env.NEXT_PUBLIC_APP_URL}/api/actors?limit=24&sort=rating`,
     { cache: "no-store" }
   );
-  const { actors, total } = await res.json();
+  const { actors, total } = res.ok ? await res.json() : { actors: [], total: 0 };
 
   return (
     <div className="min-h-screen" style={{ background: "#080C14" }}>
