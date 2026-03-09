@@ -125,12 +125,23 @@ function StepIndicator({ step }: { step: number }) {
   );
 }
 
+// ─── Row helper ───────────────────────────────────────────────────────────────
+
+function Row({ label, value, multiline }: { label: string; value: string; multiline?: boolean }) {
+  return (
+    <div className="flex gap-4 py-2 border-b border-slate-800 last:border-0">
+      <span className="text-xs text-slate-500 w-32 shrink-0 pt-0.5">{label}</span>
+      <span className={`text-sm text-slate-300 flex-1 ${multiline ? "whitespace-pre-wrap" : ""}`}>{value}</span>
+    </div>
+  );
+}
+
 // ─── RFQCreateForm ────────────────────────────────────────────────────────────
 
 export default function RFQCreateForm() {
   const router = useRouter();
   const [step, setStep] = useState(1);
-  const [loading, setLoading] = useState(false);
+  const [loadingAction, setLoadingAction] = useState<"draft" | "publish" | null>(null);
   const [error, setError] = useState("");
 
   const [form, setForm] = useState<FormData>({
@@ -158,7 +169,7 @@ export default function RFQCreateForm() {
   const step1Valid = form.title.trim().length > 0 && form.description.trim().length > 0;
 
   const submit = async (publish: boolean) => {
-    setLoading(true);
+    setLoadingAction(publish ? "publish" : "draft");
     setError("");
     try {
       const res = await fetch("/api/rfq", {
@@ -179,7 +190,7 @@ export default function RFQCreateForm() {
     } catch {
       setError("Une erreur réseau est survenue.");
     } finally {
-      setLoading(false);
+      setLoadingAction(null);
     }
   };
 
@@ -394,29 +405,18 @@ export default function RFQCreateForm() {
       )}
 
       <div className="flex justify-between mt-4 gap-3">
-        <button onClick={() => setStep(2)} className="btn-secondary" disabled={loading}>
+        <button onClick={() => setStep(2)} className="btn-secondary" disabled={loadingAction !== null}>
           ← Précédent
         </button>
         <div className="flex gap-3">
-          <button onClick={() => submit(false)} className="btn-secondary" disabled={loading}>
-            {loading ? "Enregistrement..." : "Sauvegarder en draft"}
+          <button onClick={() => submit(false)} className="btn-secondary" disabled={loadingAction !== null}>
+            {loadingAction === "draft" ? "Enregistrement..." : "Sauvegarder en draft"}
           </button>
-          <button onClick={() => submit(true)} className="btn-primary" disabled={loading}>
-            {loading ? "Publication..." : "Publier maintenant →"}
+          <button onClick={() => submit(true)} className="btn-primary" disabled={loadingAction !== null}>
+            {loadingAction === "publish" ? "Publication..." : "Publier maintenant →"}
           </button>
         </div>
       </div>
-    </div>
-  );
-}
-
-// ─── Row helper ───────────────────────────────────────────────────────────────
-
-function Row({ label, value, multiline }: { label: string; value: string; multiline?: boolean }) {
-  return (
-    <div className="flex gap-4 py-2 border-b border-slate-800 last:border-0">
-      <span className="text-xs text-slate-500 w-32 shrink-0 pt-0.5">{label}</span>
-      <span className={`text-sm text-slate-300 flex-1 ${multiline ? "whitespace-pre-wrap" : ""}`}>{value}</span>
     </div>
   );
 }
