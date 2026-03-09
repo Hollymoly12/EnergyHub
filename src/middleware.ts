@@ -50,7 +50,7 @@ export async function middleware(request: NextRequest) {
       .single();
 
     const org = member?.organizations as unknown as { subscription_plan: string } | null;
-    if (org?.subscription_plan === "free") {
+    if (!org || !["pro", "enterprise"].includes(org.subscription_plan)) {
       const upgradeUrl = new URL("/pricing", request.url);
       upgradeUrl.searchParams.set("reason", "pro_required");
       return NextResponse.redirect(upgradeUrl);

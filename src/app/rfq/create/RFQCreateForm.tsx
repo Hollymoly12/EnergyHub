@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 interface FormData {
-  type: string;
+  type: "rfq" | "rfi" | "rfp";
   title: string;
   description: string;
   requirements: string;
@@ -166,11 +166,12 @@ export default function RFQCreateForm() {
     set(field, arr.includes(value) ? arr.filter(v => v !== value) : [...arr, value]);
   };
 
-  const step1Valid = form.title.trim().length > 0 && form.description.trim().length > 0;
+  const step1Valid = form.title.trim().length > 0 && form.description.trim().length >= 20;
 
   const submit = async (publish: boolean) => {
     setLoadingAction(publish ? "publish" : "draft");
     setError("");
+    let redirectId: string | null = null;
     try {
       const res = await fetch("/api/rfq", {
         method: "POST",
@@ -186,12 +187,13 @@ export default function RFQCreateForm() {
         setError(data.error || "Une erreur est survenue.");
         return;
       }
-      router.push(`/rfq/${data.rfq.id}`);
+      redirectId = data.rfq.id;
     } catch {
       setError("Une erreur réseau est survenue.");
     } finally {
       setLoadingAction(null);
     }
+    if (redirectId) router.push(`/rfq/${redirectId}`);
   };
 
   // ── Étape 1 ──
@@ -258,6 +260,7 @@ export default function RFQCreateForm() {
           <button
             onClick={() => setStep(2)}
             disabled={!step1Valid}
+            title={!step1Valid ? "Titre requis et description (min. 20 caractères)" : undefined}
             className="btn-primary disabled:opacity-30 disabled:cursor-not-allowed"
           >
             Suivant →
@@ -338,6 +341,7 @@ export default function RFQCreateForm() {
               type="date"
               className="input"
               value={form.deadline}
+              min={new Date().toISOString().split("T")[0]}
               onChange={e => set("deadline", e.target.value)}
             />
           </div>
