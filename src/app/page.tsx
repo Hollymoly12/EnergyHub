@@ -45,6 +45,78 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ── PROBLÈME ── */}
+      <section className="max-w-6xl mx-auto px-6 py-20 border-t border-slate-800">
+        <div className="text-center mb-12">
+          <div className="section-tag mb-3">Le problème</div>
+          <h2 className="text-2xl md:text-3xl font-bold text-white">
+            Un marché de l'énergie encore trop fragmenté
+          </h2>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {[
+            {
+              icon: "🗺️",
+              title: "Un marché illisible",
+              desc: "Des centaines d'acteurs répartis sur 3 régions. Impossible de trouver rapidement le bon partenaire technique ou commercial.",
+            },
+            {
+              icon: "⏳",
+              title: "Des appels d'offres inefficaces",
+              desc: "Des mois de prospection manuelle pour trouver le bon installateur ou éditeur logiciel. Temps et budget gaspillés.",
+            },
+            {
+              icon: "🚪",
+              title: "Des opportunités manquées",
+              desc: "Les greentechs et startups peinent à accéder aux grands comptes industriels et aux investisseurs belges.",
+            },
+          ].map((p) => (
+            <div key={p.title} className="card p-6">
+              <div className="text-3xl mb-4">{p.icon}</div>
+              <h3 className="font-semibold text-white mb-2">{p.title}</h3>
+              <p className="text-sm text-slate-400 leading-relaxed">{p.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── SOLUTION ── */}
+      <section className="max-w-6xl mx-auto px-6 py-20 border-t border-slate-800">
+        <div className="text-center mb-12">
+          <div className="section-tag mb-3">Comment ça marche</div>
+          <h2 className="text-2xl md:text-3xl font-bold text-white">
+            3 étapes pour trouver vos partenaires
+          </h2>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {[
+            {
+              step: "01",
+              title: "Créez votre profil",
+              desc: "Renseignez votre type d'acteur, vos expertises, certifications et technologies. Notre IA analyse votre profil.",
+            },
+            {
+              step: "02",
+              title: "Publiez ou répondez à un RFQ",
+              desc: "Lancez un appel d'offres ciblé ou répondez à ceux qui correspondent à votre expertise.",
+            },
+            {
+              step: "03",
+              title: "Recevez vos matchs IA",
+              desc: "EnergyHub calcule automatiquement les meilleures correspondances et vous met en relation.",
+            },
+          ].map((s) => (
+            <div key={s.step} className="flex gap-4">
+              <div className="text-3xl font-bold text-yellow-500/20 font-mono leading-none shrink-0">{s.step}</div>
+              <div>
+                <h3 className="font-semibold text-white mb-2">{s.title}</h3>
+                <p className="text-sm text-slate-400 leading-relaxed">{s.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
     </div>
   );
 }
