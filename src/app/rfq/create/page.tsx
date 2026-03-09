@@ -18,8 +18,12 @@ export default async function RFQCreatePage() {
     .eq("id", user.id)
     .single();
 
-  const org = member?.organizations as unknown as { subscription_plan: string } | null;
-  if (!org || !["pro", "enterprise"].includes(org.subscription_plan)) {
+  const rawOrg = member?.organizations;
+  const orgPlan = Array.isArray(rawOrg)
+    ? (rawOrg[0] as { subscription_plan: string } | undefined)?.subscription_plan
+    : (rawOrg as unknown as { subscription_plan: string } | null)?.subscription_plan;
+
+  if (!["pro", "enterprise"].includes(orgPlan ?? "")) {
     redirect("/pricing?reason=pro_required");
   }
 

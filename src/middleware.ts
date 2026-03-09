@@ -49,8 +49,11 @@ export async function middleware(request: NextRequest) {
       .eq("id", user.id)
       .single();
 
-    const org = member?.organizations as unknown as { subscription_plan: string } | null;
-    if (!org || !["pro", "enterprise"].includes(org.subscription_plan)) {
+    const rawOrg = member?.organizations;
+    const orgPlan = Array.isArray(rawOrg)
+      ? (rawOrg[0] as { subscription_plan: string } | undefined)?.subscription_plan
+      : (rawOrg as unknown as { subscription_plan: string } | null)?.subscription_plan;
+    if (!["pro", "enterprise"].includes(orgPlan ?? "")) {
       const upgradeUrl = new URL("/pricing", request.url);
       upgradeUrl.searchParams.set("reason", "pro_required");
       return NextResponse.redirect(upgradeUrl);
