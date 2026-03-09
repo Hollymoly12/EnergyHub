@@ -27,7 +27,7 @@ export default async function RFQPage() {
             Trouvez des projets à répondre
           </h1>
           <p className="text-slate-500 mt-2 text-sm">
-            {total} appel{total > 1 ? "s" : ""} d'offres publié{total > 1 ? "s" : ""} sur EnergyHub
+            {total || 0} appel{(total || 0) > 1 ? "s" : ""} d'offres publié{(total || 0) > 1 ? "s" : ""} sur EnergyHub
           </p>
         </div>
 
