@@ -21,11 +21,16 @@ export async function POST() {
     const sourceOrgId = member.organization_id as string;
 
     // Fetch candidats : toutes les orgs sauf la sienne (limit 20)
-    const { data: candidates } = await supabase
+    const { data: candidates, error: candidatesError } = await supabase
       .from("organizations")
       .select("*")
       .neq("id", sourceOrgId)
       .limit(20);
+
+    if (candidatesError) {
+      console.error("Candidates fetch error:", candidatesError);
+      return NextResponse.json({ error: "Failed to fetch candidates" }, { status: 500 });
+    }
 
     if (!candidates || candidates.length === 0) {
       return NextResponse.json({ success: true, matchesCreated: 0 });
@@ -39,7 +44,7 @@ export async function POST() {
       context: "networking",
     });
 
-    const matchesCreated = result.output?.matches?.length ?? 0;
+    const matchesCreated = result.output?.matches?.filter((m: {score: number}) => m.score >= 60).length ?? 0;
     return NextResponse.json({ success: true, matchesCreated });
   } catch (error) {
     console.error("Matching agent error:", error);
