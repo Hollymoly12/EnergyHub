@@ -22,6 +22,11 @@ export async function submitResponse(rfqId: string, formData: {
   const org = member.organizations as unknown as { subscription_plan: string };
   const orgId = member.organization_id as string;
 
+  // Valider message
+  if (!formData.message || formData.message.trim().length < 50) {
+    throw new Error("Le message doit contenir au moins 50 caractères");
+  }
+
   // Vérifier doublon
   const { count: existingCount } = await supabase
     .from("rfq_responses")
@@ -50,11 +55,6 @@ export async function submitResponse(rfqId: string, formData: {
     }
   }
 
-  // Valider message
-  if (!formData.message || formData.message.trim().length < 50) {
-    throw new Error("Le message doit contenir au moins 50 caractères");
-  }
-
   const { error } = await supabase
     .from("rfq_responses")
     .insert({
@@ -67,6 +67,11 @@ export async function submitResponse(rfqId: string, formData: {
       status: "submitted",
     });
 
-  if (error) throw new Error(error.message);
+  if (error) {
+    if (error.code === "23505") {
+      throw new Error("Votre organisation a déjà répondu à cet appel d'offres");
+    }
+    throw new Error(error.message);
+  }
   revalidatePath(`/rfq/${rfqId}`);
 }
