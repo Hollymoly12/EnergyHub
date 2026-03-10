@@ -17,7 +17,7 @@ export async function POST() {
       .single();
     if (!member) return NextResponse.json({ error: "Member not found" }, { status: 404 });
 
-    const sourceOrg = member.organizations as Record<string, unknown>;
+    const sourceOrg = member.organizations as unknown as Record<string, unknown>;
     const sourceOrgId = member.organization_id as string;
 
     // Fetch candidats : toutes les orgs sauf la sienne (limit 20)
@@ -44,7 +44,8 @@ export async function POST() {
       context: "networking",
     });
 
-    const matchesCreated = result.output?.matches?.filter((m: {score: number}) => m.score >= 60).length ?? 0;
+    const output = result.output as { matches?: Array<{ score: number }> } | null;
+    const matchesCreated = output?.matches?.filter((m) => m.score >= 60).length ?? 0;
     return NextResponse.json({ success: true, matchesCreated });
   } catch (error) {
     console.error("Matching agent error:", error);

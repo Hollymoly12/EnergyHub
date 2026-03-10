@@ -66,7 +66,7 @@ export default async function DashboardMatchesPage() {
       rfq_id: m.rfq_id,
       created_at: m.created_at,
       direction: "sent" as const,
-      matched_org: m.target_org as MatchWithOrg["matched_org"],
+      matched_org: m.target_org as unknown as MatchWithOrg["matched_org"],
     })),
     ...(receivedMatches || []).map((m) => ({
       id: m.id,
@@ -76,7 +76,7 @@ export default async function DashboardMatchesPage() {
       rfq_id: m.rfq_id,
       created_at: m.created_at,
       direction: "received" as const,
-      matched_org: m.source_org as MatchWithOrg["matched_org"],
+      matched_org: m.source_org as unknown as MatchWithOrg["matched_org"],
     })),
   ].sort((a, b) => b.match_score - a.match_score);
 
