@@ -210,7 +210,8 @@ export default function MatchesClient({ matches }: { matches: Match[] }) {
 
       {/* Bouton relancer si des matchs existent déjà */}
       {filtered.length > 0 && activeTab === "all" && (
-        <div className="mt-8 flex justify-center">
+        <div className="mt-8 flex flex-col items-center gap-2">
+          {error && <p className="text-red-400 text-sm">{error}</p>}
           <button
             onClick={handleRunMatching}
             disabled={isPending}
