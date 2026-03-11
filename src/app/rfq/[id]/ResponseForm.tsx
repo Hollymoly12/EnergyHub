@@ -26,6 +26,7 @@ export default function ResponseForm({ rfqId, isLoggedIn, isOpen, isLimitReached
   const [message, setMessage] = useState("");
   const [priceRange, setPriceRange] = useState("");
   const [deliveryTimeline, setDeliveryTimeline] = useState("");
+  const [submittedData, setSubmittedData] = useState<{ message: string; priceRange: string; deliveryTimeline: string } | null>(null);
 
   if (!isLoggedIn) {
     return (
@@ -49,6 +50,12 @@ export default function ResponseForm({ rfqId, isLoggedIn, isOpen, isLimitReached
 
   if (existingResponse || success) {
     const resp = existingResponse;
+    const displayData = resp || (submittedData ? {
+      message: submittedData.message,
+      price_range: submittedData.priceRange || null,
+      delivery_timeline: submittedData.deliveryTimeline || null,
+      submitted_at: new Date().toISOString(),
+    } : null);
     return (
       <div className="card p-6 border-green-400/20">
         <div className="flex items-center gap-2 mb-4">
@@ -57,13 +64,13 @@ export default function ResponseForm({ rfqId, isLoggedIn, isOpen, isLimitReached
             {success ? "Réponse soumise avec succès !" : "Vous avez déjà répondu"}
           </span>
         </div>
-        {resp && (
+        {displayData && (
           <div className="space-y-3 text-sm text-slate-400">
-            <p className="leading-relaxed">{resp.message}</p>
-            {resp.price_range && <p>💰 {resp.price_range}</p>}
-            {resp.delivery_timeline && <p>🗓 {resp.delivery_timeline}</p>}
+            <p className="leading-relaxed">{displayData.message}</p>
+            {displayData.price_range && <p>💰 {displayData.price_range}</p>}
+            {displayData.delivery_timeline && <p>🗓 {displayData.delivery_timeline}</p>}
             <p className="text-[10px] text-slate-600">
-              Soumis le {new Date(resp.submitted_at).toLocaleDateString("fr-BE")}
+              Soumis le {new Date(displayData.submitted_at).toLocaleDateString("fr-BE")}
             </p>
           </div>
         )}
@@ -93,6 +100,7 @@ export default function ResponseForm({ rfqId, isLoggedIn, isOpen, isLimitReached
           price_range: priceRange || undefined,
           delivery_timeline: deliveryTimeline || undefined,
         });
+        setSubmittedData({ message, priceRange, deliveryTimeline });
         setSuccess(true);
       } catch (err) {
         const msg = (err as Error).message;
