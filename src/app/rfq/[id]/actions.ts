@@ -27,6 +27,16 @@ export async function submitResponse(rfqId: string, formData: {
     throw new Error("Le message doit contenir au moins 50 caractères");
   }
 
+  // Vérifier que l'utilisateur ne répond pas à son propre RFQ
+  const { data: rfq } = await supabase
+    .from("rfqs")
+    .select("organization_id")
+    .eq("id", rfqId)
+    .single();
+  if (rfq?.organization_id === orgId) {
+    throw new Error("Vous ne pouvez pas répondre à votre propre appel d'offres");
+  }
+
   // Vérifier doublon
   const { count: existingCount } = await supabase
     .from("rfq_responses")

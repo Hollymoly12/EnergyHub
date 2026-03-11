@@ -58,7 +58,7 @@ export default function MessagesClient({ conversations, currentUserId, initialCo
         setMessages(data || []);
         setLoadingMessages(false);
       });
-  }, [activeConvId]);
+  }, [activeConvId, supabase]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -77,13 +77,14 @@ export default function MessagesClient({ conversations, currentUserId, initialCo
           filter: `conversation_id=eq.${activeConvId}`,
         },
         (payload) => {
-          setMessages(prev => [...prev, payload.new as Message]);
+          const newMsg = payload.new as Message;
+          setMessages(prev => prev.some(m => m.id === newMsg.id) ? prev : [...prev, newMsg]);
         }
       )
       .subscribe();
 
     return () => { supabase.removeChannel(channel); };
-  }, [activeConvId]);
+  }, [activeConvId, supabase]);
 
   function handleSend(e: React.FormEvent) {
     e.preventDefault();

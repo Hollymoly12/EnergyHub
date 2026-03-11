@@ -22,6 +22,19 @@ export async function POST(req: NextRequest) {
       if (!targetOrgId || !firstMessage?.trim()) {
         return NextResponse.json({ error: "targetOrgId and firstMessage required" }, { status: 400 });
       }
+      if (targetOrgId === orgId) {
+        return NextResponse.json({ error: "Cannot message yourself" }, { status: 400 });
+      }
+
+      // Return existing conversation if one already exists between these orgs
+      const { data: existing } = await supabase
+        .from("conversations")
+        .select("id")
+        .contains("participant_org_ids", [orgId, targetOrgId])
+        .maybeSingle();
+      if (existing) {
+        return NextResponse.json({ conversationId: existing.id }, { status: 200 });
+      }
 
       const { data: conversation, error: convError } = await supabase
         .from("conversations")

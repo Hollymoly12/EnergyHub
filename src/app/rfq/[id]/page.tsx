@@ -51,6 +51,7 @@ export default async function RFQDetailPage({ params }: { params: Promise<{ id: 
     : null;
 
   const isOpen = OPEN_STATUSES.includes(rfq.status);
+  const rfqOwnerOrgId = org?.id || null;
 
   // Données user si connecté
   let memberOrgId: string | null = null;
@@ -191,17 +192,19 @@ export default async function RFQDetailPage({ params }: { params: Promise<{ id: 
               </div>
             )}
 
-            {/* Formulaire de réponse */}
-            <div id="respond">
-              <h2 className="text-lg font-semibold text-white mb-4">Répondre à cet appel d&apos;offres</h2>
-              <ResponseForm
-                rfqId={id}
-                isLoggedIn={!!user}
-                isOpen={isOpen}
-                isLimitReached={isLimitReached}
-                existingResponse={existingResponse}
-              />
-            </div>
+            {/* Formulaire de réponse — masqué pour le propriétaire */}
+            {memberOrgId !== rfqOwnerOrgId && (
+              <div id="respond">
+                <h2 className="text-lg font-semibold text-white mb-4">Répondre à cet appel d&apos;offres</h2>
+                <ResponseForm
+                  rfqId={id}
+                  isLoggedIn={!!user}
+                  isOpen={isOpen}
+                  isLimitReached={isLimitReached}
+                  existingResponse={existingResponse}
+                />
+              </div>
+            )}
           </div>
 
           {/* ── Sidebar ── */}
@@ -242,7 +245,7 @@ export default async function RFQDetailPage({ params }: { params: Promise<{ id: 
               </div>
             )}
 
-            {isOpen && user && !existingResponse && !isLimitReached && (
+            {isOpen && user && !existingResponse && !isLimitReached && memberOrgId !== rfqOwnerOrgId && (
               <a href="#respond" className="btn-primary w-full block text-center">
                 Répondre à ce RFQ →
               </a>
