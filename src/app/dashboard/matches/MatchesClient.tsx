@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import ContactModal from "./ContactModal";
 
 interface MatchedOrg {
   id: string;
@@ -49,7 +50,7 @@ function scoreColor(score: number) {
   return "text-red-400 border-red-400/30 bg-red-400/10";
 }
 
-function MatchCard({ match }: { match: Match }) {
+function MatchCard({ match, onContact }: { match: Match; onContact: (orgId: string, orgName: string) => void }) {
   const org = match.matched_org;
   const actorInfo = ACTOR_LABELS[org.actor_type] || { label: org.actor_type, icon: "🏢" };
 
@@ -110,12 +111,12 @@ function MatchCard({ match }: { match: Match }) {
         >
           Voir le profil →
         </Link>
-        <Link
-          href="/dashboard/messages"
-          className="btn-primary text-xs py-2 flex-1 text-center"
+        <button
+          onClick={() => onContact(org.id, org.name)}
+          className="btn-primary text-xs py-2 flex-1"
         >
           Contacter
-        </Link>
+        </button>
       </div>
     </div>
   );
@@ -125,6 +126,7 @@ export default function MatchesClient({ matches }: { matches: Match[] }) {
   const [activeTab, setActiveTab] = useState<string>("all");
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const [contactingOrg, setContactingOrg] = useState<{ id: string; name: string } | null>(null);
   const router = useRouter();
 
   const filtered = matches.filter((m) => {
@@ -183,7 +185,7 @@ export default function MatchesClient({ matches }: { matches: Match[] }) {
       {filtered.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filtered.map((match) => (
-            <MatchCard key={match.id} match={match} />
+            <MatchCard key={match.id} match={match} onContact={(id, name) => setContactingOrg({ id, name })} />
           ))}
         </div>
       ) : (
@@ -220,6 +222,14 @@ export default function MatchesClient({ matches }: { matches: Match[] }) {
             {isPending ? "Analyse en cours..." : "↺ Relancer le matching IA"}
           </button>
         </div>
+      )}
+
+      {contactingOrg && (
+        <ContactModal
+          targetOrgId={contactingOrg.id}
+          targetOrgName={contactingOrg.name}
+          onClose={() => setContactingOrg(null)}
+        />
       )}
     </div>
   );
