@@ -9,6 +9,18 @@ export async function POST(req: NextRequest) {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+    // Issue 1: parse body early, right after auth check
+    let body: { plan?: string };
+    try {
+      body = await req.json();
+    } catch {
+      return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+    }
+    const { plan } = body;
+    if (plan !== "pro") {
+      return NextResponse.json({ error: "Invalid plan" }, { status: 400 });
+    }
+
     const { data: member } = await supabase
       .from("members")
       .select("organization_id, organizations(name, stripe_customer_id, subscription_plan)")
@@ -16,6 +28,10 @@ export async function POST(req: NextRequest) {
       .single();
     if (!member) return NextResponse.json({ error: "Member not found" }, { status: 404 });
 
+    // Issue 2: null check on org before casting
+    if (!member.organizations) {
+      return NextResponse.json({ error: "Organization not found" }, { status: 404 });
+    }
     const org = member.organizations as unknown as {
       name: string;
       stripe_customer_id: string | null;
@@ -25,12 +41,6 @@ export async function POST(req: NextRequest) {
 
     if (org.subscription_plan !== "free") {
       return NextResponse.json({ error: "Already subscribed" }, { status: 400 });
-    }
-
-    const body = await req.json();
-    const { plan } = body;
-    if (plan !== "pro") {
-      return NextResponse.json({ error: "Invalid plan" }, { status: 400 });
     }
 
     const priceId = PLANS.pro.priceId;
@@ -45,14 +55,22 @@ export async function POST(req: NextRequest) {
       existingCustomerId: org.stripe_customer_id || undefined,
     });
 
+    // Issue 4: check stripe_customer_id DB update result, log error but proceed
     if (!org.stripe_customer_id) {
-      await supabase
+      const { error: updateError } = await supabase
         .from("organizations")
         .update({ stripe_customer_id: customerId })
         .eq("id", orgId);
+      if (updateError) {
+        console.error("Failed to save stripe_customer_id:", updateError);
+      }
     }
 
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL!;
+    // Issue 3: guard NEXT_PUBLIC_APP_URL before using it
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+    if (!appUrl) {
+      return NextResponse.json({ error: "Server misconfiguration" }, { status: 500 });
+    }
     const url = await createCheckoutSession({
       customerId,
       priceId,
