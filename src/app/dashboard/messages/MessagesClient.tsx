@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useTransition } from "react";
+import { useState, useEffect, useRef, useTransition, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
 
 interface Org {
@@ -30,12 +30,11 @@ interface Conversation {
 
 interface Props {
   conversations: Conversation[];
-  currentOrgId: string;
   currentUserId: string;
   initialConvId?: string;
 }
 
-export default function MessagesClient({ conversations, currentOrgId, currentUserId, initialConvId }: Props) {
+export default function MessagesClient({ conversations, currentUserId, initialConvId }: Props) {
   const [activeConvId, setActiveConvId] = useState<string | null>(initialConvId || conversations[0]?.id || null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [loadingMessages, setLoadingMessages] = useState(false);
@@ -43,7 +42,7 @@ export default function MessagesClient({ conversations, currentOrgId, currentUse
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
 
   const activeConv = conversations.find(c => c.id === activeConvId);
 
