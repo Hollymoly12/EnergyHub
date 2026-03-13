@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
       .select("id")
       .eq("deal_id", dealId)
       .eq("investor_org_id", orgId)
-      .single();
+      .maybeSingle();
     if (existing) {
       return NextResponse.json({ error: "Already expressed interest in this deal" }, { status: 409 });
     }
@@ -75,11 +75,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Failed to save interest" }, { status: 500 });
     }
 
-    // Increment interests_count atomically
-    await supabase
+    // Increment interests_count
+    const { error: countError } = await supabase
       .from("deals")
       .update({ interests_count: (deal.interests_count ?? 0) + 1 })
       .eq("id", dealId);
+    if (countError) {
+      console.error("interests_count update error:", countError);
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {
