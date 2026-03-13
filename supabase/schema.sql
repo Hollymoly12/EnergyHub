@@ -37,7 +37,7 @@ CREATE TYPE deal_status AS ENUM (
 );
 
 CREATE TYPE agent_event_type AS ENUM (
-  'onboarding', 'matching', 'rfq_analysis', 'communication', 'scoring'
+  'onboarding', 'matching', 'rfq_analysis', 'communication', 'scoring', 'deal_analysis'
 );
 
 -- ─── ORGANISATIONS ──────────────────────────────────────────────────────────
