@@ -24,7 +24,7 @@ export default async function InvestmentPage() {
   // Transform Supabase response: organizations is an array, take first element
   const deals = (rawDeals ?? []).map((deal: any) => ({
     ...deal,
-    organizations: Array.isArray(deal.organizations) ? deal.organizations[0] : deal.organizations,
+    organizations: Array.isArray(deal.organizations) ? (deal.organizations[0] ?? null) : deal.organizations,
   }));
 
   return (
