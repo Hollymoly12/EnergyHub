@@ -97,7 +97,7 @@ src/app/api/
 ### `/dashboard/investment` — Dashboard
 
 - Section "Mes deals" : tableau ou liste de cartes avec titre, statut badge (draft/published), vues (`views_count`), intérêts (`interests_count`), lien vers `/investment/[id]`
-- Section "Intérêts reçus" : liste des `deal_interests` sur mes deals → org investisseur, message, NDA signé (✓/✗), date, statut (interested/in_discussion/passed)
+- Section "Intérêts reçus" : liste des `deal_interests` sur mes deals → org investisseur, message, NDA signé (✓/✗), date, statut affiché (interested/in_discussion/passed) — la gestion du changement de statut est hors scope F12 (lecture seule)
 - Bouton "Nouveau deal" → `/investment/submit`
 - Banner success si `?submitted=1`
 
@@ -107,8 +107,8 @@ src/app/api/
 
 1. Auth + fetch member (organization_id)
 2. Valider champs required (title, description, funding_amount)
-3. Insert dans `deals` avec `status: 'published'` (soumission directe). Le boolean `requires_nda` gère la confidentialité — le statut enum `nda_required` n'est pas utilisé (la distinction NDA se fait via `requires_nda = true` + `status = 'published'`)
-4. Déclencher agent IA de façon **synchrone** (comme `orchestrateNewRFQ` dans `/api/rfq/route.ts`) : `analyzeDeal(deal)` → update `ai_summary`, `ai_investment_thesis`, `ai_risk_score`. Pas d'infrastructure de jobs background — l'appel bloque la réponse API (~3-5s acceptable pour une soumission de deal)
+3. Insert dans `deals` avec `status: 'published'`, `published_at: new Date().toISOString()` (soumission directe). Le boolean `requires_nda` gère la confidentialité — le statut enum `nda_required` n'est pas utilisé (la distinction NDA se fait via `requires_nda = true` + `status = 'published'`)
+4. Déclencher agent IA de façon **synchrone** (`await analyzeDeal(deal)`) — contrairement au pattern RFQ qui est fire-and-forget, ici on attend le résultat avant de répondre. L'appel bloque la réponse API (~3-5s acceptable pour une soumission de deal). Update `ai_summary`, `ai_investment_thesis`, `ai_risk_score` sur le deal.
 5. Retourner `{ id, success: true }`
 
 ### POST `/api/deal-interests`
@@ -118,7 +118,7 @@ src/app/api/
 3. Vérifier que l'utilisateur n'a pas déjà exprimé son intérêt (`deal_interests` unique sur deal_id + investor_org_id)
 4. Si deal `requires_nda` et `ndaSigned = false` → 400
 5. Insert dans `deal_interests` avec `nda_signed`, `nda_signed_at` (si ndaSigned = true)
-6. Incrémenter `deals.interests_count`
+6. Incrémenter `deals.interests_count` via `UPDATE deals SET interests_count = interests_count + 1 WHERE id = dealId`
 7. Retourner `{ success: true }`
 
 ## Migration DB requise
