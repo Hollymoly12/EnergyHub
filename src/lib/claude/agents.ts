@@ -602,7 +602,7 @@ Réponds UNIQUEMENT en JSON :
   try {
     const response = await anthropic.messages.create({
       model: MODEL,
-      max_tokens: 800,
+      max_tokens: 1000,
       messages: [{ role: "user", content: prompt }],
     });
 
@@ -616,7 +616,7 @@ Réponds UNIQUEMENT en JSON :
 
     // Persister les résultats IA sur le deal
     const supabase = await createClient();
-    await supabase
+    const { error: dbError } = await supabase
       .from("deals")
       .update({
         ai_summary: output.summary,
@@ -624,6 +624,7 @@ Réponds UNIQUEMENT en JSON :
         ai_risk_score: output.risk_score,
       })
       .eq("id", deal.id);
+    if (dbError) throw dbError;
 
     const result: AgentResult = {
       success: true,
