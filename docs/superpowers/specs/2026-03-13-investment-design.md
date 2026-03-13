@@ -58,12 +58,15 @@ src/app/api/
   - Description + infos projet (type, localisation, capacité MW)
   - Financement : montant, type, série, IRR cible, durée, investisseurs actuels
   - Section IA (si `ai_summary` disponible) : résumé, thèse d'investissement, barre score risque (0=vert/low, 100=rouge/high)
-- CTA : `<InterestButton dealId={id} requiresNda={deal.requires_nda} />`
+- Le Server Component vérifie si l'utilisateur a déjà exprimé son intérêt (fetch `deal_interests` filtré sur `investor_org_id + deal_id`) et incrémente `views_count` via `supabase.rpc` ou update direct
+- CTA : `<InterestButton dealId={id} requiresNda={deal.requires_nda} alreadyExpressed={alreadyExpressed} />`
 
 **`InterestButton.tsx`** (Client Component) :
-- Modal : titre "Exprimer mon intérêt", si NDA requis → checkbox "Je m'engage à respecter la confidentialité de ce dossier" (required), champ message optionnel
+- Props : `dealId: string`, `requiresNda: boolean`, `alreadyExpressed: boolean`
+- Si `alreadyExpressed = true` → bouton désactivé "Intérêt déjà exprimé" (pas de modal)
+- Sinon : bouton "Exprimer mon intérêt" → ouvre modal
+- Modal : si NDA requis → checkbox "Je m'engage à respecter la confidentialité de ce dossier" (required), champ message optionnel
 - Bouton "Confirmer" → POST `/api/deal-interests` → état succès "Intérêt enregistré !"
-- Si déjà exprimé (vérification server-side) → bouton désactivé "Intérêt déjà exprimé"
 
 ### `/investment/submit` — Formulaire 3 étapes
 
@@ -104,8 +107,8 @@ src/app/api/
 
 1. Auth + fetch member (organization_id)
 2. Valider champs required (title, description, funding_amount)
-3. Insert dans `deals` avec `status: 'published'` (soumission directe)
-4. Déclencher agent IA en background (non-bloquant) : `analyzeDeal(deal)` → update `ai_summary`, `ai_investment_thesis`, `ai_risk_score`
+3. Insert dans `deals` avec `status: 'published'` (soumission directe). Le boolean `requires_nda` gère la confidentialité — le statut enum `nda_required` n'est pas utilisé (la distinction NDA se fait via `requires_nda = true` + `status = 'published'`)
+4. Déclencher agent IA de façon **synchrone** (comme `orchestrateNewRFQ` dans `/api/rfq/route.ts`) : `analyzeDeal(deal)` → update `ai_summary`, `ai_investment_thesis`, `ai_risk_score`. Pas d'infrastructure de jobs background — l'appel bloque la réponse API (~3-5s acceptable pour une soumission de deal)
 5. Retourner `{ id, success: true }`
 
 ### POST `/api/deal-interests`
@@ -117,6 +120,14 @@ src/app/api/
 5. Insert dans `deal_interests` avec `nda_signed`, `nda_signed_at` (si ndaSigned = true)
 6. Incrémenter `deals.interests_count`
 7. Retourner `{ success: true }`
+
+## Migration DB requise
+
+L'enum `agent_event_type` ne contient pas `'deal_analysis'`. Avant d'implémenter l'agent, exécuter :
+```sql
+ALTER TYPE agent_event_type ADD VALUE 'deal_analysis';
+```
+Cette migration doit être la première tâche du plan d'implémentation.
 
 ## Agent IA — analyzeDeal
 
