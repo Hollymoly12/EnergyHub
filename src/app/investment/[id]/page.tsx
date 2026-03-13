@@ -226,7 +226,7 @@ export default async function DealPage({
             {/* CTA */}
             <div className="card p-6">
               <div className="text-sm text-slate-400 mb-4">
-                {deal.interests_count} investisseur{deal.interests_count !== 1 ? "s" : ""} intéressé{deal.interests_count !== 1 ? "s" : ""}
+                {deal.interests_count ?? 0} investisseur{(deal.interests_count ?? 0) !== 1 ? "s" : ""} intéressé{(deal.interests_count ?? 0) !== 1 ? "s" : ""}
               </div>
               {user ? (
                 <InterestButton
