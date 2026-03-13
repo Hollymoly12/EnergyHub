@@ -551,3 +551,104 @@ export async function orchestrateNewRFQ(rfqId: string) {
     }
   }
 }
+
+// ═══════════════════════════════════════════════════════════════════════════
+// AGENT 5 — DEAL ANALYSTE
+// Analyse les projets d'investissement soumis sur la plateforme
+// ═══════════════════════════════════════════════════════════════════════════
+
+export async function analyzeDeal(deal: {
+  id: string;
+  organizationId: string;
+  title: string;
+  description: string;
+  projectType?: string | null;
+  location?: string | null;
+  capacityMw?: number | null;
+  fundingAmount?: number | null;
+  fundingType?: string | null;
+  series?: string | null;
+  irrTarget?: number | null;
+  durationYears?: number | null;
+}): Promise<AgentResult> {
+  const start = Date.now();
+
+  const prompt = `Tu es un expert en finance d'entreprise et en énergie renouvelable. Analyse ce projet d'investissement soumis sur EnergyHub, la marketplace B2B de la transition énergétique belge.
+
+Projet :
+- Titre : ${deal.title}
+- Description : ${deal.description}
+- Type de projet : ${deal.projectType || "non précisé"}
+- Localisation : ${deal.location || "non précisée"}
+- Capacité : ${deal.capacityMw ? `${deal.capacityMw} MW` : "non précisée"}
+- Montant recherché : ${deal.fundingAmount ? `${deal.fundingAmount.toLocaleString("fr-FR")} €` : "non précisé"}
+- Type de financement : ${deal.fundingType || "non précisé"}
+- Série : ${deal.series || "non précisée"}
+- IRR cible : ${deal.irrTarget ? `${deal.irrTarget}%` : "non précisé"}
+- Durée : ${deal.durationYears ? `${deal.durationYears} ans` : "non précisée"}
+
+Fournis :
+1. Un résumé exécutif (2-3 phrases, en français)
+2. Une thèse d'investissement (pourquoi investir ou non dans ce projet, 2-3 phrases)
+3. Un score de risque de 0 à 100 (0 = risque très faible, 100 = risque très élevé) basé sur la maturité du projet, la clarté des informations, la faisabilité technique et financière
+
+Réponds UNIQUEMENT en JSON :
+{
+  "summary": "string (résumé exécutif)",
+  "investment_thesis": "string (thèse d'investissement)",
+  "risk_score": number
+}`;
+
+  try {
+    const response = await anthropic.messages.create({
+      model: MODEL,
+      max_tokens: 800,
+      messages: [{ role: "user", content: prompt }],
+    });
+
+    const text = response.content[0].type === "text" ? response.content[0].text : "";
+    const clean = text.replace(/```json|```/g, "").trim();
+    const output = JSON.parse(clean) as {
+      summary: string;
+      investment_thesis: string;
+      risk_score: number;
+    };
+
+    // Persister les résultats IA sur le deal
+    const supabase = await createClient();
+    await supabase
+      .from("deals")
+      .update({
+        ai_summary: output.summary,
+        ai_investment_thesis: output.investment_thesis,
+        ai_risk_score: output.risk_score,
+      })
+      .eq("id", deal.id);
+
+    const result: AgentResult = {
+      success: true,
+      output,
+      tokensUsed: response.usage.input_tokens + response.usage.output_tokens,
+      durationMs: Date.now() - start,
+    };
+
+    await logAgent({
+      agentType: "deal_analysis",
+      triggerEvent: "deal_submitted",
+      organizationId: deal.organizationId,
+      dealId: deal.id,
+      inputData: { title: deal.title, fundingAmount: deal.fundingAmount },
+      result,
+    });
+
+    return result;
+  } catch (error) {
+    return {
+      success: false,
+      output: {},
+      tokensUsed: 0,
+      durationMs: Date.now() - start,
+      error: error instanceof Error ? error.message : "Unknown error",
+    };
+  }
+}
