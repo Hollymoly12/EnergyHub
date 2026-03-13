@@ -240,6 +240,13 @@ export default function DealForm() {
               onChange={(e) => set("financial_model_url", e.target.value)} placeholder="https://..." />
           </div>
           <label className="flex items-center gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              id="requires_nda"
+              checked={form.requires_nda}
+              onChange={(e) => set("requires_nda", e.target.checked)}
+              className="sr-only"
+            />
             <div
               onClick={() => set("requires_nda", !form.requires_nda)}
               className={`w-11 h-6 rounded-full transition-colors relative cursor-pointer ${
@@ -257,11 +264,20 @@ export default function DealForm() {
           <div className="border border-slate-800 rounded-lg p-4 mt-4">
             <p className="text-xs text-slate-500 uppercase tracking-wide mb-3">Récapitulatif</p>
             <dl className="text-sm space-y-1">
-              <div className="flex gap-2"><dt className="text-slate-500 w-28 shrink-0">Titre</dt><dd className="text-slate-300">{form.title || "—"}</dd></div>
-              <div className="flex gap-2"><dt className="text-slate-500 w-28 shrink-0">Type</dt><dd className="text-slate-300">{form.project_type || "—"}</dd></div>
-              <div className="flex gap-2"><dt className="text-slate-500 w-28 shrink-0">Montant</dt><dd className="text-slate-300">{form.funding_amount ? `${Number(form.funding_amount).toLocaleString("fr-FR")} €` : "—"}</dd></div>
-              <div className="flex gap-2"><dt className="text-slate-500 w-28 shrink-0">Financement</dt><dd className="text-slate-300">{form.funding_type || "—"}</dd></div>
-              <div className="flex gap-2"><dt className="text-slate-500 w-28 shrink-0">NDA</dt><dd className="text-slate-300">{form.requires_nda ? "Oui" : "Non"}</dd></div>
+              <div className="flex gap-2"><dt className="text-slate-500 w-36 shrink-0">Titre</dt><dd className="text-slate-300">{form.title || "—"}</dd></div>
+              <div className="flex gap-2"><dt className="text-slate-500 w-36 shrink-0">Description</dt><dd className="text-slate-300 line-clamp-2">{form.description || "—"}</dd></div>
+              <div className="flex gap-2"><dt className="text-slate-500 w-36 shrink-0">Type</dt><dd className="text-slate-300">{form.project_type || "—"}</dd></div>
+              <div className="flex gap-2"><dt className="text-slate-500 w-36 shrink-0">Localisation</dt><dd className="text-slate-300">{form.location || "—"}</dd></div>
+              {form.capacity_mw && <div className="flex gap-2"><dt className="text-slate-500 w-36 shrink-0">Capacité</dt><dd className="text-slate-300">{form.capacity_mw} MW</dd></div>}
+              <div className="flex gap-2"><dt className="text-slate-500 w-36 shrink-0">Montant</dt><dd className="text-slate-300">{form.funding_amount ? `${Number(form.funding_amount).toLocaleString("fr-FR")} €` : "—"}</dd></div>
+              <div className="flex gap-2"><dt className="text-slate-500 w-36 shrink-0">Financement</dt><dd className="text-slate-300">{form.funding_type || "—"}</dd></div>
+              {form.series && <div className="flex gap-2"><dt className="text-slate-500 w-36 shrink-0">Série</dt><dd className="text-slate-300">{form.series}</dd></div>}
+              {form.irr_target && <div className="flex gap-2"><dt className="text-slate-500 w-36 shrink-0">IRR cible</dt><dd className="text-slate-300">{form.irr_target}%</dd></div>}
+              {form.duration_years && <div className="flex gap-2"><dt className="text-slate-500 w-36 shrink-0">Durée</dt><dd className="text-slate-300">{form.duration_years} ans</dd></div>}
+              {form.current_investors && <div className="flex gap-2"><dt className="text-slate-500 w-36 shrink-0">Investisseurs</dt><dd className="text-slate-300">{form.current_investors}</dd></div>}
+              {form.pitch_deck_url && <div className="flex gap-2"><dt className="text-slate-500 w-36 shrink-0">Pitch deck</dt><dd className="text-slate-300 truncate">{form.pitch_deck_url}</dd></div>}
+              {form.financial_model_url && <div className="flex gap-2"><dt className="text-slate-500 w-36 shrink-0">Modèle financier</dt><dd className="text-slate-300 truncate">{form.financial_model_url}</dd></div>}
+              <div className="flex gap-2"><dt className="text-slate-500 w-36 shrink-0">NDA</dt><dd className="text-slate-300">{form.requires_nda ? "Oui" : "Non"}</dd></div>
             </dl>
           </div>
         </div>
