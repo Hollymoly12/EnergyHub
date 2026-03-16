@@ -16,6 +16,9 @@ export async function POST(_req: NextRequest) {
     if (!member) return NextResponse.json({ error: "Member not found" }, { status: 404 });
 
     const org = member.organizations as unknown as { stripe_customer_id: string | null };
+    if (!org) {
+      return NextResponse.json({ error: "Organization not found" }, { status: 404 });
+    }
     if (!org.stripe_customer_id) {
       return NextResponse.json({ error: "No active subscription" }, { status: 400 });
     }
