@@ -1,172 +1,241 @@
 import Link from "next/link";
 
 export default function LandingPage() {
+  const actors = [
+    { n: "01", title: "Industriels", desc: "Publiez vos besoins énergétiques et trouvez des solutions certifiées pour votre transition." },
+    { n: "02", title: "Installateurs", desc: "Répondez aux appels d'offres qualifiés et développez votre portefeuille de projets." },
+    { n: "03", title: "Éditeurs logiciels", desc: "Distribuez vos solutions auprès des acteurs de la transition énergétique belge." },
+    { n: "04", title: "Fonds d'investissement", desc: "Sourcez des projets verts, évaluez les deals avec l'IA et gérez vos intérêts." },
+    { n: "05", title: "Fournisseurs d'énergie", desc: "Connectez-vous aux industriels et proposez vos offres sur-mesure." },
+    { n: "06", title: "Greentechs", desc: "Faites connaître vos innovations et trouvez des partenaires industriels." },
+  ];
+
+  const steps = [
+    { n: "01", title: "Créez votre profil", desc: "L'agent IA analyse votre organisation et optimise votre visibilité sur la plateforme." },
+    { n: "02", title: "Publiez ou répondez", desc: "Créez des RFQ ciblés ou répondez aux appels d'offres correspondant à vos compétences." },
+    { n: "03", title: "Matching IA", desc: "L'algorithme calcule un score de compatibilité 0-100 et vous met en relation avec les meilleurs partenaires." },
+  ];
+
+  const tickerItems = ["Industriels", "Installateurs", "Éditeurs logiciels", "Fonds d'investissement", "Fournisseurs d'énergie", "Greentechs"];
+
   return (
-    <div style={{ backgroundColor: "#07090F", color: "#F1F5F9", fontFamily: "DM Sans, sans-serif", minHeight: "100vh" }}>
+    <div style={{ backgroundColor: "#FAFAF7", color: "#0D0D0D", fontFamily: "Plus Jakarta Sans, sans-serif", minHeight: "100vh" }}>
 
       {/* ── Navbar ── */}
-      <nav style={{ borderBottom: "1px solid #1E2D45", backgroundColor: "rgba(7,9,15,0.95)", backdropFilter: "blur(12px)", position: "sticky", top: 0, zIndex: 50 }}>
+      <nav style={{ borderBottom: "1px solid #E2DDD6", backgroundColor: "rgba(250,250,247,0.95)", backdropFilter: "blur(12px)", position: "sticky", top: 0, zIndex: 50 }}>
         <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 24px", height: 60, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <div style={{ width: 30, height: 30, borderRadius: 8, background: "linear-gradient(135deg, #F59E0B, #D97706)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: "bold", color: "#000" }}>⚡</div>
-            <span style={{ fontFamily: "Syne, sans-serif", fontWeight: 800, fontSize: 16, color: "#fff", letterSpacing: "-0.02em" }}>EnergyHub</span>
+          <Link href="/" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none" }}>
+            <div style={{ width: 30, height: 30, borderRadius: 8, backgroundColor: "#16523A", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M7 1L1 8h5.5L5 13l8-8H7.5L9 1z" fill="#B8FF3C" strokeLinejoin="round"/>
+              </svg>
+            </div>
+            <span style={{ fontFamily: "Bricolage Grotesque, sans-serif", fontWeight: 800, fontSize: 16, color: "#0D0D0D", letterSpacing: "-0.02em" }}>EnergyHub</span>
+          </Link>
+
+          <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+            {[["Annuaire", "/directory"], ["RFQ", "/rfq"], ["Investissement", "/investment"], ["Tarifs", "/pricing"]].map(([label, href]) => (
+              <Link key={href} href={href} style={{ color: "#6B6560", fontSize: 14, textDecoration: "none", padding: "6px 12px", borderRadius: 8, fontWeight: 500 }}>{label}</Link>
+            ))}
           </div>
+
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <Link href="/directory" style={{ color: "#94A3B8", fontSize: 14, textDecoration: "none", padding: "6px 14px", borderRadius: 8, transition: "color 0.15s" }}>Annuaire</Link>
-            <Link href="/rfq" style={{ color: "#94A3B8", fontSize: 14, textDecoration: "none", padding: "6px 14px", borderRadius: 8 }}>RFQ</Link>
-            <Link href="/pricing" style={{ color: "#94A3B8", fontSize: 14, textDecoration: "none", padding: "6px 14px", borderRadius: 8 }}>Tarifs</Link>
-            <Link href="/login" style={{ color: "#F1F5F9", fontSize: 14, textDecoration: "none", padding: "7px 16px", borderRadius: 8, border: "1px solid #1E2D45", marginLeft: 8 }}>Connexion</Link>
-            <Link href="/register" style={{ backgroundColor: "#F59E0B", color: "#000", fontSize: 14, fontWeight: 600, textDecoration: "none", padding: "7px 18px", borderRadius: 8 }}>Rejoindre →</Link>
+            <Link href="/login" style={{ color: "#3A3632", fontSize: 14, textDecoration: "none", padding: "8px 16px", borderRadius: 100, border: "1.5px solid #E2DDD6", fontWeight: 500 }}>Connexion</Link>
+            <Link href="/register" style={{ backgroundColor: "#16523A", color: "#fff", fontSize: 14, fontWeight: 600, textDecoration: "none", padding: "8px 18px", borderRadius: 100 }}>Rejoindre →</Link>
           </div>
         </div>
       </nav>
 
       {/* ── Hero ── */}
-      <section style={{ position: "relative", overflow: "hidden", paddingTop: 100, paddingBottom: 100 }}>
-        {/* Dot grid background */}
-        <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle, #1A2540 1px, transparent 1px)", backgroundSize: "24px 24px", opacity: 0.6 }} />
-        {/* Amber glow */}
-        <div style={{ position: "absolute", top: -100, left: "50%", transform: "translateX(-50%)", width: 800, height: 500, background: "radial-gradient(ellipse, rgba(245,158,11,0.10) 0%, transparent 70%)", pointerEvents: "none" }} />
-
-        <div style={{ position: "relative", maxWidth: 1200, margin: "0 auto", padding: "0 24px", textAlign: "center" }}>
-          {/* Eyebrow */}
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, backgroundColor: "rgba(245,158,11,0.08)", border: "1px solid rgba(245,158,11,0.2)", borderRadius: 100, padding: "5px 14px", marginBottom: 32 }}>
-            <span style={{ width: 6, height: 6, borderRadius: "50%", backgroundColor: "#F59E0B", display: "inline-block" }} />
-            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#F59E0B", fontFamily: "Syne, sans-serif" }}>Marketplace B2B · Belgique</span>
+      <section style={{ padding: "80px 24px 60px", maxWidth: 1200, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 420px", gap: 64, alignItems: "center" }}>
+        {/* Left */}
+        <div>
+          {/* Badge */}
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, backgroundColor: "#D4E8DF", borderRadius: 100, padding: "5px 14px", marginBottom: 28 }}>
+            <span style={{ width: 6, height: 6, borderRadius: "50%", backgroundColor: "#16523A", display: "inline-block" }} />
+            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" as const, color: "#16523A", fontFamily: "Bricolage Grotesque, sans-serif" }}>Marketplace B2B · Belgique</span>
           </div>
 
-          {/* Headline */}
-          <h1 style={{ fontFamily: "Syne, sans-serif", fontSize: "clamp(40px, 6vw, 72px)", fontWeight: 800, lineHeight: 1.05, letterSpacing: "-0.03em", marginBottom: 24, color: "#fff" }}>
-            La marketplace de la<br />
-            <span style={{ color: "#F59E0B" }}>transition énergétique</span><br />
-            belge
+          <h1 style={{ fontFamily: "Bricolage Grotesque, sans-serif", fontSize: "clamp(44px, 5.5vw, 72px)", fontWeight: 800, lineHeight: 1.02, letterSpacing: "-0.035em", marginBottom: 24, color: "#0D0D0D" }}>
+            La marketplace<br />
+            de l&apos;énergie<br />
+            <span style={{ color: "#16523A" }}>belge.</span>
           </h1>
 
-          <p style={{ fontSize: 18, color: "#94A3B8", maxWidth: 560, margin: "0 auto 40px", lineHeight: 1.7 }}>
-            Connectez industriels, installateurs, investisseurs et greentechs. Matching IA, RFQ automatisés, deals d&apos;investissement.
+          <p style={{ fontSize: 17, color: "#6B6560", maxWidth: 460, lineHeight: 1.7, marginBottom: 36 }}>
+            Connectez industriels, installateurs, investisseurs et greentechs. Matching IA, RFQ automatisés, module d&apos;investissement.
           </p>
 
-          {/* CTAs */}
-          <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", marginBottom: 64 }}>
-            <Link href="/register" style={{ backgroundColor: "#F59E0B", color: "#000", fontWeight: 700, fontSize: 15, textDecoration: "none", padding: "13px 28px", borderRadius: 10, fontFamily: "DM Sans, sans-serif", display: "inline-flex", alignItems: "center", gap: 8 }}>
+          <div style={{ display: "flex", gap: 12, flexWrap: "wrap" as const, marginBottom: 52 }}>
+            <Link href="/register" style={{ backgroundColor: "#16523A", color: "#fff", fontWeight: 700, fontSize: 15, textDecoration: "none", padding: "12px 26px", borderRadius: 100, display: "inline-flex", alignItems: "center", gap: 8 }}>
               Créer un compte gratuit →
             </Link>
-            <Link href="/directory" style={{ color: "#F1F5F9", fontWeight: 500, fontSize: 15, textDecoration: "none", padding: "13px 28px", borderRadius: 10, border: "1px solid #1E2D45", fontFamily: "DM Sans, sans-serif", display: "inline-flex", alignItems: "center", gap: 8 }}>
+            <Link href="/directory" style={{ color: "#0D0D0D", fontWeight: 500, fontSize: 15, textDecoration: "none", padding: "12px 26px", borderRadius: 100, border: "1.5px solid #E2DDD6", display: "inline-flex", alignItems: "center", gap: 8 }}>
               Voir l&apos;annuaire
             </Link>
           </div>
 
-          {/* Stats row */}
-          <div style={{ display: "flex", gap: 0, justifyContent: "center", flexWrap: "wrap", borderTop: "1px solid #1E2D45", paddingTop: 40 }}>
+          {/* Stats */}
+          <div style={{ display: "flex", gap: 32, flexWrap: "wrap" as const }}>
             {[
               { value: "6", label: "types d'acteurs" },
               { value: "3", label: "régions belges" },
-              { value: "IA", label: "matching intelligent" },
+              { value: "0—100", label: "score IA" },
               { value: "€0", label: "pour démarrer" },
-            ].map((stat, i) => (
-              <div key={i} style={{ padding: "0 40px", borderRight: i < 3 ? "1px solid #1E2D45" : "none", textAlign: "center" }}>
-                <div style={{ fontFamily: "Space Mono, monospace", fontSize: 28, fontWeight: 700, color: "#F59E0B", marginBottom: 4 }}>{stat.value}</div>
-                <div style={{ fontSize: 13, color: "#64748B" }}>{stat.label}</div>
+            ].map((s) => (
+              <div key={s.label}>
+                <div style={{ fontFamily: "Fira Code, monospace", fontSize: 22, fontWeight: 500, color: "#0D0D0D", lineHeight: 1 }}>{s.value}</div>
+                <div style={{ fontSize: 12, color: "#6B6560", marginTop: 3 }}>{s.label}</div>
               </div>
             ))}
           </div>
         </div>
+
+        {/* Right: Preview card */}
+        <div style={{ display: "flex", flexDirection: "column" as const, gap: 12 }}>
+          {/* Mock match card 1 */}
+          <div style={{ backgroundColor: "#fff", border: "1px solid #E2DDD6", borderRadius: 16, padding: 20, boxShadow: "0 4px 16px rgba(13,13,13,0.08)" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
+              <div>
+                <div style={{ fontSize: 11, fontWeight: 600, color: "#16523A", letterSpacing: "0.08em", textTransform: "uppercase" as const, fontFamily: "Bricolage Grotesque, sans-serif", marginBottom: 4 }}>Match IA</div>
+                <div style={{ fontFamily: "Bricolage Grotesque, sans-serif", fontWeight: 700, fontSize: 16, color: "#0D0D0D" }}>SolarNRG Belgium</div>
+                <div style={{ fontSize: 12, color: "#6B6560", marginTop: 2 }}>Installateur · Bruxelles</div>
+              </div>
+              <div style={{ textAlign: "right" as const }}>
+                <div style={{ fontFamily: "Fira Code, monospace", fontSize: 32, fontWeight: 500, color: "#0D0D0D", lineHeight: 1 }}>87</div>
+                <div style={{ fontSize: 11, color: "#6B6560" }}>/ 100</div>
+              </div>
+            </div>
+            <div style={{ height: 4, backgroundColor: "#F3F1EC", borderRadius: 2, overflow: "hidden" }}>
+              <div style={{ height: "100%", width: "87%", backgroundColor: "#B8FF3C", borderRadius: 2 }} />
+            </div>
+            <div style={{ display: "flex", gap: 6, marginTop: 12, flexWrap: "wrap" as const }}>
+              {["Certification RGE", "Région Wallonie", "PME"].map(tag => (
+                <span key={tag} style={{ backgroundColor: "#D4E8DF", color: "#16523A", fontSize: 10, fontWeight: 600, padding: "3px 8px", borderRadius: 100 }}>{tag}</span>
+              ))}
+            </div>
+          </div>
+
+          {/* Mock match card 2 */}
+          <div style={{ backgroundColor: "#F3F1EC", border: "1px solid #E2DDD6", borderRadius: 16, padding: 20 }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+              <div>
+                <div style={{ fontSize: 11, fontWeight: 600, color: "#6B6560", letterSpacing: "0.08em", textTransform: "uppercase" as const, fontFamily: "Bricolage Grotesque, sans-serif", marginBottom: 4 }}>Match IA</div>
+                <div style={{ fontFamily: "Bricolage Grotesque, sans-serif", fontWeight: 700, fontSize: 15, color: "#0D0D0D" }}>EnergiaTech SPRL</div>
+                <div style={{ fontSize: 12, color: "#6B6560", marginTop: 2 }}>Greentech · Liège</div>
+              </div>
+              <div style={{ textAlign: "right" as const }}>
+                <div style={{ fontFamily: "Fira Code, monospace", fontSize: 28, fontWeight: 500, color: "#3A3632", lineHeight: 1 }}>72</div>
+                <div style={{ fontSize: 11, color: "#6B6560" }}>/ 100</div>
+              </div>
+            </div>
+            <div style={{ height: 4, backgroundColor: "#EAE7E0", borderRadius: 2, overflow: "hidden" }}>
+              <div style={{ height: "100%", width: "72%", backgroundColor: "#B8FF3C", borderRadius: 2, opacity: 0.7 }} />
+            </div>
+          </div>
+
+          {/* Label */}
+          <div style={{ textAlign: "center" as const, fontSize: 12, color: "#B8B2AB" }}>
+            Matching IA · Scores en temps réel
+          </div>
+        </div>
       </section>
 
-      {/* ── Actor types ── */}
-      <section style={{ padding: "80px 24px", maxWidth: 1200, margin: "0 auto" }}>
-        <div style={{ textAlign: "center", marginBottom: 56 }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
-            <span style={{ width: 16, height: 1, backgroundColor: "rgba(245,158,11,0.6)", display: "inline-block" }} />
-            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#F59E0B", fontFamily: "Syne, sans-serif" }}>Les acteurs</span>
-          </div>
-          <h2 style={{ fontFamily: "Syne, sans-serif", fontSize: 36, fontWeight: 800, color: "#fff", letterSpacing: "-0.02em", marginBottom: 12 }}>
-            Une plateforme pour tout l&apos;écosystème
+      {/* ── Ticker ── */}
+      <div style={{ borderTop: "1px solid #E2DDD6", borderBottom: "1px solid #E2DDD6", backgroundColor: "#F3F1EC", overflow: "hidden", padding: "14px 0" }}>
+        <div style={{ display: "flex", width: "max-content", animation: "ticker 25s linear infinite" }}>
+          {[...tickerItems, ...tickerItems, ...tickerItems].map((item, i) => (
+            <span key={i} style={{ display: "inline-flex", alignItems: "center", gap: 20, padding: "0 20px", whiteSpace: "nowrap" as const, fontSize: 13, fontWeight: 600, color: "#3A3632", fontFamily: "Bricolage Grotesque, sans-serif", letterSpacing: "0.02em" }}>
+              {item}
+              <span style={{ width: 4, height: 4, borderRadius: "50%", backgroundColor: "#B8FF3C", display: "inline-block", flexShrink: 0 }} />
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* ── How it works ── */}
+      <section style={{ padding: "100px 24px", maxWidth: 1200, margin: "0 auto" }}>
+        <div style={{ marginBottom: 56 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" as const, color: "#16523A", fontFamily: "Bricolage Grotesque, sans-serif", marginBottom: 14 }}>Comment ça marche</div>
+          <h2 style={{ fontFamily: "Bricolage Grotesque, sans-serif", fontSize: "clamp(32px, 4vw, 52px)", fontWeight: 800, color: "#0D0D0D", letterSpacing: "-0.025em", maxWidth: 480, lineHeight: 1.1 }}>
+            Opérationnel en 3 étapes
           </h2>
-          <p style={{ color: "#64748B", fontSize: 16 }}>6 types d&apos;acteurs interconnectés par l&apos;intelligence artificielle</p>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16 }}>
-          {[
-            { icon: "🏭", label: "Industriels", color: "#F59E0B", desc: "Publiez vos besoins énergétiques, trouvez des solutions certifiées et optimisez votre transition." },
-            { icon: "🔧", label: "Installateurs", color: "#22C55E", desc: "Répondez aux appels d'offres qualifiés et développez votre portefeuille de projets." },
-            { icon: "💻", label: "Éditeurs logiciels", color: "#818CF8", desc: "Distribuez vos solutions auprès des acteurs de la transition énergétique." },
-            { icon: "💼", label: "Fonds d'investissement", color: "#F59E0B", desc: "Sourcez des projets verts, évaluez les deals avec l'IA et gérez vos intérêts." },
-            { icon: "⚡", label: "Fournisseurs d'énergie", color: "#22C55E", desc: "Connectez-vous aux industriels et proposez vos offres sur-mesure." },
-            { icon: "🌿", label: "Greentechs", color: "#818CF8", desc: "Faites connaître vos innovations et trouvez des partenaires industriels." },
-          ].map((actor) => (
-            <div key={actor.label} style={{ backgroundColor: "#0D1421", border: "1px solid #1E2D45", borderRadius: 12, padding: "24px" }}>
-              <div style={{ fontSize: 28, marginBottom: 12 }}>{actor.icon}</div>
-              <div style={{ fontFamily: "Syne, sans-serif", fontSize: 16, fontWeight: 700, color: actor.color, marginBottom: 8 }}>{actor.label}</div>
-              <p style={{ fontSize: 14, color: "#64748B", lineHeight: 1.6 }}>{actor.desc}</p>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 2 }}>
+          {steps.map((step, i) => (
+            <div key={step.n} style={{ padding: "36px 32px", backgroundColor: i === 1 ? "#16523A" : "#F3F1EC", borderRadius: i === 0 ? "16px 0 0 16px" : i === 2 ? "0 16px 16px 0" : 0 }}>
+              <div style={{ fontFamily: "Fira Code, monospace", fontSize: 11, fontWeight: 500, color: i === 1 ? "rgba(184,255,60,0.8)" : "#B8B2AB", letterSpacing: "0.05em", marginBottom: 20 }}>{step.n}</div>
+              <h3 style={{ fontFamily: "Bricolage Grotesque, sans-serif", fontSize: 22, fontWeight: 700, color: i === 1 ? "#fff" : "#0D0D0D", marginBottom: 12, lineHeight: 1.2 }}>{step.title}</h3>
+              <p style={{ fontSize: 14, color: i === 1 ? "rgba(255,255,255,0.65)" : "#6B6560", lineHeight: 1.7 }}>{step.desc}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* ── How it works ── */}
-      <section style={{ padding: "80px 24px", backgroundColor: "#0D1421", borderTop: "1px solid #1E2D45", borderBottom: "1px solid #1E2D45" }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: 56 }}>
-            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
-              <span style={{ width: 16, height: 1, backgroundColor: "rgba(245,158,11,0.6)", display: "inline-block" }} />
-              <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#F59E0B", fontFamily: "Syne, sans-serif" }}>Comment ça marche</span>
-            </div>
-            <h2 style={{ fontFamily: "Syne, sans-serif", fontSize: 36, fontWeight: 800, color: "#fff", letterSpacing: "-0.02em" }}>
-              Opérationnel en 3 étapes
-            </h2>
-          </div>
+      {/* ── Actors ── */}
+      <section style={{ padding: "0 24px 100px", maxWidth: 1200, margin: "0 auto" }}>
+        <div style={{ marginBottom: 48 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" as const, color: "#16523A", fontFamily: "Bricolage Grotesque, sans-serif", marginBottom: 14 }}>Les acteurs</div>
+          <h2 style={{ fontFamily: "Bricolage Grotesque, sans-serif", fontSize: "clamp(28px, 3.5vw, 44px)", fontWeight: 800, color: "#0D0D0D", letterSpacing: "-0.025em", lineHeight: 1.1 }}>
+            Une plateforme pour<br />tout l&apos;écosystème
+          </h2>
+        </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 24 }}>
-            {[
-              { n: "01", title: "Créez votre profil", desc: "L'agent IA analyse votre organisation et complète automatiquement votre profil pour maximiser votre visibilité." },
-              { n: "02", title: "Publiez ou répondez", desc: "Créez des RFQ ciblés ou répondez aux appels d'offres qui correspondent à vos compétences." },
-              { n: "03", title: "Matchs IA", desc: "L'algorithme calcule un score de compatibilité 0-100 et vous met en relation avec les meilleurs partenaires." },
-            ].map((step) => (
-              <div key={step.n} style={{ position: "relative", padding: "32px 28px", backgroundColor: "#131C2E", borderRadius: 12, border: "1px solid #1E2D45" }}>
-                <div style={{ fontFamily: "Space Mono, monospace", fontSize: 48, fontWeight: 700, color: "rgba(245,158,11,0.12)", position: "absolute", top: 20, right: 24, lineHeight: 1 }}>{step.n}</div>
-                <div style={{ fontFamily: "Space Mono, monospace", fontSize: 11, fontWeight: 700, color: "#F59E0B", letterSpacing: "0.1em", marginBottom: 12 }}>{step.n}</div>
-                <h3 style={{ fontFamily: "Syne, sans-serif", fontSize: 20, fontWeight: 700, color: "#fff", marginBottom: 10 }}>{step.title}</h3>
-                <p style={{ fontSize: 14, color: "#64748B", lineHeight: 1.7 }}>{step.desc}</p>
-              </div>
-            ))}
-          </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12 }}>
+          {actors.map((actor) => (
+            <div key={actor.n} style={{ backgroundColor: "#F3F1EC", border: "1px solid #E2DDD6", borderRadius: 16, padding: "28px 24px", transition: "border-color 0.2s" }}>
+              <div style={{ fontFamily: "Fira Code, monospace", fontSize: 11, color: "#B8B2AB", marginBottom: 12 }}>{actor.n}</div>
+              <h3 style={{ fontFamily: "Bricolage Grotesque, sans-serif", fontSize: 18, fontWeight: 700, color: "#0D0D0D", marginBottom: 8 }}>{actor.title}</h3>
+              <p style={{ fontSize: 13, color: "#6B6560", lineHeight: 1.65 }}>{actor.desc}</p>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* ── CTA finale ── */}
-      <section style={{ padding: "100px 24px", textAlign: "center", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle, #1A2540 1px, transparent 1px)", backgroundSize: "24px 24px", opacity: 0.4 }} />
-        <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: 600, height: 400, background: "radial-gradient(ellipse, rgba(245,158,11,0.08) 0%, transparent 70%)", pointerEvents: "none" }} />
-        <div style={{ position: "relative", maxWidth: 640, margin: "0 auto" }}>
-          <h2 style={{ fontFamily: "Syne, sans-serif", fontSize: "clamp(32px, 5vw, 52px)", fontWeight: 800, color: "#fff", letterSpacing: "-0.02em", marginBottom: 20 }}>
-            Rejoignez l&apos;écosystème<br /><span style={{ color: "#F59E0B" }}>énergie belge</span>
+      {/* ── CTA ── */}
+      <section style={{ backgroundColor: "#16523A", padding: "100px 24px", textAlign: "center" as const }}>
+        <div style={{ maxWidth: 640, margin: "0 auto" }}>
+          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" as const, color: "#B8FF3C", fontFamily: "Bricolage Grotesque, sans-serif", marginBottom: 20 }}>Rejoindre la plateforme</div>
+          <h2 style={{ fontFamily: "Bricolage Grotesque, sans-serif", fontSize: "clamp(36px, 5vw, 60px)", fontWeight: 800, color: "#fff", letterSpacing: "-0.03em", lineHeight: 1.05, marginBottom: 20 }}>
+            L&apos;énergie belge se<br />connecte ici.
           </h2>
-          <p style={{ color: "#64748B", fontSize: 16, marginBottom: 36, lineHeight: 1.7 }}>
+          <p style={{ fontSize: 16, color: "rgba(255,255,255,0.6)", marginBottom: 36 }}>
             Gratuit pour démarrer. Aucune carte de crédit requise.
           </p>
-          <Link href="/register" style={{ backgroundColor: "#F59E0B", color: "#000", fontWeight: 700, fontSize: 16, textDecoration: "none", padding: "14px 32px", borderRadius: 10, display: "inline-flex", alignItems: "center", gap: 8, fontFamily: "DM Sans, sans-serif" }}>
+          <Link href="/register" style={{ display: "inline-flex", alignItems: "center", gap: 10, backgroundColor: "#B8FF3C", color: "#0D3324", fontWeight: 700, fontSize: 15, textDecoration: "none", padding: "14px 30px", borderRadius: 100, fontFamily: "Plus Jakarta Sans, sans-serif" }}>
             Créer un compte gratuit →
           </Link>
         </div>
       </section>
 
       {/* ── Footer ── */}
-      <footer style={{ borderTop: "1px solid #1E2D45", padding: "32px 24px" }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <div style={{ width: 24, height: 24, borderRadius: 6, background: "linear-gradient(135deg, #F59E0B, #D97706)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, color: "#000" }}>⚡</div>
-            <span style={{ fontFamily: "Syne, sans-serif", fontWeight: 800, fontSize: 14, color: "#fff" }}>EnergyHub</span>
-            <span style={{ color: "#1E2D45", margin: "0 8px" }}>|</span>
-            <span style={{ fontSize: 13, color: "#4A5568" }}>Marketplace B2B · Belgique</span>
+      <footer style={{ borderTop: "1px solid #E2DDD6", padding: "28px 24px", backgroundColor: "#FAFAF7" }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap" as const, gap: 16 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <div style={{ width: 24, height: 24, borderRadius: 6, backgroundColor: "#16523A", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <svg width="11" height="11" viewBox="0 0 14 14" fill="none">
+                <path d="M7 1L1 8h5.5L5 13l8-8H7.5L9 1z" fill="#B8FF3C"/>
+              </svg>
+            </div>
+            <span style={{ fontFamily: "Bricolage Grotesque, sans-serif", fontWeight: 800, fontSize: 14, color: "#0D0D0D" }}>EnergyHub</span>
+            <span style={{ color: "#E2DDD6", margin: "0 8px" }}>|</span>
+            <span style={{ fontSize: 13, color: "#B8B2AB" }}>Marketplace B2B · Belgique</span>
           </div>
           <div style={{ display: "flex", gap: 24 }}>
             {[["Annuaire", "/directory"], ["RFQ", "/rfq"], ["Investissement", "/investment"], ["Tarifs", "/pricing"]].map(([label, href]) => (
-              <Link key={href} href={href} style={{ fontSize: 13, color: "#4A5568", textDecoration: "none" }}>{label}</Link>
+              <Link key={href} href={href} style={{ fontSize: 13, color: "#B8B2AB", textDecoration: "none" }}>{label}</Link>
             ))}
           </div>
         </div>
       </footer>
+
+      <style>{`
+        @keyframes ticker {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-33.333%); }
+        }
+      `}</style>
     </div>
   );
 }

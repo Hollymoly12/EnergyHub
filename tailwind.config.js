@@ -8,61 +8,71 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Surface layers
-        surface: {
-          DEFAULT: "#07090F",
-          1: "#0D1421",
-          2: "#131C2E",
-          3: "#1A2540",
-          4: "#243050",
-          border: "#1E2D45",
+        cream: "#FAFAF7",
+        ink: {
+          DEFAULT: "#0D0D0D",
+          2: "#3A3632",
+          3: "#6B6560",
         },
-        // Brand colors
-        brand: {
-          amber: "#F59E0B",
-          "amber-light": "#FCD34D",
-          "amber-dim": "#92600A",
-          green: "#22C55E",
-          "green-dim": "#14532D",
-          purple: "#818CF8",
-          "purple-dim": "#312E81",
-          red: "#EF4444",
-          "red-dim": "#7F1D1D",
+        surface: {
+          DEFAULT: "#F3F1EC",
+          2: "#EAE7E0",
+          3: "#E2DDD6",
+        },
+        forest: {
+          DEFAULT: "#16523A",
+          light: "#1D6B4C",
+          dark: "#0D3324",
+          muted: "#D4E8DF",
+        },
+        lime: {
+          DEFAULT: "#B8FF3C",
+          dark: "#8ACC2A",
+          muted: "#E8FAC8",
+        },
+        // Keep these for any remaining components
+        slate: {
+          400: "#94A3B8",
+          500: "#64748B",
+          600: "#475569",
+          700: "#334155",
+          800: "#1E293B",
+          900: "#0F172A",
         },
       },
       fontFamily: {
-        display: ["Syne", "sans-serif"],
-        body: ["DM Sans", "sans-serif"],
-        mono: ["Space Mono", "monospace"],
+        display: ["Bricolage Grotesque", "sans-serif"],
+        body: ["Plus Jakarta Sans", "sans-serif"],
+        mono: ["Fira Code", "monospace"],
       },
-      backgroundImage: {
-        "dot-grid": "radial-gradient(circle, #1A2540 1px, transparent 1px)",
-        "amber-glow": "radial-gradient(ellipse 60% 40% at 50% 0%, rgba(245,158,11,0.12) 0%, transparent 70%)",
-        "amber-glow-sm": "radial-gradient(ellipse 40% 30% at 50% 0%, rgba(245,158,11,0.08) 0%, transparent 70%)",
-      },
-      backgroundSize: {
-        "dot-24": "24px 24px",
-      },
-      animation: {
-        "pulse-slow": "pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-        "flow": "flow 3s ease-in-out infinite",
-        "fade-up": "fadeUp 0.6s ease forwards",
-      },
-      keyframes: {
-        flow: {
-          "0%, 100%": { opacity: "0.4", transform: "scaleX(0.95)" },
-          "50%": { opacity: "1", transform: "scaleX(1)" },
-        },
-        fadeUp: {
-          "0%": { opacity: "0", transform: "translateY(16px)" },
-          "100%": { opacity: "1", transform: "translateY(0)" },
-        },
+      borderRadius: {
+        "4xl": "2rem",
+        "5xl": "2.5rem",
       },
       boxShadow: {
-        "amber-glow": "0 0 30px rgba(245,158,11,0.15), 0 0 80px rgba(245,158,11,0.05)",
-        "amber-glow-sm": "0 0 12px rgba(245,158,11,0.2)",
-        "card": "0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3)",
-        "card-hover": "0 4px 20px rgba(0,0,0,0.5), 0 0 1px rgba(245,158,11,0.3)",
+        "card": "0 1px 3px rgba(13,13,13,0.06), 0 1px 2px rgba(13,13,13,0.04)",
+        "card-md": "0 4px 16px rgba(13,13,13,0.08), 0 1px 4px rgba(13,13,13,0.04)",
+        "card-lg": "0 8px 32px rgba(13,13,13,0.10), 0 2px 8px rgba(13,13,13,0.06)",
+        "lime": "0 0 20px rgba(184,255,60,0.3)",
+      },
+      animation: {
+        "ticker": "ticker 30s linear infinite",
+        "fade-up": "fadeUp 0.5s ease forwards",
+        "fade-in": "fadeIn 0.4s ease forwards",
+      },
+      keyframes: {
+        ticker: {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-50%)" },
+        },
+        fadeUp: {
+          "0%": { opacity: "0", transform: "translateY(12px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        fadeIn: {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
       },
     },
   },

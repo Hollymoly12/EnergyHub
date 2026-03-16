@@ -28,15 +28,15 @@ export default async function InvestmentPage() {
   }));
 
   return (
-    <div className="min-h-screen" style={{ background: "#080C14" }}>
+    <div className="min-h-screen" style={{ backgroundColor: "#FAFAF7" }}>
       <div className="max-w-7xl mx-auto px-6 py-12">
         {/* Header */}
         <div className="flex items-start justify-between mb-10">
           <div>
-            <div className="text-xs font-bold tracking-widest text-yellow-500 uppercase mb-3">
+            <div className="text-xs font-bold tracking-widest uppercase mb-3" style={{ color: "#16523A" }}>
               Investissement
             </div>
-            <h1 className="text-4xl font-bold text-white mb-3">
+            <h1 className="text-4xl font-bold mb-3" style={{ color: "#0D0D0D" }}>
               Opportunités d&apos;investissement
             </h1>
             <p className="text-slate-400 max-w-xl">

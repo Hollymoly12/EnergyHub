@@ -3,13 +3,13 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 
 const NAV_ITEMS = [
-  { href: "/dashboard",            icon: "⊞",  label: "Vue d'ensemble" },
-  { href: "/dashboard/profile",    icon: "◎",  label: "Mon profil" },
-  { href: "/dashboard/rfq",        icon: "≡",  label: "Mes RFQ" },
-  { href: "/dashboard/matches",    icon: "◈",  label: "Mes matchs" },
-  { href: "/dashboard/messages",   icon: "◻",  label: "Messages" },
-  { href: "/dashboard/investment", icon: "◆",  label: "Investissement" },
-  { href: "/dashboard/billing",    icon: "◇",  label: "Abonnement" },
+  { href: "/dashboard",            label: "Vue d'ensemble" },
+  { href: "/dashboard/profile",    label: "Mon profil" },
+  { href: "/dashboard/rfq",        label: "Mes RFQ" },
+  { href: "/dashboard/matches",    label: "Mes matchs" },
+  { href: "/dashboard/messages",   label: "Messages" },
+  { href: "/dashboard/investment", label: "Investissement" },
+  { href: "/dashboard/billing",    label: "Abonnement" },
 ];
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -30,79 +30,81 @@ export default async function DashboardLayout({ children }: { children: React.Re
     actor_type: string;
   } | null;
 
-  const planLabel = org?.subscription_plan === "pro" ? "Pro" :
-                    org?.subscription_plan === "enterprise" ? "Enterprise" : "Starter";
-  const planColor = org?.subscription_plan === "pro" ? "text-brand-amber" :
-                    org?.subscription_plan === "enterprise" ? "text-brand-purple" : "text-slate-500";
+  const planLabel = org?.subscription_plan === "pro" ? "Pro"
+    : org?.subscription_plan === "enterprise" ? "Enterprise"
+    : "Starter";
+
+  const planStyle = org?.subscription_plan === "pro"
+    ? { backgroundColor: "#D4E8DF", color: "#16523A" }
+    : org?.subscription_plan === "enterprise"
+    ? { backgroundColor: "#EDE9FE", color: "#5B21B6" }
+    : { backgroundColor: "#F3F1EC", color: "#6B6560" };
+
+  const displayName = member?.first_name
+    ? `${member.first_name} ${member.last_name || ""}`.trim()
+    : user.email?.split("@")[0] || "Utilisateur";
+
+  const initials = displayName.split(" ").map((w: string) => w[0]).join("").slice(0, 2).toUpperCase();
 
   return (
-    <div className="flex h-screen bg-surface-DEFAULT overflow-hidden" style={{ backgroundColor: "#07090F" }}>
+    <div style={{ display: "flex", height: "100vh", backgroundColor: "#FAFAF7", overflow: "hidden" }}>
 
       {/* ── Sidebar ── */}
-      <aside className="w-56 flex flex-col shrink-0" style={{ borderRight: "1px solid #1E2D45", backgroundColor: "#0D1421" }}>
+      <aside style={{ width: 220, display: "flex", flexDirection: "column", flexShrink: 0, backgroundColor: "#F3F1EC", borderRight: "1px solid #E2DDD6" }}>
 
         {/* Logo */}
-        <div className="h-14 flex items-center px-4" style={{ borderBottom: "1px solid #1E2D45" }}>
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-7 h-7 rounded-lg flex items-center justify-center text-sm font-bold"
-              style={{ background: "linear-gradient(135deg, #F59E0B, #D97706)", color: "#000" }}>
-              ⚡
+        <div style={{ height: 56, display: "flex", alignItems: "center", padding: "0 20px", borderBottom: "1px solid #E2DDD6" }}>
+          <Link href="/" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none" }}>
+            <div style={{ width: 28, height: 28, borderRadius: 8, backgroundColor: "#16523A", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M7 1L1 8h5.5L5 13l8-8H7.5L9 1z" fill="#B8FF3C" strokeLinejoin="round"/>
+              </svg>
             </div>
-            <span className="font-display font-bold text-sm text-white tracking-tight">EnergyHub</span>
+            <span style={{ fontFamily: "Bricolage Grotesque, sans-serif", fontWeight: 800, fontSize: 15, color: "#0D0D0D", letterSpacing: "-0.02em" }}>EnergyHub</span>
           </Link>
         </div>
 
         {/* Org badge */}
-        <div className="px-3 py-3" style={{ borderBottom: "1px solid #1E2D45" }}>
-          <div className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg" style={{ backgroundColor: "#131C2E" }}>
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center text-xs shrink-0 overflow-hidden"
-              style={{ backgroundColor: "#1A2540", border: "1px solid #243050" }}>
+        <div style={{ padding: "12px 12px 0" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", backgroundColor: "#fff", borderRadius: 12, border: "1px solid #E2DDD6" }}>
+            <div style={{ width: 32, height: 32, borderRadius: 8, backgroundColor: "#EAE7E0", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, color: "#16523A", flexShrink: 0, overflow: "hidden" }}>
               {org?.logo_url
-                ? <img src={org.logo_url} alt="" className="w-full h-full object-cover" />
-                : <span style={{ color: "#F59E0B" }}>⬡</span>
-              }
+                ? <img src={org.logo_url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                : (org?.name?.[0]?.toUpperCase() || "E")}
             </div>
-            <div className="min-w-0">
-              <div className="text-xs font-semibold text-white truncate font-display">
+            <div style={{ minWidth: 0 }}>
+              <div style={{ fontSize: 12, fontWeight: 600, color: "#0D0D0D", fontFamily: "Bricolage Grotesque, sans-serif", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                 {org?.name || "Mon organisation"}
               </div>
-              <div className={`text-[10px] font-bold tracking-widest mt-0.5 ${planColor}`} style={{ fontFamily: "Space Mono, monospace" }}>
-                {planLabel.toUpperCase()}
-              </div>
+              <span style={{ ...planStyle, fontSize: 10, fontWeight: 700, borderRadius: 100, padding: "1px 7px", fontFamily: "Fira Code, monospace", letterSpacing: "0.05em", display: "inline-block", marginTop: 2 }}>
+                {planLabel}
+              </span>
             </div>
           </div>
         </div>
 
         {/* Nav */}
-        <nav className="flex-1 px-2 py-3 overflow-y-auto space-y-px">
+        <nav style={{ flex: 1, padding: "8px 12px", overflowY: "auto", marginTop: 8 }}>
           {NAV_ITEMS.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-400 transition-all duration-150 group"
-              style={{ fontFamily: "DM Sans, sans-serif" }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.backgroundColor = "#131C2E";
-                (e.currentTarget as HTMLElement).style.color = "#fff";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.backgroundColor = "transparent";
-                (e.currentTarget as HTMLElement).style.color = "#94A3B8";
-              }}
+              style={{ display: "flex", alignItems: "center", padding: "8px 12px", borderRadius: 10, fontSize: 13, fontWeight: 500, color: "#3A3632", textDecoration: "none", fontFamily: "Plus Jakarta Sans, sans-serif", marginBottom: 1, transition: "background-color 0.15s, color 0.15s" }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = "#EAE7E0"; (e.currentTarget as HTMLElement).style.color = "#0D0D0D"; }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = "transparent"; (e.currentTarget as HTMLElement).style.color = "#3A3632"; }}
             >
-              <span className="text-base w-4 text-center shrink-0 opacity-70" style={{ fontFamily: "monospace" }}>{item.icon}</span>
-              <span>{item.label}</span>
+              {item.label}
             </Link>
           ))}
         </nav>
 
         {/* Upgrade nudge */}
         {(!org?.subscription_plan || org.subscription_plan === "free") && (
-          <div className="px-3 py-3" style={{ borderTop: "1px solid #1E2D45" }}>
-            <div className="rounded-lg p-3" style={{ background: "rgba(245,158,11,0.06)", border: "1px solid rgba(245,158,11,0.15)" }}>
-              <div className="text-xs font-bold text-yellow-500 mb-1" style={{ fontFamily: "Syne, sans-serif" }}>Passer au Pro</div>
-              <div className="text-xs mb-2.5" style={{ color: "#64748B" }}>RFQ illimités · Matching IA · Analytics</div>
-              <Link href="/pricing" className="btn-primary text-xs py-1.5 px-3 w-full block text-center">
+          <div style={{ padding: "12px", borderTop: "1px solid #E2DDD6" }}>
+            <div style={{ backgroundColor: "#16523A", borderRadius: 12, padding: "14px 16px" }}>
+              <div style={{ fontSize: 12, fontWeight: 700, color: "#B8FF3C", marginBottom: 4, fontFamily: "Bricolage Grotesque, sans-serif" }}>Passer au Pro</div>
+              <div style={{ fontSize: 11, color: "rgba(255,255,255,0.6)", marginBottom: 12, lineHeight: 1.5 }}>RFQ illimités · Matching IA · Analytics</div>
+              <Link href="/pricing" style={{ display: "block", textAlign: "center", backgroundColor: "#B8FF3C", color: "#0D3324", fontSize: 12, fontWeight: 700, padding: "7px 12px", borderRadius: 8, textDecoration: "none", fontFamily: "Plus Jakarta Sans, sans-serif" }}>
                 Voir les offres →
               </Link>
             </div>
@@ -110,22 +112,19 @@ export default async function DashboardLayout({ children }: { children: React.Re
         )}
 
         {/* User */}
-        <div className="px-3 py-3 flex items-center gap-2.5" style={{ borderTop: "1px solid #1E2D45" }}>
-          <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
-            style={{ backgroundColor: "#1A2540", border: "1px solid #243050", color: "#94A3B8" }}>
-            {member?.first_name?.[0]?.toUpperCase() || user.email?.[0]?.toUpperCase() || "?"}
+        <div style={{ padding: "12px 16px", borderTop: "1px solid #E2DDD6", display: "flex", alignItems: "center", gap: 10 }}>
+          <div style={{ width: 30, height: 30, borderRadius: "50%", backgroundColor: "#E2DDD6", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: "#3A3632", flexShrink: 0, fontFamily: "Fira Code, monospace" }}>
+            {initials}
           </div>
-          <div className="flex-1 min-w-0">
-            <div className="text-xs font-medium text-slate-300 truncate">
-              {member?.first_name ? `${member.first_name} ${member.last_name || ""}`.trim() : user.email?.split("@")[0]}
-            </div>
-            <div className="text-[10px] truncate" style={{ color: "#4A5568" }}>{user.email}</div>
+          <div style={{ minWidth: 0 }}>
+            <div style={{ fontSize: 12, fontWeight: 600, color: "#0D0D0D", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{displayName}</div>
+            <div style={{ fontSize: 10, color: "#B8B2AB", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user.email}</div>
           </div>
         </div>
       </aside>
 
-      {/* ── Main content ── */}
-      <main className="flex-1 overflow-y-auto" style={{ backgroundColor: "#07090F" }}>
+      {/* ── Main ── */}
+      <main style={{ flex: 1, overflowY: "auto", backgroundColor: "#FAFAF7" }}>
         {children}
       </main>
     </div>

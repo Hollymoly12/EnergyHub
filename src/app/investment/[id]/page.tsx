@@ -75,7 +75,7 @@ export default async function DealPage({
   };
 
   return (
-    <div className="min-h-screen" style={{ background: "#080C14" }}>
+    <div className="min-h-screen" style={{ backgroundColor: "#FAFAF7" }}>
       <div className="max-w-4xl mx-auto px-6 py-12">
         {/* Breadcrumb */}
         <Link href="/investment" className="text-slate-500 text-sm hover:text-slate-300 mb-6 inline-block">
@@ -87,11 +87,11 @@ export default async function DealPage({
           <div className="flex items-start justify-between gap-4 flex-wrap mb-3">
             <div>
               {deal.project_type && (
-                <span className="text-xs font-bold text-yellow-500 uppercase tracking-widest block mb-2">
+                <span className="text-xs font-bold uppercase tracking-widest block mb-2" style={{ color: "#16523A" }}>
                   {PROJECT_TYPE_LABELS[deal.project_type] || deal.project_type}
                 </span>
               )}
-              <h1 className="text-3xl font-bold text-white">{deal.title}</h1>
+              <h1 className="text-3xl font-bold" style={{ color: "#0D0D0D" }}>{deal.title}</h1>
             </div>
             {deal.requires_nda && (
               <span className="px-3 py-1 rounded-full text-xs font-bold border border-orange-500/30 text-orange-400 bg-orange-500/10 whitespace-nowrap">
