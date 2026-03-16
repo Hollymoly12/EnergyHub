@@ -62,10 +62,19 @@ function formatAmount(amount: number | null): string {
   return `${amount.toLocaleString("fr-FR")} €`;
 }
 
+// ai_risk_score: 0=low risk, 100=high risk
+// Grade A+ = risk ≤ 20, B = 21-40, C = 41+
+const FUNDING_TYPES = ["equity", "debt", "convertible"];
+const FUNDING_TYPE_LABELS: Record<string, string> = {
+  equity: "Equity", debt: "Dette", convertible: "Convertible",
+};
+
 export default function ProjectsClient({ deals }: { deals: Deal[] }) {
   const [search, setSearch] = useState("");
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const [selectedRegions, setSelectedRegions] = useState<string[]>([]);
+  const [selectedFundingType, setSelectedFundingType] = useState("");
+  const [maxRiskScore, setMaxRiskScore] = useState(100);
   const [sortBy, setSortBy] = useState("recent");
   const [page, setPage] = useState(1);
 
@@ -96,10 +105,16 @@ export default function ProjectsClient({ deals }: { deals: Deal[] }) {
     if (selectedRegions.length > 0) {
       list = list.filter((d) => selectedRegions.some(r => d.location?.includes(r)));
     }
-    if (sortBy === "score") list.sort((a, b) => (b.ai_risk_score ?? 0) - (a.ai_risk_score ?? 0));
+    if (selectedFundingType) {
+      list = list.filter((d) => d.funding_type === selectedFundingType);
+    }
+    if (maxRiskScore < 100) {
+      list = list.filter((d) => (d.ai_risk_score ?? 0) <= maxRiskScore);
+    }
+    if (sortBy === "score") list.sort((a, b) => (a.ai_risk_score ?? 100) - (b.ai_risk_score ?? 100));
     else if (sortBy === "funding") list.sort((a, b) => (b.funding_amount ?? 0) - (a.funding_amount ?? 0));
     return list;
-  }, [deals, search, selectedTypes, selectedRegions, sortBy]);
+  }, [deals, search, selectedTypes, selectedRegions, selectedFundingType, maxRiskScore, sortBy]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const currentPage = Math.min(page, totalPages);
@@ -178,15 +193,19 @@ export default function ProjectsClient({ deals }: { deals: Deal[] }) {
             </div>
           </div>
 
-          {/* Statut */}
+          {/* Funding type */}
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3">Statut</p>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3">Type de financement</p>
             <div className="relative">
-              <select className="w-full appearance-none bg-white border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-600 outline-none pr-8">
-                <option>Tous les statuts</option>
-                <option>Construction</option>
-                <option>Planification</option>
-                <option>Opérationnel</option>
+              <select
+                value={selectedFundingType}
+                onChange={(e) => { setSelectedFundingType(e.target.value); setPage(1); }}
+                className="w-full appearance-none bg-white border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-600 outline-none pr-8"
+              >
+                <option value="">Tous les types</option>
+                <option value="equity">Equity</option>
+                <option value="debt">Dette</option>
+                <option value="convertible">Convertible</option>
               </select>
               <span className="material-symbols-outlined text-slate-400 text-sm absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none">expand_more</span>
             </div>
@@ -216,7 +235,14 @@ export default function ProjectsClient({ deals }: { deals: Deal[] }) {
           {/* Grade d'investissement */}
           <div>
             <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3">Grade d&apos;investissement</p>
-            <input type="range" min="0" max="100" defaultValue="60" className="w-full accent-primary" />
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value={maxRiskScore}
+              onChange={(e) => { setMaxRiskScore(Number(e.target.value)); setPage(1); }}
+              className="w-full accent-primary"
+            />
             <div className="flex justify-between text-[10px] text-slate-400 mt-1">
               <span>A+ (Premium)</span>
               <span>C (Risque)</span>
