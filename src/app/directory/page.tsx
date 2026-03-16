@@ -22,7 +22,6 @@ export default async function DirectoryPage() {
     .order("rating", { ascending: false })
     .range(0, 23);
 
-  console.log("[directory] count:", count, "error:", error?.message);
 
   const actors = data ?? [];
   const total = count ?? 0;
@@ -80,6 +79,11 @@ export default async function DirectoryPage() {
             Ajouter mon entreprise
           </Link>
         </div>
+
+        {/* DEBUG — à supprimer */}
+        <pre className="bg-red-50 border border-red-200 rounded p-4 text-xs mb-6 text-red-800">
+          count: {total} | error: {error?.message ?? "none"} | actors: {actors.length}
+        </pre>
 
         <DirectoryClient
           initialActors={actors || []}
