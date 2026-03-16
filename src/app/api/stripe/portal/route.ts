@@ -29,7 +29,7 @@ export async function POST(_req: NextRequest) {
       `${appUrl}/dashboard/billing`
     );
 
-    return NextResponse.redirect(url);
+    return NextResponse.json({ url });
   } catch (error) {
     console.error("Portal error:", error);
     return NextResponse.json({ error: "Server error" }, { status: 500 });
