@@ -66,7 +66,7 @@ export default async function InvestmentPage() {
   const totalFunding = deals.reduce((sum, d) => sum + (d.funding_amount ?? 0), 0);
 
   return (
-    <div className="min-h-screen bg-background-light" className="font-sans">
+    <div className="min-h-screen bg-background-light font-sans">
       {/* Navbar */}
       <nav className="sticky top-0 z-50 bg-primary border-b border-white/10 px-6 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-6">
