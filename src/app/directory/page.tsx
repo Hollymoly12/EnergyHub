@@ -11,13 +11,20 @@ export default async function DirectoryPage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_APP_URL}/api/actors?limit=24&sort=rating`,
-    { cache: "no-store" }
-  );
-  const { actors, total } = res.ok
-    ? await res.json()
-    : { actors: [], total: 0 };
+  const { data, count } = await supabase
+    .from("organizations")
+    .select(`
+      id, name, slug, actor_type, short_description, city, region,
+      logo_url, tags, technologies, certifications,
+      is_verified, subscription_plan, rating, reviews_count,
+      profile_views, founded_year, team_size
+    `, { count: "exact" })
+    .order("subscription_plan", { ascending: false })
+    .order("rating", { ascending: false })
+    .range(0, 23);
+
+  const actors = data ?? [];
+  const total = count ?? 0;
 
   return (
     <div className="min-h-screen bg-background-light">
