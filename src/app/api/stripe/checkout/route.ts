@@ -21,6 +21,9 @@ export async function POST(req: NextRequest) {
       stripe_customer_id: string | null;
       subscription_plan: string;
     };
+    if (!org) {
+      return NextResponse.json({ error: "Organization not found" }, { status: 404 });
+    }
     const orgId = member.organization_id as string;
 
     if (org.subscription_plan !== "free") {
@@ -38,21 +41,32 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Price not configured" }, { status: 500 });
     }
 
+    if (!user.email) {
+      return NextResponse.json({ error: "User email not found" }, { status: 400 });
+    }
+
     const customerId = await getOrCreateStripeCustomer({
       organizationId: orgId,
       orgName: org.name,
-      email: user.email!,
+      email: user.email,
       existingCustomerId: org.stripe_customer_id || undefined,
     });
 
     if (!org.stripe_customer_id) {
-      await supabase
+      const { error: updateError } = await supabase
         .from("organizations")
         .update({ stripe_customer_id: customerId })
         .eq("id", orgId);
+      if (updateError) {
+        console.error("Failed to persist stripe_customer_id:", updateError);
+        return NextResponse.json({ error: "Server error" }, { status: 500 });
+      }
     }
 
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL!;
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+    if (!appUrl) {
+      return NextResponse.json({ error: "App URL not configured" }, { status: 500 });
+    }
     const url = await createCheckoutSession({
       customerId,
       priceId,
