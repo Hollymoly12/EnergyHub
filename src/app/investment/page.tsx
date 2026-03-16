@@ -1,26 +1,12 @@
 // src/app/investment/page.tsx
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
+import ProjectsClient from "./ProjectsClient";
 
 export const metadata = {
-  title: "Investissement — EnergyHub",
-  description: "Découvrez les opportunités d'investissement dans la transition énergétique belge.",
+  title: "Annuaire des Projets — EnergyHub",
+  description: "Explorez l'écosystème de la transition énergétique belge.",
 };
-
-const PROJECT_TYPE_LABELS: Record<string, string> = {
-  solar: "Solaire",
-  wind: "Éolien",
-  storage: "Stockage",
-  efficiency: "Efficacité énergétique",
-  other: "Autre",
-};
-
-function formatAmount(amount: number | null): string {
-  if (!amount) return "N/A";
-  if (amount >= 1_000_000) return `${(amount / 1_000_000).toFixed(1)} M€`;
-  if (amount >= 1_000) return `${(amount / 1_000).toFixed(0)} K€`;
-  return `${amount.toLocaleString("fr-FR")} €`;
-}
 
 interface DealOrg {
   name: string;
@@ -38,6 +24,11 @@ interface Deal {
   published_at: string | null;
   interests_count: number | null;
   ai_score: number | null;
+  status: string | null;
+  capacity_mw: number | null;
+  efficiency_pct: number | null;
+  progress_pct: number | null;
+  region: string | null;
   organizations: DealOrg | null;
 }
 
@@ -48,348 +39,144 @@ export default async function InvestmentPage() {
     .from("deals")
     .select(`
       id, title, description, project_type, funding_amount, funding_type,
-      irr_target, published_at, interests_count, ai_score,
+      irr_target, published_at, interests_count, ai_score, status,
+      capacity_mw, efficiency_pct, progress_pct, region,
       organizations (name, city)
     `)
     .eq("status", "published")
     .order("published_at", { ascending: false });
 
-  const deals: Deal[] = (rawDeals ?? []).map((deal: Record<string, unknown>) => ({
+  const deals: Deal[] = ((rawDeals ?? []) as Record<string, unknown>[]).map((deal) => ({
     ...deal,
     organizations: Array.isArray(deal.organizations)
       ? (deal.organizations[0] ?? null)
       : (deal.organizations as DealOrg | null),
   })) as Deal[];
 
-  // Mock stats for the hero dashboard
-  const totalDeals = deals.length;
-  const totalFunding = deals.reduce((sum, d) => sum + (d.funding_amount ?? 0), 0);
-
   return (
     <div className="min-h-screen bg-background-light font-sans">
-      {/* Navbar */}
-      <nav className="sticky top-0 z-50 bg-primary border-b border-white/10 px-6 py-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-6">
-          {/* Logo */}
-          <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-accent text-2xl">bolt</span>
-            <span className="text-white font-extrabold text-xl tracking-tight">EnergyHub</span>
-          </div>
 
-          {/* Nav links */}
-          <div className="hidden md:flex items-center gap-6 text-sm font-medium text-white/70">
-            <Link href="/" className="hover:text-white transition-colors">Marketplace</Link>
-            <Link href="/directory" className="hover:text-white transition-colors">Projets</Link>
+      {/* ── Navbar ── */}
+      <nav className="sticky top-0 z-50 bg-white border-b border-slate-100 px-6 py-4">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-6">
+          <Link href="/" className="flex items-center gap-2">
+            <span className="material-symbols-outlined text-2xl" style={{ color: "#16523A" }}>bolt</span>
+            <span className="font-extrabold text-xl tracking-tight" style={{ color: "#16523A" }}>EnergyHub</span>
+          </Link>
+
+          <div className="hidden md:flex items-center gap-7 text-sm font-medium text-slate-500">
+            <Link href="/" className="hover:text-primary transition-colors">Marketplace</Link>
+            <Link href="/directory" className="hover:text-primary transition-colors">Companies</Link>
             <Link
               href="/investment"
-              className="text-white border-b-2 border-accent pb-0.5"
+              className="font-bold border-b-2 pb-0.5 transition-colors"
+              style={{ color: "#16523A", borderColor: "#16523A" }}
             >
-              Investissements
+              Projects
             </Link>
-            <Link href="/dashboard" className="hover:text-white transition-colors">Insights</Link>
+            <Link href="/rfq" className="hover:text-primary transition-colors">RFQ</Link>
           </div>
 
-          {/* Right actions */}
           <div className="flex items-center gap-3">
-            <div className="hidden md:flex items-center gap-2 bg-white/10 rounded-xl px-3 py-2 text-sm text-white/60">
-              <span className="material-symbols-outlined text-base">search</span>
-              <span>Rechercher...</span>
-            </div>
-            <button className="relative text-white/70 hover:text-white transition-colors">
+            <button className="text-slate-400 hover:text-primary transition-colors">
               <span className="material-symbols-outlined text-xl">notifications</span>
             </button>
-            <div className="size-8 rounded-full bg-accent flex items-center justify-center">
-              <span className="material-symbols-outlined text-primary text-base">person</span>
+            <div className="size-8 rounded-full bg-slate-200 overflow-hidden flex items-center justify-center">
+              <span className="material-symbols-outlined text-slate-500 text-base">person</span>
             </div>
           </div>
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-6 py-10">
-        {/* Dashboard Summary Hero */}
-        <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
-          <h2
-            className="text-3xl font-extrabold text-primary"
-           
-          >
-            Tableau de Bord
-          </h2>
-          <Link
-            href="/investment/submit"
-            className="flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-xl font-semibold text-sm hover:bg-[#1a6347] transition-colors"
-          >
-            <span className="material-symbols-outlined text-base">add</span>
-            Nouvel Investissement
-          </Link>
+      <div className="max-w-7xl mx-auto px-6 py-12">
+
+        {/* ── Hero heading ── */}
+        <div className="mb-10">
+          <h1 className="text-4xl font-extrabold mb-3 font-display" style={{ color: "#16523A" }}>
+            Annuaire des Projets
+          </h1>
+          <p className="text-slate-500 text-base max-w-xl leading-relaxed">
+            Explorez l&apos;écosystème de la transition énergétique belge. Trouvez des opportunités
+            d&apos;investissement, suivez le progrès des infrastructures critiques et collaborez sur des
+            projets d&apos;avenir.
+          </p>
         </div>
 
-        {/* Stat Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-10">
-          {/* Total Investi */}
-          <div className="bg-white rounded-2xl border border-slate-100 p-6 flex items-start justify-between">
-            <div>
-              <p className="text-sm text-slate-500 mb-1">Total en Financement</p>
-              <p className="text-2xl font-extrabold text-primary">
-                {formatAmount(totalFunding)}
-              </p>
-              <span className="inline-flex items-center gap-1 mt-2 bg-green-50 text-green-700 text-xs font-bold px-2 py-0.5 rounded-lg">
-                <span className="material-symbols-outlined text-xs">trending_up</span>
-                Actif
-              </span>
-            </div>
-            <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center">
-              <span className="material-symbols-outlined text-primary">account_balance_wallet</span>
-            </div>
-          </div>
+        {/* Client: search + filters + grid + pagination */}
+        <ProjectsClient deals={deals} />
 
-          {/* ROI Portefeuille */}
-          <div className="bg-white rounded-2xl border border-slate-100 p-6 flex items-start justify-between">
-            <div>
-              <p className="text-sm text-slate-500 mb-1">ROI Moyen Cible</p>
-              <p className="text-2xl font-extrabold text-primary">
-                {deals.length > 0 && deals.some((d) => d.irr_target)
-                  ? `${(
-                      deals
-                        .filter((d) => d.irr_target)
-                        .reduce((sum, d) => sum + (d.irr_target ?? 0), 0) /
-                      deals.filter((d) => d.irr_target).length
-                    ).toFixed(1)}%`
-                  : "—"}
-              </p>
-              <span className="inline-flex items-center gap-1 mt-2 bg-slate-50 text-slate-600 text-xs font-bold px-2 py-0.5 rounded-lg">
-                IRR annuel
-              </span>
-            </div>
-            <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center">
-              <span className="material-symbols-outlined text-primary">show_chart</span>
-            </div>
-          </div>
-
-          {/* Projets Actifs */}
-          <div className="bg-white rounded-2xl border border-slate-100 p-6 flex items-start justify-between">
-            <div>
-              <p className="text-sm text-slate-500 mb-1">Projets Actifs</p>
-              <p className="text-2xl font-extrabold text-primary">
-                {totalDeals}
-              </p>
-              <span className="inline-flex items-center gap-1 mt-2 bg-accent/30 text-primary text-xs font-bold px-2 py-0.5 rounded-lg">
-                <span className="material-symbols-outlined text-xs">electric_bolt</span>
-                En cours
-              </span>
-            </div>
-            <div className="size-12 rounded-xl bg-accent/30 flex items-center justify-center">
-              <span className="material-symbols-outlined text-primary">electric_bolt</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Main Content */}
-        <div className="flex gap-8 items-start">
-          {/* Project Cards Section */}
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center justify-between mb-5 flex-wrap gap-3">
-              <h3
-                className="text-xl font-extrabold text-primary"
-               
-              >
-                Marketplace des Projets
-              </h3>
-              <div className="flex items-center gap-2 flex-wrap">
-                {["Tous", "Solaire", "Éolien", "Stockage", "Efficacité"].map((filter) => (
-                  <button
-                    key={filter}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-colors ${
-                      filter === "Tous"
-                        ? "bg-primary text-white border-primary"
-                        : "bg-white text-slate-600 border-slate-200 hover:border-primary hover:text-primary"
-                    }`}
-                  >
-                    {filter}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {deals.length === 0 ? (
-              <div className="bg-white rounded-2xl border border-slate-100 p-12 text-center">
-                <span className="material-symbols-outlined text-4xl text-slate-300 mb-3 block">inbox</span>
-                <p className="text-slate-500 font-medium">Aucun projet disponible pour le moment.</p>
-                <p className="text-slate-400 text-sm mt-1">Revenez bientôt ou soumettez votre deal.</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                {deals.map((deal) => {
-                  const progress = Math.min(
-                    100,
-                    Math.round(((deal.interests_count ?? 0) / 10) * 100)
-                  );
-                  return (
-                    <Link
-                      key={deal.id}
-                      href={`/investment/${deal.id}`}
-                      className="block bg-white rounded-2xl border border-slate-100 overflow-hidden hover:shadow-md transition-shadow group"
-                    >
-                      {/* Image placeholder */}
-                      <div className="relative h-48 w-full bg-gradient-to-br from-slate-100 to-slate-200 overflow-hidden">
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <span className="material-symbols-outlined text-5xl text-slate-300">
-                            {deal.project_type === "solar"
-                              ? "wb_sunny"
-                              : deal.project_type === "wind"
-                              ? "air"
-                              : deal.project_type === "storage"
-                              ? "battery_charging_full"
-                              : "bolt"}
-                          </span>
-                        </div>
-                        {/* Category badge */}
-                        {deal.project_type && (
-                          <span className="absolute top-4 left-4 bg-accent text-primary text-xs font-bold uppercase tracking-wide px-2.5 py-1 rounded-lg">
-                            {PROJECT_TYPE_LABELS[deal.project_type] ?? deal.project_type}
-                          </span>
-                        )}
-                        {/* IA Score badge */}
-                        {deal.ai_score != null && (
-                          <span className="absolute top-4 right-4 flex items-center gap-1 bg-primary text-white text-xs font-bold px-2.5 py-1 rounded-xl">
-                            <span className="material-symbols-outlined text-xs">psychology</span>
-                            {deal.ai_score}/100
-                          </span>
-                        )}
-                      </div>
-
-                      {/* Card content */}
-                      <div className="p-5">
-                        <h4
-                          className="text-base font-bold text-primary mb-1 group-hover:underline line-clamp-2"
-                         
-                        >
-                          {deal.title}
-                        </h4>
-
-                        {deal.organizations?.city && (
-                          <p className="flex items-center gap-1 text-xs text-slate-500 mb-3">
-                            <span className="material-symbols-outlined text-xs">location_on</span>
-                            {deal.organizations.city}
-                            {deal.organizations.name ? ` · ${deal.organizations.name}` : ""}
-                          </p>
-                        )}
-
-                        <div className="grid grid-cols-2 gap-3 text-sm mb-4">
-                          <div>
-                            <p className="text-xs text-slate-400 mb-0.5">ROI Cible</p>
-                            <p className="font-bold text-primary">
-                              {deal.irr_target != null ? `${deal.irr_target}%` : "—"}
-                            </p>
-                          </div>
-                          <div>
-                            <p className="text-xs text-slate-400 mb-0.5">Objectif</p>
-                            <p className="font-bold text-primary">{formatAmount(deal.funding_amount)}</p>
-                          </div>
-                        </div>
-
-                        {/* Progress bar */}
-                        <div>
-                          <div className="flex justify-between text-xs text-slate-400 mb-1">
-                            <span>{deal.interests_count ?? 0} intéressés</span>
-                            <span>{progress}%</span>
-                          </div>
-                          <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
-                            <div
-                              className="h-full bg-primary rounded-full transition-all"
-                              style={{ width: `${progress}%` }}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </Link>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-
-          {/* IA Insights Sidebar */}
-          <div className="w-96 shrink-0 space-y-5">
-            {/* IA Insights */}
-            <div className="bg-primary rounded-2xl p-6 text-white">
-              <div className="flex items-center gap-2 mb-5">
-                <span className="material-symbols-outlined text-accent">auto_awesome</span>
-                <h3
-                  className="font-extrabold text-lg"
-                 
-                >
-                  IA Insights
-                </h3>
-              </div>
-
-              <div className="space-y-3 mb-5">
-                {/* Insight 1 */}
-                <div className="bg-white/10 p-4 rounded-xl">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="material-symbols-outlined text-accent text-base">trending_up</span>
-                    <span className="text-xs font-bold text-white/80 uppercase tracking-wide">
-                      Secteur Tendance
-                    </span>
-                  </div>
-                  <p className="text-sm text-white/80">
-                    Le solaire distribué connaît une croissance de 34% en Belgique ce trimestre.
-                    Forte demande industrielle.
-                  </p>
-                </div>
-
-                {/* Insight 2 */}
-                <div className="bg-white/10 p-4 rounded-xl">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="material-symbols-outlined text-accent text-base">shield</span>
-                    <span className="text-xs font-bold text-white/80 uppercase tracking-wide">
-                      Évaluation Risque
-                    </span>
-                  </div>
-                  <p className="text-sm text-white/80">
-                    Environnement réglementaire stable. La directive EU ETS renforce la rentabilité
-                    des projets bas-carbone.
-                  </p>
-                </div>
-              </div>
-
-              <button className="w-full bg-accent text-primary font-bold text-sm py-2.5 rounded-xl hover:bg-[#a8ef2c] transition-colors flex items-center justify-center gap-2">
-                <span className="material-symbols-outlined text-base">description</span>
-                Rapport Complet
-              </button>
-            </div>
-
-            {/* Opportunités d'Arbitrage */}
-            <div className="bg-white rounded-2xl border border-slate-100 p-6">
-              <h3
-                className="font-extrabold text-base text-primary mb-4"
-               
-              >
-                Opportunités d&apos;Arbitrage
-              </h3>
-              <div className="space-y-3">
-                {[
-                  { label: "Solaire + Stockage", delta: "+2.4% IRR", icon: "wb_sunny" },
-                  { label: "ESCO B2B", delta: "+1.8% IRR", icon: "factory" },
-                  { label: "Efficacité industrielle", delta: "+3.1% IRR", icon: "precision_manufacturing" },
-                ].map((opp) => (
-                  <div
-                    key={opp.label}
-                    className="flex items-center justify-between p-3 rounded-xl bg-background-light border border-slate-100"
-                  >
-                    <div className="flex items-center gap-2">
-                      <span className="material-symbols-outlined text-primary text-base">{opp.icon}</span>
-                      <span className="text-sm font-medium text-slate-700">{opp.label}</span>
-                    </div>
-                    <span className="text-xs font-bold text-green-700 bg-green-50 px-2 py-0.5 rounded-lg">
-                      {opp.delta}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
+
+      {/* ── Footer ── */}
+      <footer className="mt-20 py-12 px-6" style={{ backgroundColor: "#16523A" }}>
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-10">
+            {/* Brand */}
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <span className="material-symbols-outlined text-2xl" style={{ color: "#B8FF3C" }}>bolt</span>
+                <span className="font-extrabold text-xl text-white">EnergyHub</span>
+              </div>
+              <p className="text-white/60 text-sm leading-relaxed">
+                La plateforme leader pour le financement et le développement des projets énergétiques durables en Belgique.
+              </p>
+              <div className="flex items-center gap-3 mt-4">
+                <span className="material-symbols-outlined text-white/40 text-lg cursor-pointer hover:text-white/70 transition-colors">language</span>
+                <span className="material-symbols-outlined text-white/40 text-lg cursor-pointer hover:text-white/70 transition-colors">share</span>
+                <span className="material-symbols-outlined text-white/40 text-lg cursor-pointer hover:text-white/70 transition-colors">alternate_email</span>
+              </div>
+            </div>
+
+            {/* Navigation */}
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-widest mb-4" style={{ color: "#B8FF3C" }}>Navigation</p>
+              <ul className="space-y-2.5 text-sm text-white/60">
+                {["Marketplace", "Annuaire Projets", "Entreprises", "Appels d'offres"].map((l) => (
+                  <li key={l}><a href="#" className="hover:text-white transition-colors">{l}</a></li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Ressources */}
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-widest mb-4" style={{ color: "#B8FF3C" }}>Ressources</p>
+              <ul className="space-y-2.5 text-sm text-white/60">
+                {["Documentation API", "Guide Investisseur", "Rapports du Marché", "Blog & News"].map((l) => (
+                  <li key={l}><a href="#" className="hover:text-white transition-colors">{l}</a></li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Newsletter */}
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-widest mb-4" style={{ color: "#B8FF3C" }}>Newsletter</p>
+              <p className="text-white/60 text-sm mb-4">Recevez les nouveaux projets directement dans votre boite mail.</p>
+              <div className="flex gap-2">
+                <input
+                  type="email"
+                  placeholder="Email"
+                  className="flex-1 bg-white/10 border border-white/20 rounded-xl px-3 py-2 text-sm text-white placeholder-white/40 outline-none focus:border-accent"
+                />
+                <button
+                  className="size-10 rounded-xl flex items-center justify-center shrink-0 hover:opacity-90 transition-opacity"
+                  style={{ backgroundColor: "#B8FF3C" }}
+                >
+                  <span className="material-symbols-outlined text-base" style={{ color: "#16523A" }}>arrow_forward</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="border-t border-white/10 pt-6 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-white/40">
+            <p>© 2024 EnergyHub Platform. Tous droits réservés.</p>
+            <div className="flex items-center gap-5">
+              {["Mentions Légales", "Confidentialité", "Cookies"].map((l) => (
+                <a key={l} href="#" className="hover:text-white/70 transition-colors">{l}</a>
+              ))}
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
