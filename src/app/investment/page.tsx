@@ -4,8 +4,8 @@ import ProjectsClient from "./ProjectsClient";
 import PublicNavbar from "@/components/PublicNavbar";
 
 export const metadata = {
-  title: "Annuaire des Projets — EnergyHub",
-  description: "Explorez l'écosystème de la transition énergétique belge.",
+  title: "Deals & Levées de Fonds — EnergyHub",
+  description: "Projets en recherche de financement et opportunités d'investissement dans la transition énergétique belge.",
 };
 
 interface DealOrg {
@@ -64,7 +64,7 @@ export default async function InvestmentPage() {
         {/* ── Hero heading ── */}
         <div className="mb-10">
           <h1 className="text-4xl font-extrabold mb-3 font-display" style={{ color: "#16523A" }}>
-            Annuaire des Projets
+            Deals & Levées de Fonds
           </h1>
           <p className="text-slate-500 text-base max-w-xl leading-relaxed">
             Explorez l&apos;écosystème de la transition énergétique belge. Trouvez des opportunités

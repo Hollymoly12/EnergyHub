@@ -3,8 +3,8 @@ import Link from "next/link";
 
 const NAV_LINKS = [
   { label: "Annuaire", href: "/directory" },
-  { label: "Projets", href: "/projets" },
-  { label: "Investissements", href: "/investment" },
+  { label: "Appels d'offres", href: "/projets" },
+  { label: "Financement", href: "/investment" },
 ];
 
 interface PublicNavbarProps {
