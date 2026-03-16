@@ -38,7 +38,7 @@ BEGIN
    NOW() + INTERVAL '45 days',
    'Liège, Wallonie',
    'published', NOW() - INTERVAL '3 days',
-   ARRAY['installer'],
+   ARRAY['installer']::actor_type[],
    ARRAY['solaire', 'toiture industrielle', 'PV', '2MWc', 'maintenance'],
    4),
 
@@ -51,7 +51,7 @@ BEGIN
    NOW() + INTERVAL '30 days',
    'Liège, Wallonie',
    'published', NOW() - INTERVAL '7 days',
-   ARRAY['software_editor'],
+   ARRAY['software_editor']::actor_type[],
    ARRAY['EMS', 'logiciel', 'multi-sites', 'SCADA', 'demand response'],
    2),
 
@@ -64,7 +64,7 @@ BEGIN
    NOW() + INTERVAL '21 days',
    'Namur, Wallonie',
    'responses_open', NOW() - INTERVAL '10 days',
-   ARRAY['esco'],
+   ARRAY['esco']::actor_type[],
    ARRAY['audit', 'CPE', 'tertiaire', 'performance', 'ISO 50001'],
    6),
 
@@ -77,7 +77,7 @@ BEGIN
    NOW() + INTERVAL '14 days',
    'Wallonie & Flandre',
    'under_review', NOW() - INTERVAL '15 days',
-   ARRAY['energy_provider'],
+   ARRAY['energy_provider']::actor_type[],
    ARRAY['électricité verte', 'PPA', 'B2B', 'garanties origine', 'contrat-cadre'],
    9),
 
@@ -90,7 +90,7 @@ BEGIN
    NOW() + INTERVAL '60 days',
    'Gand, Flandre',
    'published', NOW() - INTERVAL '1 day',
-   ARRAY['greentech', 'software_editor'],
+   ARRAY['greentech', 'software_editor']::actor_type[],
    ARRAY['BESS', 'stockage', 'LFP', 'batteries', '5MWh', 'intégration solaire'],
    1),
 
@@ -103,7 +103,7 @@ BEGIN
    NOW() + INTERVAL '90 days',
    'Wallonie, Belgique',
    'published', NOW() - INTERVAL '2 days',
-   ARRAY['industrial', 'investor', 'energy_provider'],
+   ARRAY['industrial', 'investor', 'energy_provider']::actor_type[],
    ARRAY['hydrogène', 'H2 vert', 'électrolyse', 'consortium', 'pilote'],
    3),
 
@@ -116,7 +116,7 @@ BEGIN
    NOW() + INTERVAL '35 days',
    'Belgique (national)',
    'published', NOW() - INTERVAL '5 days',
-   ARRAY['installer', 'software_editor'],
+   ARRAY['installer', 'software_editor']::actor_type[],
    ARRAY['VE', 'recharge', 'OCPP', 'CPO', 'mobilité électrique', 'multi-sites'],
    7);
 
