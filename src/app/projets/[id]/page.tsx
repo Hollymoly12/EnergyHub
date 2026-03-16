@@ -99,7 +99,7 @@ export default async function RFQDetailPage({ params }: { params: Promise<{ id: 
 
         {/* Breadcrumb */}
         <div className="mb-6">
-          <Link href="/rfq" className="flex items-center gap-1.5 text-sm text-slate-400 hover:text-primary transition-colors w-fit">
+          <Link href="/projets" className="flex items-center gap-1.5 text-sm text-slate-400 hover:text-primary transition-colors w-fit">
             <span className="material-symbols-outlined text-base">arrow_back</span>
             Retour aux appels d&apos;offres
           </Link>

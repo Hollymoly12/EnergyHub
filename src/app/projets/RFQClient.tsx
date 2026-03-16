@@ -145,7 +145,7 @@ function RFQCard({ rfq }: { rfq: RFQ }) {
 
       {/* CTA */}
       <Link
-        href={`/rfq/${rfq.id}`}
+        href={`/projets/${rfq.id}`}
         className="flex items-center justify-center gap-1.5 mt-auto px-4 py-2.5 rounded-xl text-sm font-bold border transition-colors hover:bg-slate-50"
         style={{ borderColor: "#16523A", color: "#16523A" }}
       >
@@ -351,7 +351,7 @@ export default function RFQClient({ initialRFQs, totalCount, isLoggedIn }: Props
           </span>
           {isLoggedIn && (
             <Link
-              href="/rfq/create"
+              href="/projets/create"
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm text-white transition-opacity hover:opacity-90"
               style={{ backgroundColor: "#16523A" }}
             >

@@ -197,7 +197,7 @@ export default function RFQCreateForm() {
     } finally {
       setLoadingAction(null);
     }
-    if (redirectId) router.push(`/rfq/${redirectId}`);
+    if (redirectId) router.push(`/projets/${redirectId}`);
   };
 
   const inputClass = "w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all";

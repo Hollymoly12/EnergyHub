@@ -10,7 +10,7 @@ export default async function RFQCreatePage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) redirect("/login?redirect=/rfq/create");
+  if (!user) redirect("/login?redirect=/projets/create");
 
   const { data: member } = await supabase
     .from("members")

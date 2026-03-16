@@ -83,5 +83,5 @@ export async function submitResponse(rfqId: string, formData: {
     }
     throw new Error(error.message);
   }
-  revalidatePath(`/rfq/${rfqId}`);
+  revalidatePath(`/projets/${rfqId}`);
 }
