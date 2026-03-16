@@ -33,12 +33,12 @@ export default async function DirectoryPage() {
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <div className="flex items-center gap-10">
             <Link href="/" className="flex items-center gap-2 text-primary">
-              <span className="material-symbols-outlined text-3xl">bolt</span>
-              <h2 className="text-2xl font-extrabold tracking-tight font-display">EnergyHub</h2>
+              <span className="material-symbols-outlined text-2xl">bolt</span>
+              <span className="text-xl font-extrabold tracking-tight font-display">EnergyHub</span>
             </Link>
             <nav className="hidden md:flex items-center gap-8">
               <Link href="/" className="text-sm font-semibold hover:text-primary transition-colors text-slate-600">Marketplace</Link>
-              <span className="text-sm font-bold text-primary border-b-2 border-primary pb-px">Annuaire</span>
+              <Link href="/directory" className="text-sm font-bold text-primary border-b-2 border-primary pb-px">Annuaire</Link>
               <Link href="/rfq" className="text-sm font-semibold hover:text-primary transition-colors text-slate-600">Projets</Link>
               <Link href="/investment" className="text-sm font-semibold hover:text-primary transition-colors text-slate-600">Investissements</Link>
             </nav>
@@ -72,11 +72,11 @@ export default async function DirectoryPage() {
             </p>
           </div>
           <Link
-            href="/register"
+            href={user ? "/dashboard/profile" : "/register"}
             className="inline-flex items-center gap-2 bg-accent text-primary px-8 py-4 rounded-2xl font-bold hover:shadow-lg transition-all whitespace-nowrap"
           >
             <span className="material-symbols-outlined">add_circle</span>
-            Ajouter mon entreprise
+            {user ? "Mon profil" : "Ajouter mon entreprise"}
           </Link>
         </div>
 
