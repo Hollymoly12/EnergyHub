@@ -80,16 +80,54 @@ export default async function DashboardMatchesPage() {
     })),
   ].sort((a, b) => b.match_score - a.match_score);
 
+  const unreadCount = allMatches.filter((m) => !m.is_viewed).length;
+
   return (
     <div className="p-8 max-w-6xl">
-      <div className="flex items-center justify-between mb-8">
+      {/* Header */}
+      <div className="mb-8 flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="font-display text-2xl font-bold text-white">Mes matchs IA</h1>
-          <p className="text-slate-500 text-sm mt-1">
-            {allMatches.length} correspondance{allMatches.length > 1 ? "s" : ""} trouvée{allMatches.length > 1 ? "s" : ""}
+          <p className="section-tag mb-3">Mes matchs</p>
+          <h1 className="font-display text-3xl font-bold text-white leading-tight">
+            Correspondances IA
+          </h1>
+          <p className="text-slate-500 text-sm mt-2">
+            {allMatches.length} correspondance{allMatches.length !== 1 ? "s" : ""} trouvée{allMatches.length !== 1 ? "s" : ""}
+            {unreadCount > 0 && (
+              <span className="ml-2 badge-amber">{unreadCount} non vus</span>
+            )}
           </p>
         </div>
       </div>
+
+      {/* Summary stats row */}
+      {allMatches.length > 0 && (
+        <div className="grid grid-cols-3 gap-4 mb-8">
+          {[
+            {
+              label: "Total matchs",
+              value: allMatches.length,
+              color: "#F59E0B",
+            },
+            {
+              label: "Score moyen",
+              value: `${Math.round(allMatches.reduce((acc, m) => acc + m.match_score, 0) / allMatches.length)}%`,
+              color: "#818CF8",
+            },
+            {
+              label: "Non vus",
+              value: unreadCount,
+              color: unreadCount > 0 ? "#EF4444" : "#4A5568",
+            },
+          ].map((s) => (
+            <div key={s.label} className="card p-4" style={{ borderColor: "var(--border)" }}>
+              <div className="stat-number" style={{ color: s.color }}>{s.value}</div>
+              <div className="text-xs text-slate-500 mt-1">{s.label}</div>
+            </div>
+          ))}
+        </div>
+      )}
+
       <MatchesClient matches={allMatches} />
     </div>
   );

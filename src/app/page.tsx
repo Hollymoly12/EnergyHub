@@ -1,250 +1,172 @@
 import Link from "next/link";
 
-export default function HomePage() {
+export default function LandingPage() {
   return (
-    <div style={{ background: "#080C14", minHeight: "100vh", color: "#E2E8F0" }}>
+    <div style={{ backgroundColor: "#07090F", color: "#F1F5F9", fontFamily: "DM Sans, sans-serif", minHeight: "100vh" }}>
 
-      {/* ── NAVBAR ── */}
-      <header className="border-b border-slate-800 sticky top-0 z-50" style={{ background: "#080C14" }}>
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-yellow-500 to-orange-500 flex items-center justify-center text-sm font-bold text-black">⚡</div>
-            <span className="font-bold text-white text-sm tracking-tight">EnergyHub</span>
-          </Link>
-          <nav className="hidden md:flex items-center gap-6">
-            <Link href="/directory" className="text-sm text-slate-400 hover:text-white transition-colors">Annuaire</Link>
-            <Link href="/rfq" className="text-sm text-slate-400 hover:text-white transition-colors">RFQ</Link>
-          </nav>
-          <div className="flex items-center gap-3">
-            <Link href="/login" className="text-sm text-slate-400 hover:text-white transition-colors">Se connecter</Link>
-            <Link href="/register" className="btn-primary text-sm py-2 px-4">S'inscrire</Link>
+      {/* ── Navbar ── */}
+      <nav style={{ borderBottom: "1px solid #1E2D45", backgroundColor: "rgba(7,9,15,0.95)", backdropFilter: "blur(12px)", position: "sticky", top: 0, zIndex: 50 }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 24px", height: 60, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div style={{ width: 30, height: 30, borderRadius: 8, background: "linear-gradient(135deg, #F59E0B, #D97706)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: "bold", color: "#000" }}>⚡</div>
+            <span style={{ fontFamily: "Syne, sans-serif", fontWeight: 800, fontSize: 16, color: "#fff", letterSpacing: "-0.02em" }}>EnergyHub</span>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <Link href="/directory" style={{ color: "#94A3B8", fontSize: 14, textDecoration: "none", padding: "6px 14px", borderRadius: 8, transition: "color 0.15s" }}>Annuaire</Link>
+            <Link href="/rfq" style={{ color: "#94A3B8", fontSize: 14, textDecoration: "none", padding: "6px 14px", borderRadius: 8 }}>RFQ</Link>
+            <Link href="/pricing" style={{ color: "#94A3B8", fontSize: 14, textDecoration: "none", padding: "6px 14px", borderRadius: 8 }}>Tarifs</Link>
+            <Link href="/login" style={{ color: "#F1F5F9", fontSize: 14, textDecoration: "none", padding: "7px 16px", borderRadius: 8, border: "1px solid #1E2D45", marginLeft: 8 }}>Connexion</Link>
+            <Link href="/register" style={{ backgroundColor: "#F59E0B", color: "#000", fontSize: 14, fontWeight: 600, textDecoration: "none", padding: "7px 18px", borderRadius: 8 }}>Rejoindre →</Link>
           </div>
         </div>
-      </header>
+      </nav>
 
-      {/* ── HERO ── */}
-      <section className="max-w-6xl mx-auto px-6 pt-24 pb-20 text-center">
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-yellow-500/30 bg-yellow-500/8 text-yellow-400 text-xs font-semibold tracking-wide mb-8">
-          ⚡ Marketplace B2B · Belgique
-        </div>
-        <h1 className="text-4xl md:text-6xl font-bold text-white leading-tight mb-6 max-w-3xl mx-auto">
-          Connectez-vous aux acteurs de la{" "}
-          <span className="text-yellow-500">transition énergétique</span>
-        </h1>
-        <p className="text-lg text-slate-400 mb-10 max-w-2xl mx-auto leading-relaxed">
-          EnergyHub réunit industriels, installateurs et greentechs sur une seule plateforme —
-          avec matching IA et RFQ intégrés.
-        </p>
-        <div className="flex gap-4 justify-center flex-wrap">
-          <Link href="/register" className="btn-primary px-8 py-3 text-base">
-            S'inscrire gratuitement →
-          </Link>
-          <Link href="/directory" className="btn-secondary px-8 py-3 text-base">
-            Parcourir l'annuaire
-          </Link>
-        </div>
-      </section>
+      {/* ── Hero ── */}
+      <section style={{ position: "relative", overflow: "hidden", paddingTop: 100, paddingBottom: 100 }}>
+        {/* Dot grid background */}
+        <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle, #1A2540 1px, transparent 1px)", backgroundSize: "24px 24px", opacity: 0.6 }} />
+        {/* Amber glow */}
+        <div style={{ position: "absolute", top: -100, left: "50%", transform: "translateX(-50%)", width: 800, height: 500, background: "radial-gradient(ellipse, rgba(245,158,11,0.10) 0%, transparent 70%)", pointerEvents: "none" }} />
 
-      {/* ── PROBLÈME ── */}
-      <section className="max-w-6xl mx-auto px-6 py-20 border-t border-slate-800">
-        <div className="text-center mb-12">
-          <div className="section-tag mb-3">Le problème</div>
-          <h2 className="text-2xl md:text-3xl font-bold text-white">
-            Un marché de l'énergie encore trop fragmenté
-          </h2>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[
-            {
-              icon: "🗺️",
-              title: "Un marché illisible",
-              desc: "Des centaines d'acteurs répartis sur 3 régions. Impossible de trouver rapidement le bon partenaire technique ou commercial.",
-            },
-            {
-              icon: "⏳",
-              title: "Des appels d'offres inefficaces",
-              desc: "Des mois de prospection manuelle pour trouver le bon installateur ou éditeur logiciel. Temps et budget gaspillés.",
-            },
-            {
-              icon: "🚪",
-              title: "Des opportunités manquées",
-              desc: "Les greentechs et startups peinent à accéder aux grands comptes industriels et aux investisseurs belges.",
-            },
-          ].map((p) => (
-            <div key={p.title} className="card p-6">
-              <div className="text-3xl mb-4">{p.icon}</div>
-              <h3 className="font-semibold text-white mb-2">{p.title}</h3>
-              <p className="text-sm text-slate-400 leading-relaxed">{p.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+        <div style={{ position: "relative", maxWidth: 1200, margin: "0 auto", padding: "0 24px", textAlign: "center" }}>
+          {/* Eyebrow */}
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, backgroundColor: "rgba(245,158,11,0.08)", border: "1px solid rgba(245,158,11,0.2)", borderRadius: 100, padding: "5px 14px", marginBottom: 32 }}>
+            <span style={{ width: 6, height: 6, borderRadius: "50%", backgroundColor: "#F59E0B", display: "inline-block" }} />
+            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#F59E0B", fontFamily: "Syne, sans-serif" }}>Marketplace B2B · Belgique</span>
+          </div>
 
-      {/* ── SOLUTION ── */}
-      <section className="max-w-6xl mx-auto px-6 py-20 border-t border-slate-800">
-        <div className="text-center mb-12">
-          <div className="section-tag mb-3">Comment ça marche</div>
-          <h2 className="text-2xl md:text-3xl font-bold text-white">
-            3 étapes pour trouver vos partenaires
-          </h2>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {[
-            {
-              step: "01",
-              title: "Créez votre profil",
-              desc: "Renseignez votre type d'acteur, vos expertises, certifications et technologies. Notre IA analyse votre profil.",
-            },
-            {
-              step: "02",
-              title: "Publiez ou répondez à un RFQ",
-              desc: "Lancez un appel d'offres ciblé ou répondez à ceux qui correspondent à votre expertise.",
-            },
-            {
-              step: "03",
-              title: "Recevez vos matchs IA",
-              desc: "EnergyHub calcule automatiquement les meilleures correspondances et vous met en relation.",
-            },
-          ].map((s) => (
-            <div key={s.step} className="flex gap-4">
-              <div className="text-3xl font-bold text-yellow-500/20 font-mono leading-none shrink-0">{s.step}</div>
-              <div>
-                <h3 className="font-semibold text-white mb-2">{s.title}</h3>
-                <p className="text-sm text-slate-400 leading-relaxed">{s.desc}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+          {/* Headline */}
+          <h1 style={{ fontFamily: "Syne, sans-serif", fontSize: "clamp(40px, 6vw, 72px)", fontWeight: 800, lineHeight: 1.05, letterSpacing: "-0.03em", marginBottom: 24, color: "#fff" }}>
+            La marketplace de la<br />
+            <span style={{ color: "#F59E0B" }}>transition énergétique</span><br />
+            belge
+          </h1>
 
-      {/* ── POUR VOUS ── */}
-      <section className="max-w-6xl mx-auto px-6 py-20 border-t border-slate-800">
-        <div className="text-center mb-12">
-          <div className="section-tag mb-3">Pour vous</div>
-          <h2 className="text-2xl md:text-3xl font-bold text-white">
-            Conçu pour chaque acteur de l'énergie
-          </h2>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <p style={{ fontSize: 18, color: "#94A3B8", maxWidth: 560, margin: "0 auto 40px", lineHeight: 1.7 }}>
+            Connectez industriels, installateurs, investisseurs et greentechs. Matching IA, RFQ automatisés, deals d&apos;investissement.
+          </p>
 
-          {/* Industriels */}
-          <div className="card p-6 border-yellow-500/20 hover:border-yellow-500/40 transition-colors">
-            <div className="text-3xl mb-4">⚡</div>
-            <div className="text-xs font-bold tracking-widest text-yellow-500 uppercase mb-2">Industriels</div>
-            <h3 className="font-semibold text-white mb-2">
-              Trouvez les bons prestataires, vite
-            </h3>
-            <p className="text-sm text-slate-400 mb-4 leading-relaxed">
-              Publiez vos appels d'offres et recevez des propositions qualifiées en quelques jours.
-            </p>
-            <ul className="space-y-2 mb-6">
-              {["Matching IA sur vos RFQ", "RFQ illimités (plan Pro)", "Annuaire de 100+ fournisseurs certifiés"].map(f => (
-                <li key={f} className="flex items-start gap-2 text-xs text-slate-400">
-                  <span className="text-yellow-500 shrink-0 mt-0.5">✓</span>{f}
-                </li>
-              ))}
-            </ul>
-            <Link href="/register?type=industrial" className="btn-primary text-xs py-2 w-full block text-center">
-              Publier un RFQ →
+          {/* CTAs */}
+          <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap", marginBottom: 64 }}>
+            <Link href="/register" style={{ backgroundColor: "#F59E0B", color: "#000", fontWeight: 700, fontSize: 15, textDecoration: "none", padding: "13px 28px", borderRadius: 10, fontFamily: "DM Sans, sans-serif", display: "inline-flex", alignItems: "center", gap: 8 }}>
+              Créer un compte gratuit →
+            </Link>
+            <Link href="/directory" style={{ color: "#F1F5F9", fontWeight: 500, fontSize: 15, textDecoration: "none", padding: "13px 28px", borderRadius: 10, border: "1px solid #1E2D45", fontFamily: "DM Sans, sans-serif", display: "inline-flex", alignItems: "center", gap: 8 }}>
+              Voir l&apos;annuaire
             </Link>
           </div>
 
-          {/* Installateurs */}
-          <div className="card p-6 border-slate-700 hover:border-slate-600 transition-colors">
-            <div className="text-3xl mb-4">🔧</div>
-            <div className="text-xs font-bold tracking-widest text-slate-400 uppercase mb-2">Installateurs</div>
-            <h3 className="font-semibold text-white mb-2">
-              Développez votre carnet de commandes
-            </h3>
-            <p className="text-sm text-slate-400 mb-4 leading-relaxed">
-              Accédez aux appels d'offres qualifiés qui correspondent à votre expertise technique.
-            </p>
-            <ul className="space-y-2 mb-6">
-              {["Alertes RFQ ciblées par région", "Profil certifié visible par tous", "Messagerie intégrée"].map(f => (
-                <li key={f} className="flex items-start gap-2 text-xs text-slate-400">
-                  <span className="text-green-400 shrink-0 mt-0.5">✓</span>{f}
-                </li>
-              ))}
-            </ul>
-            <Link href="/register?type=installer" className="btn-secondary text-xs py-2 w-full block text-center">
-              Créer mon profil →
-            </Link>
-          </div>
-
-          {/* Greentechs */}
-          <div className="card p-6 border-green-400/20 hover:border-green-400/40 transition-colors">
-            <div className="text-3xl mb-4">🌱</div>
-            <div className="text-xs font-bold tracking-widest text-green-400 uppercase mb-2">Greentechs</div>
-            <h3 className="font-semibold text-white mb-2">
-              Accédez aux grands comptes et aux investisseurs
-            </h3>
-            <p className="text-sm text-slate-400 mb-4 leading-relaxed">
-              Gagnez en visibilité B2B et connectez-vous aux fonds d'investissement belges.
-            </p>
-            <ul className="space-y-2 mb-6">
-              {["Accès au module investissement", "Deal flow avec fonds belges", "Visibilité premium B2B"].map(f => (
-                <li key={f} className="flex items-start gap-2 text-xs text-slate-400">
-                  <span className="text-green-400 shrink-0 mt-0.5">✓</span>{f}
-                </li>
-              ))}
-            </ul>
-            <Link href="/register?type=greentech" className="btn-secondary text-xs py-2 w-full block text-center">
-              Rejoindre EnergyHub →
-            </Link>
-          </div>
-
-        </div>
-      </section>
-
-      {/* ── CHIFFRES ── */}
-      <section className="border-t border-slate-800" style={{ background: "#0D1520" }}>
-        <div className="max-w-6xl mx-auto px-6 py-16">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+          {/* Stats row */}
+          <div style={{ display: "flex", gap: 0, justifyContent: "center", flexWrap: "wrap", borderTop: "1px solid #1E2D45", paddingTop: 40 }}>
             {[
-              { value: "7",       label: "Types d'acteurs",     sub: "connectés sur la plateforme" },
-              { value: "IA",      label: "Matching intelligent", sub: "en temps réel" },
-              { value: "3",       label: "Régions belges",       sub: "Wallonie · Flandre · BXL" },
-              { value: "Gratuit", label: "Pour démarrer",        sub: "Sans CB requise" },
-            ].map((s) => (
-              <div key={s.label}>
-                <div className="text-3xl font-bold text-yellow-500 mb-1">{s.value}</div>
-                <div className="text-sm font-semibold text-white">{s.label}</div>
-                <div className="text-xs text-slate-500 mt-0.5">{s.sub}</div>
+              { value: "6", label: "types d'acteurs" },
+              { value: "3", label: "régions belges" },
+              { value: "IA", label: "matching intelligent" },
+              { value: "€0", label: "pour démarrer" },
+            ].map((stat, i) => (
+              <div key={i} style={{ padding: "0 40px", borderRight: i < 3 ? "1px solid #1E2D45" : "none", textAlign: "center" }}>
+                <div style={{ fontFamily: "Space Mono, monospace", fontSize: 28, fontWeight: 700, color: "#F59E0B", marginBottom: 4 }}>{stat.value}</div>
+                <div style={{ fontSize: 13, color: "#64748B" }}>{stat.label}</div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── CTA FINAL ── */}
-      <section className="max-w-6xl mx-auto px-6 py-24 text-center border-t border-slate-800">
-        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-          Rejoignez la marketplace de la<br />
-          <span className="text-yellow-500">transition énergétique belge</span>
-        </h2>
-        <p className="text-slate-400 mb-8 text-sm">
-          Inscription gratuite · Aucune CB requise · Déployé en Belgique
-        </p>
-        <Link href="/register" className="btn-primary px-10 py-3 text-base inline-block">
-          S'inscrire gratuitement →
-        </Link>
+      {/* ── Actor types ── */}
+      <section style={{ padding: "80px 24px", maxWidth: 1200, margin: "0 auto" }}>
+        <div style={{ textAlign: "center", marginBottom: 56 }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
+            <span style={{ width: 16, height: 1, backgroundColor: "rgba(245,158,11,0.6)", display: "inline-block" }} />
+            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#F59E0B", fontFamily: "Syne, sans-serif" }}>Les acteurs</span>
+          </div>
+          <h2 style={{ fontFamily: "Syne, sans-serif", fontSize: 36, fontWeight: 800, color: "#fff", letterSpacing: "-0.02em", marginBottom: 12 }}>
+            Une plateforme pour tout l&apos;écosystème
+          </h2>
+          <p style={{ color: "#64748B", fontSize: 16 }}>6 types d&apos;acteurs interconnectés par l&apos;intelligence artificielle</p>
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16 }}>
+          {[
+            { icon: "🏭", label: "Industriels", color: "#F59E0B", desc: "Publiez vos besoins énergétiques, trouvez des solutions certifiées et optimisez votre transition." },
+            { icon: "🔧", label: "Installateurs", color: "#22C55E", desc: "Répondez aux appels d'offres qualifiés et développez votre portefeuille de projets." },
+            { icon: "💻", label: "Éditeurs logiciels", color: "#818CF8", desc: "Distribuez vos solutions auprès des acteurs de la transition énergétique." },
+            { icon: "💼", label: "Fonds d'investissement", color: "#F59E0B", desc: "Sourcez des projets verts, évaluez les deals avec l'IA et gérez vos intérêts." },
+            { icon: "⚡", label: "Fournisseurs d'énergie", color: "#22C55E", desc: "Connectez-vous aux industriels et proposez vos offres sur-mesure." },
+            { icon: "🌿", label: "Greentechs", color: "#818CF8", desc: "Faites connaître vos innovations et trouvez des partenaires industriels." },
+          ].map((actor) => (
+            <div key={actor.label} style={{ backgroundColor: "#0D1421", border: "1px solid #1E2D45", borderRadius: 12, padding: "24px" }}>
+              <div style={{ fontSize: 28, marginBottom: 12 }}>{actor.icon}</div>
+              <div style={{ fontFamily: "Syne, sans-serif", fontSize: 16, fontWeight: 700, color: actor.color, marginBottom: 8 }}>{actor.label}</div>
+              <p style={{ fontSize: 14, color: "#64748B", lineHeight: 1.6 }}>{actor.desc}</p>
+            </div>
+          ))}
+        </div>
       </section>
 
-      {/* ── FOOTER ── */}
-      <footer className="border-t border-slate-800">
-        <div className="max-w-6xl mx-auto px-6 py-8 flex items-center justify-between flex-wrap gap-4">
-          <div className="flex items-center gap-2">
-            <div className="w-5 h-5 rounded bg-gradient-to-br from-yellow-500 to-orange-500 flex items-center justify-center text-[10px] font-bold text-black">⚡</div>
-            <span className="text-sm text-slate-500">EnergyHub · Belgique</span>
+      {/* ── How it works ── */}
+      <section style={{ padding: "80px 24px", backgroundColor: "#0D1421", borderTop: "1px solid #1E2D45", borderBottom: "1px solid #1E2D45" }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 56 }}>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
+              <span style={{ width: 16, height: 1, backgroundColor: "rgba(245,158,11,0.6)", display: "inline-block" }} />
+              <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#F59E0B", fontFamily: "Syne, sans-serif" }}>Comment ça marche</span>
+            </div>
+            <h2 style={{ fontFamily: "Syne, sans-serif", fontSize: 36, fontWeight: 800, color: "#fff", letterSpacing: "-0.02em" }}>
+              Opérationnel en 3 étapes
+            </h2>
           </div>
-          <div className="flex gap-6">
-            <Link href="/directory" className="text-xs text-slate-600 hover:text-slate-400 transition-colors">Annuaire</Link>
-            <Link href="/rfq" className="text-xs text-slate-600 hover:text-slate-400 transition-colors">RFQ</Link>
-            <Link href="/pricing" className="text-xs text-slate-600 hover:text-slate-400 transition-colors">Tarifs</Link>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 24 }}>
+            {[
+              { n: "01", title: "Créez votre profil", desc: "L'agent IA analyse votre organisation et complète automatiquement votre profil pour maximiser votre visibilité." },
+              { n: "02", title: "Publiez ou répondez", desc: "Créez des RFQ ciblés ou répondez aux appels d'offres qui correspondent à vos compétences." },
+              { n: "03", title: "Matchs IA", desc: "L'algorithme calcule un score de compatibilité 0-100 et vous met en relation avec les meilleurs partenaires." },
+            ].map((step) => (
+              <div key={step.n} style={{ position: "relative", padding: "32px 28px", backgroundColor: "#131C2E", borderRadius: 12, border: "1px solid #1E2D45" }}>
+                <div style={{ fontFamily: "Space Mono, monospace", fontSize: 48, fontWeight: 700, color: "rgba(245,158,11,0.12)", position: "absolute", top: 20, right: 24, lineHeight: 1 }}>{step.n}</div>
+                <div style={{ fontFamily: "Space Mono, monospace", fontSize: 11, fontWeight: 700, color: "#F59E0B", letterSpacing: "0.1em", marginBottom: 12 }}>{step.n}</div>
+                <h3 style={{ fontFamily: "Syne, sans-serif", fontSize: 20, fontWeight: 700, color: "#fff", marginBottom: 10 }}>{step.title}</h3>
+                <p style={{ fontSize: 14, color: "#64748B", lineHeight: 1.7 }}>{step.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── CTA finale ── */}
+      <section style={{ padding: "100px 24px", textAlign: "center", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(circle, #1A2540 1px, transparent 1px)", backgroundSize: "24px 24px", opacity: 0.4 }} />
+        <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: 600, height: 400, background: "radial-gradient(ellipse, rgba(245,158,11,0.08) 0%, transparent 70%)", pointerEvents: "none" }} />
+        <div style={{ position: "relative", maxWidth: 640, margin: "0 auto" }}>
+          <h2 style={{ fontFamily: "Syne, sans-serif", fontSize: "clamp(32px, 5vw, 52px)", fontWeight: 800, color: "#fff", letterSpacing: "-0.02em", marginBottom: 20 }}>
+            Rejoignez l&apos;écosystème<br /><span style={{ color: "#F59E0B" }}>énergie belge</span>
+          </h2>
+          <p style={{ color: "#64748B", fontSize: 16, marginBottom: 36, lineHeight: 1.7 }}>
+            Gratuit pour démarrer. Aucune carte de crédit requise.
+          </p>
+          <Link href="/register" style={{ backgroundColor: "#F59E0B", color: "#000", fontWeight: 700, fontSize: 16, textDecoration: "none", padding: "14px 32px", borderRadius: 10, display: "inline-flex", alignItems: "center", gap: 8, fontFamily: "DM Sans, sans-serif" }}>
+            Créer un compte gratuit →
+          </Link>
+        </div>
+      </section>
+
+      {/* ── Footer ── */}
+      <footer style={{ borderTop: "1px solid #1E2D45", padding: "32px 24px" }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div style={{ width: 24, height: 24, borderRadius: 6, background: "linear-gradient(135deg, #F59E0B, #D97706)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, color: "#000" }}>⚡</div>
+            <span style={{ fontFamily: "Syne, sans-serif", fontWeight: 800, fontSize: 14, color: "#fff" }}>EnergyHub</span>
+            <span style={{ color: "#1E2D45", margin: "0 8px" }}>|</span>
+            <span style={{ fontSize: 13, color: "#4A5568" }}>Marketplace B2B · Belgique</span>
+          </div>
+          <div style={{ display: "flex", gap: 24 }}>
+            {[["Annuaire", "/directory"], ["RFQ", "/rfq"], ["Investissement", "/investment"], ["Tarifs", "/pricing"]].map(([label, href]) => (
+              <Link key={href} href={href} style={{ fontSize: 13, color: "#4A5568", textDecoration: "none" }}>{label}</Link>
+            ))}
           </div>
         </div>
       </footer>
-
     </div>
   );
 }

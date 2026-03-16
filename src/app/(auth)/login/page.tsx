@@ -1,100 +1,93 @@
 "use client";
-import { useState, Suspense } from "react";
-import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+
+import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
-function LoginForm() {
+export default function LoginPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const redirect = searchParams.get("redirect") || "/dashboard";
   const supabase = createClient();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
-  const handleLogin = async (e: React.FormEvent) => {
+  async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
-    setError("");
+    setError(null);
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) { setError(error.message); setLoading(false); return; }
-    router.push(redirect);
-  };
+    router.push("/dashboard");
+    router.refresh();
+  }
 
-  const handleGoogle = async () => {
+  async function handleGoogle() {
     await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: `${window.location.origin}/auth/callback?redirect=${redirect}` },
+      options: { redirectTo: `${window.location.origin}/auth/callback` },
     });
-  };
+  }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4" style={{background:"#080C14"}}>
-      <div className="w-full max-w-sm">
-        <div className="text-center mb-8">
-          <div style={{width:40,height:40,borderRadius:12,background:"linear-gradient(135deg,#F59E0B,#EF4444)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,margin:"0 auto 16px"}}>⚡</div>
-          <h1 style={{fontWeight:800,fontSize:24,color:"#fff",marginBottom:4}}>Bon retour</h1>
-          <p style={{color:"#64748b",fontSize:14}}>Connectez-vous à votre espace EnergyHub</p>
+    <div style={{ minHeight: "100vh", backgroundColor: "#07090F", display: "flex", alignItems: "center", justifyContent: "center", padding: 24, position: "relative" }}>
+      {/* Background grid */}
+      <div style={{ position: "fixed", inset: 0, backgroundImage: "radial-gradient(circle, #1A2540 1px, transparent 1px)", backgroundSize: "24px 24px", opacity: 0.5, pointerEvents: "none" }} />
+      {/* Amber glow */}
+      <div style={{ position: "fixed", top: 0, left: "50%", transform: "translateX(-50%)", width: 600, height: 400, background: "radial-gradient(ellipse, rgba(245,158,11,0.07) 0%, transparent 70%)", pointerEvents: "none" }} />
+
+      <div style={{ position: "relative", width: "100%", maxWidth: 400 }}>
+        {/* Logo */}
+        <div style={{ textAlign: "center", marginBottom: 40 }}>
+          <Link href="/" style={{ display: "inline-flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
+            <div style={{ width: 36, height: 36, borderRadius: 10, background: "linear-gradient(135deg, #F59E0B, #D97706)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, color: "#000" }}>⚡</div>
+            <span style={{ fontFamily: "Syne, sans-serif", fontWeight: 800, fontSize: 20, color: "#fff" }}>EnergyHub</span>
+          </Link>
         </div>
 
-        <div style={{background:"#0D1520",border:"1px solid #1E293B",borderRadius:12,padding:24}}>
-          <button onClick={handleGoogle} style={{width:"100%",display:"flex",alignItems:"center",justifyContent:"center",gap:12,padding:"10px 0",border:"1px solid #1E293B",borderRadius:8,background:"transparent",color:"#cbd5e1",cursor:"pointer",marginBottom:20,fontSize:14}}>
-            <svg width="16" height="16" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
-            Continuer avec Google
-          </button>
-
-          <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:20}}>
-            <div style={{flex:1,height:1,background:"#1E293B"}}/>
-            <span style={{fontSize:12,color:"#475569"}}>ou par email</span>
-            <div style={{flex:1,height:1,background:"#1E293B"}}/>
-          </div>
+        {/* Card */}
+        <div style={{ backgroundColor: "#0D1421", border: "1px solid #1E2D45", borderRadius: 16, padding: 32 }}>
+          <h1 style={{ fontFamily: "Syne, sans-serif", fontSize: 22, fontWeight: 800, color: "#fff", marginBottom: 6 }}>Connexion</h1>
+          <p style={{ fontSize: 14, color: "#64748B", marginBottom: 28 }}>Accédez à votre espace EnergyHub</p>
 
           {error && (
-            <div style={{background:"rgba(239,68,68,0.1)",border:"1px solid rgba(239,68,68,0.3)",color:"#EF4444",fontSize:12,borderRadius:8,padding:"10px 14px",marginBottom:16}}>
+            <div style={{ backgroundColor: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", borderRadius: 8, padding: "10px 14px", marginBottom: 20, fontSize: 13, color: "#EF4444" }}>
               {error}
             </div>
           )}
 
-          <form onSubmit={handleLogin}>
-            <div style={{marginBottom:16}}>
-              <label style={{display:"block",fontSize:11,fontWeight:600,color:"#94a3b8",marginBottom:6,textTransform:"uppercase",letterSpacing:"0.05em"}}>Email</label>
-              <input type="email" value={email} onChange={e => setEmail(e.target.value)}
-                style={{width:"100%",background:"#080C14",border:"1px solid #1E293B",borderRadius:8,padding:"10px 14px",fontSize:14,color:"#e2e8f0",outline:"none",boxSizing:"border-box"}}
-                placeholder="vous@entreprise.be" required />
+          <form onSubmit={handleLogin} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            <div>
+              <label className="label">Email</label>
+              <input type="email" className="input" value={email} onChange={e => setEmail(e.target.value)} placeholder="vous@entreprise.be" required />
             </div>
-            <div style={{marginBottom:20}}>
-              <label style={{display:"block",fontSize:11,fontWeight:600,color:"#94a3b8",marginBottom:6,textTransform:"uppercase",letterSpacing:"0.05em"}}>Mot de passe</label>
-              <input type="password" value={password} onChange={e => setPassword(e.target.value)}
-                style={{width:"100%",background:"#080C14",border:"1px solid #1E293B",borderRadius:8,padding:"10px 14px",fontSize:14,color:"#e2e8f0",outline:"none",boxSizing:"border-box"}}
-                placeholder="••••••••" required />
+            <div>
+              <label className="label">Mot de passe</label>
+              <input type="password" className="input" value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" required />
             </div>
-            <button type="submit" disabled={loading}
-              style={{width:"100%",background:"#F59E0B",color:"#000",fontWeight:700,padding:"12px 0",borderRadius:8,border:"none",cursor:"pointer",fontSize:14}}>
+            <button type="submit" disabled={loading} className="btn-primary" style={{ marginTop: 4, width: "100%", justifyContent: "center" }}>
               {loading ? "Connexion..." : "Se connecter →"}
             </button>
           </form>
 
-          <p style={{textAlign:"center",fontSize:12,color:"#475569",marginTop:16}}>
-            <Link href="/forgot-password" style={{color:"#94a3b8",textDecoration:"none"}}>Mot de passe oublié ?</Link>
-          </p>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "20px 0" }}>
+            <div style={{ flex: 1, height: 1, backgroundColor: "#1E2D45" }} />
+            <span style={{ fontSize: 12, color: "#4A5568" }}>ou</span>
+            <div style={{ flex: 1, height: 1, backgroundColor: "#1E2D45" }} />
+          </div>
+
+          <button onClick={handleGoogle} className="btn-secondary" style={{ width: "100%", justifyContent: "center" }}>
+            <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+            Continuer avec Google
+          </button>
         </div>
 
-        <p style={{textAlign:"center",fontSize:14,color:"#64748b",marginTop:24}}>
-          Pas encore inscrit ?{" "}
-          <Link href="/register" style={{color:"#F59E0B",fontWeight:600}}>Créer un compte gratuit</Link>
+        <p style={{ textAlign: "center", fontSize: 14, color: "#4A5568", marginTop: 24 }}>
+          Pas encore de compte ?{" "}
+          <Link href="/register" style={{ color: "#F59E0B", textDecoration: "none", fontWeight: 600 }}>Créer un compte →</Link>
         </p>
       </div>
     </div>
-  );
-}
-
-export default function LoginPage() {
-  return (
-    <Suspense fallback={<div style={{minHeight:"100vh",background:"#080C14"}} />}>
-      <LoginForm />
-    </Suspense>
   );
 }

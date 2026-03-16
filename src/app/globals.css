@@ -2,31 +2,222 @@
 @tailwind components;
 @tailwind utilities;
 
-* { box-sizing: border-box; }
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Space+Mono:wght@400;700&display=swap');
 
-body {
-  background-color: #080C14;
-  color: #E2E8F0;
-  -webkit-font-smoothing: antialiased;
+* {
+  box-sizing: border-box;
 }
 
+:root {
+  --bg-base: #07090F;
+  --bg-surface-1: #0D1421;
+  --bg-surface-2: #131C2E;
+  --bg-surface-3: #1A2540;
+  --border: #1E2D45;
+  --text-primary: #F1F5F9;
+  --text-secondary: #94A3B8;
+  --text-muted: #4A5568;
+  --amber: #F59E0B;
+  --amber-light: #FCD34D;
+  --green: #22C55E;
+  --purple: #818CF8;
+  --red: #EF4444;
+}
+
+html {
+  background-color: var(--bg-base);
+}
+
+body {
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  font-family: "DM Sans", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Syne", sans-serif;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--bg-surface-3); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #2A3D5A; }
+
 @layer components {
+  /* ── Buttons ── */
   .btn-primary {
-    @apply bg-yellow-500 text-black font-semibold px-5 py-2.5 rounded-lg text-sm hover:opacity-90 transition-all cursor-pointer;
+    @apply inline-flex items-center justify-center gap-2 bg-brand-amber text-black font-semibold px-5 py-2.5 rounded-lg text-sm transition-all duration-200 cursor-pointer;
+    @apply hover:bg-brand-amber-light hover:shadow-amber-glow-sm active:scale-[0.98];
+    font-family: "DM Sans", sans-serif;
   }
+
   .btn-secondary {
-    @apply bg-transparent text-slate-300 font-medium px-5 py-2.5 rounded-lg text-sm border border-slate-700 hover:border-slate-600 transition-all cursor-pointer;
+    @apply inline-flex items-center justify-center gap-2 bg-transparent text-slate-300 font-medium px-5 py-2.5 rounded-lg text-sm border border-surface-border transition-all duration-200 cursor-pointer;
+    @apply hover:border-brand-amber/40 hover:text-white active:scale-[0.98];
+    font-family: "DM Sans", sans-serif;
   }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 text-slate-400 font-medium px-4 py-2 rounded-lg text-sm transition-all duration-200 cursor-pointer;
+    @apply hover:text-white hover:bg-surface-2 active:scale-[0.98];
+    font-family: "DM Sans", sans-serif;
+  }
+
+  /* ── Cards ── */
   .card {
-    @apply bg-slate-900 border border-slate-800 rounded-xl;
+    @apply bg-surface-1 border border-surface-border rounded-xl shadow-card;
+    transition: border-color 0.2s, box-shadow 0.2s;
   }
+
+  .card-hover {
+    @apply card;
+    @apply hover:border-brand-amber/30 hover:shadow-card-hover;
+  }
+
+  /* ── Form elements ── */
   .input {
-    @apply w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-yellow-500 transition-colors;
+    @apply w-full bg-surface-2 border border-surface-border rounded-lg px-4 py-2.5 text-sm text-slate-200 placeholder-slate-600;
+    @apply focus:outline-none focus:border-brand-amber/60 focus:ring-1 focus:ring-brand-amber/20 transition-all;
+    font-family: "DM Sans", sans-serif;
   }
+
   .label {
-    @apply block text-xs font-medium text-slate-400 mb-1.5 tracking-wide uppercase;
+    @apply block text-xs font-medium text-slate-500 mb-1.5 tracking-wider uppercase;
+    font-family: "DM Sans", sans-serif;
   }
+
+  /* ── Typography helpers ── */
   .section-tag {
-    @apply text-xs font-bold tracking-widest text-yellow-500 uppercase;
+    @apply inline-flex items-center gap-2 text-xs font-bold tracking-widest text-brand-amber uppercase;
+    font-family: "Syne", sans-serif;
   }
+
+  .section-tag::before {
+    content: "";
+    @apply block w-4 h-px bg-brand-amber/60;
+  }
+
+  /* ── Stat display ── */
+  .stat-number {
+    font-family: "Space Mono", monospace;
+    @apply text-2xl font-bold text-white tabular-nums;
+  }
+
+  /* ── Badge ── */
+  .badge {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold;
+  }
+
+  .badge-amber {
+    @apply badge bg-brand-amber/10 text-brand-amber border border-brand-amber/20;
+  }
+
+  .badge-green {
+    @apply badge bg-brand-green/10 text-brand-green border border-brand-green/20;
+  }
+
+  .badge-purple {
+    @apply badge bg-brand-purple/10 text-brand-purple border border-brand-purple/20;
+  }
+
+  .badge-muted {
+    @apply badge bg-surface-3 text-slate-400 border border-surface-border;
+  }
+
+  /* ── Page header ── */
+  .page-header {
+    @apply mb-8;
+  }
+
+  .page-header .page-eyebrow {
+    @apply section-tag mb-3;
+  }
+
+  .page-header h1 {
+    @apply text-2xl font-bold text-white;
+    font-family: "Syne", sans-serif;
+  }
+
+  .page-header p {
+    @apply text-slate-500 text-sm mt-1.5;
+  }
+
+  /* ── Divider ── */
+  .divider {
+    @apply border-t border-surface-border;
+  }
+
+  /* ── Energy line (decorative animated line) ── */
+  .energy-line {
+    @apply h-px w-full relative overflow-hidden;
+    background: linear-gradient(90deg, transparent, rgba(245,158,11,0.6), transparent);
+    animation: flow 3s ease-in-out infinite;
+  }
+
+  /* ── Select ── */
+  select.input {
+    @apply cursor-pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+    appearance: none;
+  }
+
+  /* ── Textarea ── */
+  textarea.input {
+    resize: vertical;
+    min-height: 80px;
+  }
+
+  /* ── Dot-grid background helper ── */
+  .bg-grid {
+    background-image: radial-gradient(circle, #1A2540 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  /* ── Glow containers ── */
+  .glow-amber {
+    @apply relative;
+  }
+
+  .glow-amber::before {
+    content: "";
+    @apply absolute inset-0 rounded-xl pointer-events-none;
+    background: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(245,158,11,0.08) 0%, transparent 70%);
+  }
+
+  /* ── Alert / Banner ── */
+  .alert-success {
+    @apply p-4 rounded-lg bg-brand-green/8 border border-brand-green/20 text-brand-green text-sm;
+  }
+
+  .alert-error {
+    @apply p-4 rounded-lg bg-brand-red/8 border border-brand-red/20 text-brand-red text-sm;
+  }
+
+  .alert-info {
+    @apply p-4 rounded-lg bg-brand-amber/8 border border-brand-amber/20 text-brand-amber text-sm;
+  }
+}
+
+/* ── Utility overrides ── */
+@layer utilities {
+  .font-display { font-family: "Syne", sans-serif; }
+  .font-body { font-family: "DM Sans", sans-serif; }
+  .font-data { font-family: "Space Mono", monospace; }
+
+  .text-balance { text-wrap: balance; }
+
+  .bg-surface-DEFAULT { background-color: var(--bg-base); }
+  .bg-surface-2 { background-color: var(--bg-surface-2); }
+  .bg-surface-3 { background-color: var(--bg-surface-3); }
+  .border-surface-3 { border-color: #1A2540; }
+  .text-brand-amber { color: var(--amber); }
+  .bg-brand-amber\/8 { background-color: rgba(245,158,11,0.08); }
+  .bg-brand-amber\/20 { background-color: rgba(245,158,11,0.20); }
+  .border-brand-amber\/20 { border-color: rgba(245,158,11,0.20); }
 }

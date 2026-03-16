@@ -14,6 +14,7 @@ export default async function DashboardPage() {
   const org = member?.organizations as Record<string, unknown> | null;
   const plan = (org?.subscription_plan as string) || "free";
   const profileCompletion = (org?.profile_completion as number) || 0;
+  const orgName = (org?.name as string) || member?.first_name || "vous";
 
   // Stats rapides
   const { count: rfqCount } = await supabase
@@ -26,6 +27,12 @@ export default async function DashboardPage() {
     .select("*", { count: "exact", head: true })
     .eq("source_org_id", org?.id as string);
 
+  const { count: unreadMsgCount } = await supabase
+    .from("notifications")
+    .select("*", { count: "exact", head: true })
+    .eq("member_id", user!.id)
+    .eq("is_read", false);
+
   const { data: notifications } = await supabase
     .from("notifications")
     .select("*")
@@ -34,21 +41,66 @@ export default async function DashboardPage() {
     .order("created_at", { ascending: false })
     .limit(5);
 
+  const planBadgeClass =
+    plan === "enterprise" ? "badge-purple" :
+    plan === "pro" ? "badge-amber" :
+    "badge-muted";
+
+  const stats = [
+    {
+      label: "RFQs publiés",
+      value: rfqCount ?? 0,
+      sub: "appels d'offres",
+      href: "/dashboard/rfq",
+      color: "#818CF8",
+    },
+    {
+      label: "Matchs reçus",
+      value: matchCount ?? 0,
+      sub: "correspondances IA",
+      href: "/dashboard/matches",
+      color: "#F59E0B",
+    },
+    {
+      label: "Profil complété",
+      value: `${profileCompletion}%`,
+      sub: "score de visibilité",
+      href: "/dashboard/profile",
+      color: profileCompletion >= 80 ? "#22C55E" : "#F59E0B",
+    },
+    {
+      label: "Messages",
+      value: unreadMsgCount ?? 0,
+      sub: "non lus",
+      href: "/dashboard/messages",
+      color: "#EF4444",
+    },
+  ];
+
   return (
-    <div className="p-8 max-w-5xl">
+    <div className="p-8 max-w-6xl">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="font-display text-2xl font-bold text-white">
-          Bonjour, {member?.first_name} 👋
-        </h1>
-        <p className="text-slate-500 text-sm mt-1">
-          Voici ce qui se passe sur votre espace EnergyHub.
-        </p>
+      <div className="mb-8 flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <p className="section-tag mb-3">Vue d'ensemble</p>
+          <h1 className="font-display text-3xl font-bold text-white leading-tight">
+            Bonjour, {orgName}
+          </h1>
+          <p className="text-slate-500 text-sm mt-2">
+            Voici l'état de votre espace EnergyHub.
+          </p>
+        </div>
+        <span className={planBadgeClass} style={{ alignSelf: "flex-start", marginTop: "4px" }}>
+          {plan.toUpperCase()}
+        </span>
       </div>
 
       {/* Profile completion alert */}
       {profileCompletion < 80 && (
-        <div className="card p-5 mb-6 border-brand-amber/30 bg-brand-amber/4">
+        <div
+          className="card p-5 mb-8"
+          style={{ borderColor: "rgba(245,158,11,0.25)", background: "rgba(245,158,11,0.04)" }}
+        >
           <div className="flex items-center justify-between mb-3">
             <div>
               <div className="text-sm font-semibold text-white">Complétez votre profil</div>
@@ -56,75 +108,152 @@ export default async function DashboardPage() {
                 Un profil complet génère 3× plus de contacts
               </div>
             </div>
-            <span className="text-brand-amber font-bold text-lg">{profileCompletion}%</span>
+            <span
+              className="font-data text-xl font-bold"
+              style={{ color: "#F59E0B" }}
+            >
+              {profileCompletion}%
+            </span>
           </div>
-          <div className="w-full bg-surface-3 rounded-full h-1.5 mb-3">
+          <div className="w-full rounded-full h-1.5 mb-3" style={{ background: "#1A2540" }}>
             <div
-              className="bg-brand-amber h-1.5 rounded-full transition-all"
-              style={{ width: `${profileCompletion}%` }}
+              className="h-1.5 rounded-full transition-all"
+              style={{ width: `${profileCompletion}%`, background: "#F59E0B" }}
             />
           </div>
-          <Link href="/dashboard/profile" className="text-xs text-brand-amber hover:underline">
+          <Link href="/dashboard/profile" className="text-xs hover:underline" style={{ color: "#F59E0B" }}>
             Compléter mon profil →
           </Link>
         </div>
       )}
 
-      {/* KPI Cards */}
+      {/* KPI Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        {[
-          { label: "RFQ publiés", value: rfqCount || 0, icon: "📋", color: "text-brand-blue", link: "/dashboard/rfq" },
-          { label: "Matchs IA", value: matchCount || 0, icon: "🧠", color: "text-brand-purple", link: "/dashboard/matches" },
-          { label: "Vues profil", value: (org?.profile_views as number) || 0, icon: "👁", color: "text-brand-green", link: "/dashboard/analytics" },
-          { label: "Plan actuel", value: plan.toUpperCase(), icon: "💳", color: "text-brand-amber", link: "/dashboard/billing" },
-        ].map((k) => (
-          <Link key={k.label} href={k.link} className="card p-5 hover:border-surface-4 transition-colors group">
-            <div className="text-2xl mb-2">{k.icon}</div>
-            <div className={`text-xl font-bold ${k.color}`}>{k.value}</div>
-            <div className="text-xs text-slate-500 mt-0.5">{k.label}</div>
+        {stats.map((s) => (
+          <Link
+            key={s.label}
+            href={s.href}
+            className="card p-5 hover:shadow-lg transition-all group"
+            style={{ borderColor: "var(--border)" }}
+          >
+            <div
+              className="stat-number mb-1 group-hover:opacity-90 transition-opacity"
+              style={{ color: s.color }}
+            >
+              {s.value}
+            </div>
+            <div className="text-sm font-semibold text-white mt-0.5">{s.label}</div>
+            <div className="text-xs text-slate-600 mt-0.5">{s.sub}</div>
           </Link>
         ))}
       </div>
 
       {/* Quick Actions */}
+      <h2 className="font-display text-sm font-semibold text-slate-400 uppercase tracking-widest mb-4">
+        Actions rapides
+      </h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <Link href="/rfq/create" className="card p-5 hover:border-brand-amber/30 hover:bg-brand-amber/3 transition-all group">
-          <div className="text-2xl mb-3">📋</div>
-          <div className="font-semibold text-white text-sm mb-1 group-hover:text-brand-amber transition-colors">
-            Publier un RFI / RFQ
+        <Link
+          href="/rfq/create"
+          className="card p-6 flex flex-col gap-3 group transition-all"
+          style={{ borderColor: "var(--border)" }}
+          onMouseEnter={undefined}
+        >
+          <div
+            className="w-10 h-10 rounded-lg flex items-center justify-center text-lg"
+            style={{ background: "rgba(245,158,11,0.1)", border: "1px solid rgba(245,158,11,0.2)" }}
+          >
+            📋
           </div>
-          <div className="text-xs text-slate-500">Lancez un appel d'offres ciblé</div>
+          <div>
+            <div
+              className="font-semibold text-sm text-white group-hover:text-yellow-400 transition-colors"
+              style={{ fontFamily: "Syne, sans-serif" }}
+            >
+              Publier un RFQ
+            </div>
+            <div className="text-xs text-slate-500 mt-1">Lancez un appel d'offres ciblé</div>
+          </div>
+          <span className="text-xs mt-auto" style={{ color: "#F59E0B" }}>Commencer →</span>
         </Link>
-        <Link href="/directory" className="card p-5 hover:border-brand-purple/30 hover:bg-brand-purple/3 transition-all group">
-          <div className="text-2xl mb-3">🔍</div>
-          <div className="font-semibold text-white text-sm mb-1 group-hover:text-brand-purple transition-colors">
-            Parcourir l'annuaire
+
+        <Link
+          href="/dashboard/matches"
+          className="card p-6 flex flex-col gap-3 group transition-all"
+          style={{ borderColor: "var(--border)" }}
+        >
+          <div
+            className="w-10 h-10 rounded-lg flex items-center justify-center text-lg"
+            style={{ background: "rgba(129,140,248,0.1)", border: "1px solid rgba(129,140,248,0.2)" }}
+          >
+            🧠
           </div>
-          <div className="text-xs text-slate-500">Trouvez le bon partenaire</div>
+          <div>
+            <div
+              className="font-semibold text-sm text-white group-hover:text-purple-400 transition-colors"
+              style={{ fontFamily: "Syne, sans-serif" }}
+            >
+              Voir mes matchs
+            </div>
+            <div className="text-xs text-slate-500 mt-1">Correspondances IA calculées</div>
+          </div>
+          <span className="text-xs mt-auto" style={{ color: "#818CF8" }}>Explorer →</span>
         </Link>
-        <Link href="/investment/submit" className="card p-5 hover:border-brand-green/30 hover:bg-brand-green/3 transition-all group">
-          <div className="text-2xl mb-3">📈</div>
-          <div className="font-semibold text-white text-sm mb-1 group-hover:text-brand-green transition-colors">
-            Soumettre un projet
+
+        <Link
+          href="/directory"
+          className="card p-6 flex flex-col gap-3 group transition-all"
+          style={{ borderColor: "var(--border)" }}
+        >
+          <div
+            className="w-10 h-10 rounded-lg flex items-center justify-center text-lg"
+            style={{ background: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.2)" }}
+          >
+            🔍
           </div>
-          <div className="text-xs text-slate-500">Trouvez des investisseurs</div>
+          <div>
+            <div
+              className="font-semibold text-sm text-white group-hover:text-green-400 transition-colors"
+              style={{ fontFamily: "Syne, sans-serif" }}
+            >
+              Explorer l'annuaire
+            </div>
+            <div className="text-xs text-slate-500 mt-1">Trouvez le bon partenaire</div>
+          </div>
+          <span className="text-xs mt-auto" style={{ color: "#22C55E" }}>Parcourir →</span>
         </Link>
       </div>
 
-      {/* Notifications */}
-      <div className="card">
-        <div className="flex items-center justify-between p-5 border-b border-surface-3">
-          <h2 className="font-semibold text-white text-sm">Notifications récentes</h2>
+      {/* Recent activity — Notifications */}
+      <div className="card" style={{ borderColor: "var(--border)" }}>
+        <div
+          className="flex items-center justify-between p-5"
+          style={{ borderBottom: "1px solid #1E2D45" }}
+        >
+          <h2
+            className="font-semibold text-sm text-white"
+            style={{ fontFamily: "Syne, sans-serif" }}
+          >
+            Activité récente
+          </h2>
           {(notifications?.length || 0) > 0 && (
-            <span className="badge bg-brand-amber/20 text-brand-amber">{notifications?.length} nouvelles</span>
+            <span className="badge-amber">{notifications?.length} nouvelles</span>
           )}
         </div>
+
         {notifications && notifications.length > 0 ? (
-          <div className="divide-y divide-surface-3">
-            {notifications.map((n) => (
-              <div key={n.id} className="flex items-start gap-3 p-4 hover:bg-surface-3/30 transition-colors">
-                <div className="w-2 h-2 rounded-full bg-brand-amber mt-1.5 shrink-0" />
-                <div>
+          <div>
+            {notifications.map((n, i) => (
+              <div
+                key={n.id}
+                className="flex items-start gap-3 p-4 transition-colors hover:bg-white/[0.02]"
+                style={i < notifications.length - 1 ? { borderBottom: "1px solid #1E2D45" } : {}}
+              >
+                <div
+                  className="w-2 h-2 rounded-full mt-1.5 shrink-0"
+                  style={{ background: "#F59E0B" }}
+                />
+                <div className="min-w-0">
                   <div className="text-sm text-white font-medium">{n.title}</div>
                   <div className="text-xs text-slate-500 mt-0.5">{n.message}</div>
                 </div>
@@ -132,8 +261,9 @@ export default async function DashboardPage() {
             ))}
           </div>
         ) : (
-          <div className="p-8 text-center text-slate-600 text-sm">
-            Aucune nouvelle notification
+          <div className="p-10 text-center">
+            <div className="text-3xl mb-3 opacity-30">🔔</div>
+            <p className="text-slate-600 text-sm">Aucune nouvelle notification</p>
           </div>
         )}
       </div>

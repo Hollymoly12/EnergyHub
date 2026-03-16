@@ -21,19 +21,49 @@ export default async function DashboardRFQPage() {
     .eq("organization_id", member.organization_id)
     .order("created_at", { ascending: false });
 
+  const publishedCount = rfqs?.filter(
+    (r) => r.status === "published" || r.status === "responses_open" || r.status === "under_review"
+  ).length ?? 0;
+
+  const draftCount = rfqs?.filter((r) => r.status === "draft").length ?? 0;
+
+  const totalResponses = rfqs?.reduce((acc, r) => acc + (r.responses_count ?? 0), 0) ?? 0;
+
   return (
     <div className="p-8 max-w-6xl">
-      <div className="flex items-center justify-between mb-8">
+      {/* Header */}
+      <div className="mb-8 flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="font-display text-2xl font-bold text-white">Mes appels d'offres</h1>
-          <p className="text-slate-500 text-sm mt-1">
-            {rfqs?.length ?? 0} RFQ{(rfqs?.length ?? 0) > 1 ? "s" : ""} au total
+          <p className="section-tag mb-3">Mes RFQ</p>
+          <h1 className="font-display text-3xl font-bold text-white leading-tight">
+            Appels d'offres
+          </h1>
+          <p className="text-slate-500 text-sm mt-2">
+            {rfqs?.length ?? 0} RFQ{(rfqs?.length ?? 0) !== 1 ? "s" : ""} au total
           </p>
         </div>
-        <Link href="/rfq/create" className="btn-primary">
-          + Publier un RFQ
+        <Link href="/rfq/create" className="btn-primary" style={{ alignSelf: "flex-start" }}>
+          + Créer un RFQ
         </Link>
       </div>
+
+      {/* Summary stats row */}
+      {(rfqs?.length ?? 0) > 0 && (
+        <div className="grid grid-cols-3 gap-4 mb-8">
+          <div className="card p-4" style={{ borderColor: "var(--border)" }}>
+            <div className="stat-number" style={{ color: "#22C55E" }}>{publishedCount}</div>
+            <div className="text-xs text-slate-500 mt-1">Publiés / actifs</div>
+          </div>
+          <div className="card p-4" style={{ borderColor: "var(--border)" }}>
+            <div className="stat-number" style={{ color: "#94A3B8" }}>{draftCount}</div>
+            <div className="text-xs text-slate-500 mt-1">Brouillons</div>
+          </div>
+          <div className="card p-4" style={{ borderColor: "var(--border)" }}>
+            <div className="stat-number" style={{ color: "#F59E0B" }}>{totalResponses}</div>
+            <div className="text-xs text-slate-500 mt-1">Réponses reçues</div>
+          </div>
+        </div>
+      )}
 
       <RFQDashboardClient rfqs={rfqs ?? []} />
     </div>
