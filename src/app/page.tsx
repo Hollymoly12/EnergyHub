@@ -1,6 +1,10 @@
 import Link from "next/link";
+import { createClient } from "@/lib/supabase/server";
+import PublicNavbar from "@/components/PublicNavbar";
 
-export default function LandingPage() {
+export default async function LandingPage() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
   const tickerItems = [
     "Installateurs",
     "Industriels",
@@ -13,52 +17,7 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#FAFAF7", color: "#0D0D0D" }}>
 
-      {/* ── Sticky Navbar ── */}
-      <nav className="sticky top-0 z-50 h-20 bg-white/80 backdrop-blur border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 no-underline">
-            <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center flex-shrink-0">
-              <span className="material-symbols-outlined text-accent" style={{ fontSize: 20, fontVariationSettings: "'FILL' 1" }}>bolt</span>
-            </div>
-            <span className="font-display font-extrabold text-xl text-primary tracking-tight">EnergyHub</span>
-          </Link>
-
-          {/* Nav links */}
-          <div className="hidden md:flex items-center gap-1">
-            {[
-              ["Marketplace", "/directory"],
-              ["Annuaire", "/directory"],
-              ["Projets", "/rfq"],
-              ["Investissements", "/investment"],
-            ].map(([label, href]) => (
-              <Link
-                key={label}
-                href={href}
-                className="text-sm font-semibold text-slate-600 hover:text-primary px-4 py-2 rounded-full hover:bg-primary/5 transition-colors no-underline"
-              >
-                {label}
-              </Link>
-            ))}
-          </div>
-
-          {/* Right actions */}
-          <div className="flex items-center gap-2">
-            <button className="rounded-full p-2 hover:bg-primary/5 transition-colors text-slate-500">
-              <span className="material-symbols-outlined" style={{ fontSize: 20 }}>search</span>
-            </button>
-            <Link
-              href="/login"
-              className="bg-primary text-white text-sm font-semibold px-6 py-2.5 rounded-full hover:opacity-90 transition-opacity no-underline"
-            >
-              Mon Compte
-            </Link>
-            <div className="w-9 h-9 rounded-full bg-slate-100 border-2 border-slate-200 flex items-center justify-center ml-1">
-              <span className="material-symbols-outlined text-slate-400" style={{ fontSize: 18 }}>person</span>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <PublicNavbar activePath="/" isLoggedIn={!!user} />
 
       {/* ── Hero Section ── */}
       <section className="max-w-7xl mx-auto px-6 pt-20 pb-16">

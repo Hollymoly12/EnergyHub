@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import RFQClient from "./RFQClient";
+import PublicNavbar from "@/components/PublicNavbar";
 
 export const metadata = {
   title: "Appels d'offres — EnergyHub",
@@ -18,6 +19,7 @@ export default async function RFQPage() {
 
   return (
     <div className="min-h-screen bg-background-light">
+      <PublicNavbar activePath="/rfq" isLoggedIn={!!user} />
       <div className="max-w-7xl mx-auto px-6 py-10">
         <div className="mb-10">
           <p className="text-xs font-bold uppercase tracking-widest text-primary/50 mb-2">Appels d'offres</p>

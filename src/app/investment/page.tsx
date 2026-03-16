@@ -1,7 +1,7 @@
 // src/app/investment/page.tsx
 import { createClient } from "@/lib/supabase/server";
-import Link from "next/link";
 import ProjectsClient from "./ProjectsClient";
+import PublicNavbar from "@/components/PublicNavbar";
 
 export const metadata = {
   title: "Annuaire des Projets — EnergyHub",
@@ -34,6 +34,7 @@ interface Deal {
 
 export default async function InvestmentPage() {
   const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
 
   const { data: rawDeals } = await supabase
     .from("deals")
@@ -56,37 +57,7 @@ export default async function InvestmentPage() {
   return (
     <div className="min-h-screen bg-background-light font-sans">
 
-      {/* ── Navbar ── */}
-      <nav className="sticky top-0 z-50 bg-white border-b border-slate-100 px-6 py-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-6">
-          <Link href="/" className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-2xl" style={{ color: "#16523A" }}>bolt</span>
-            <span className="font-extrabold text-xl tracking-tight" style={{ color: "#16523A" }}>EnergyHub</span>
-          </Link>
-
-          <div className="hidden md:flex items-center gap-7 text-sm font-medium text-slate-500">
-            <Link href="/" className="hover:text-primary transition-colors">Marketplace</Link>
-            <Link href="/directory" className="hover:text-primary transition-colors">Companies</Link>
-            <Link
-              href="/investment"
-              className="font-bold border-b-2 pb-0.5 transition-colors"
-              style={{ color: "#16523A", borderColor: "#16523A" }}
-            >
-              Projects
-            </Link>
-            <Link href="/rfq" className="hover:text-primary transition-colors">RFQ</Link>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <button className="text-slate-400 hover:text-primary transition-colors">
-              <span className="material-symbols-outlined text-xl">notifications</span>
-            </button>
-            <div className="size-8 rounded-full bg-slate-200 overflow-hidden flex items-center justify-center">
-              <span className="material-symbols-outlined text-slate-500 text-base">person</span>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <PublicNavbar activePath="/investment" isLoggedIn={!!user} />
 
       <div className="max-w-7xl mx-auto px-6 py-12">
 

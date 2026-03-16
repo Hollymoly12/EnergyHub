@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import DirectoryClient from "./DirectoryClient";
+import PublicNavbar from "@/components/PublicNavbar";
 
 export const metadata = {
   title: "Annuaire des acteurs — EnergyHub",
@@ -28,37 +29,7 @@ export default async function DirectoryPage() {
 
   return (
     <div className="min-h-screen bg-background-light">
-      {/* Header */}
-      <header className="border-b border-primary/10 bg-white/80 backdrop-blur-md sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-10">
-            <Link href="/" className="flex items-center gap-2 text-primary">
-              <span className="material-symbols-outlined text-2xl">bolt</span>
-              <span className="text-xl font-extrabold tracking-tight font-display">EnergyHub</span>
-            </Link>
-            <nav className="hidden md:flex items-center gap-8">
-              <Link href="/" className="text-sm font-semibold hover:text-primary transition-colors text-slate-600">Marketplace</Link>
-              <Link href="/directory" className="text-sm font-bold text-primary border-b-2 border-primary pb-px">Annuaire</Link>
-              <Link href="/rfq" className="text-sm font-semibold hover:text-primary transition-colors text-slate-600">Projets</Link>
-              <Link href="/investment" className="text-sm font-semibold hover:text-primary transition-colors text-slate-600">Investissements</Link>
-            </nav>
-          </div>
-          <div className="flex items-center gap-4">
-            {user ? (
-              <Link href="/dashboard" className="bg-primary text-white px-6 py-2.5 rounded-full text-sm font-bold hover:opacity-90 transition-opacity">
-                Mon Compte
-              </Link>
-            ) : (
-              <>
-                <Link href="/login" className="text-sm font-semibold text-slate-600 hover:text-primary transition-colors">Connexion</Link>
-                <Link href="/register" className="bg-primary text-white px-6 py-2.5 rounded-full text-sm font-bold hover:opacity-90 transition-opacity">
-                  Rejoindre
-                </Link>
-              </>
-            )}
-          </div>
-        </div>
-      </header>
+      <PublicNavbar activePath="/directory" isLoggedIn={!!user} />
 
       {/* Page heading */}
       <div className="max-w-7xl mx-auto px-6 py-12">
