@@ -27,11 +27,13 @@ export default function BillingPortalButton() {
       <button
         onClick={handleClick}
         disabled={isPending}
-        className="btn-secondary disabled:opacity-50"
+        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm border transition-colors hover:bg-slate-50 disabled:opacity-50"
+        style={{ borderColor: "#16523A", color: "#16523A" }}
       >
-        {isPending ? "Redirection..." : "Gérer l'abonnement →"}
+        <span className="material-symbols-outlined text-base">receipt_long</span>
+        {isPending ? "Redirection..." : "Gérer l'abonnement"}
       </button>
-      {error && <p className="text-red-400 text-sm mt-2">{error}</p>}
+      {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
     </>
   );
 }

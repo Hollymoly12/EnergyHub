@@ -82,19 +82,25 @@ export default async function DashboardMatchesPage() {
 
   const unreadCount = allMatches.filter((m) => !m.is_viewed).length;
 
+  const avgScore = allMatches.length
+    ? Math.round(allMatches.reduce((acc, m) => acc + m.match_score, 0) / allMatches.length)
+    : 0;
+
   return (
     <div className="p-8 max-w-6xl">
       {/* Header */}
       <div className="mb-8 flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <p className="section-tag mb-3">Mes matchs</p>
-          <h1 className="font-display text-3xl font-bold text-white leading-tight">
+          <p className="text-xs font-bold uppercase tracking-widest text-primary/50 mb-2">Mes matchs</p>
+          <h1 className="font-display text-3xl font-bold text-primary leading-tight">
             Correspondances IA
           </h1>
           <p className="text-slate-500 text-sm mt-2">
             {allMatches.length} correspondance{allMatches.length !== 1 ? "s" : ""} trouvée{allMatches.length !== 1 ? "s" : ""}
             {unreadCount > 0 && (
-              <span className="ml-2 badge-amber">{unreadCount} non vus</span>
+              <span className="ml-2 inline-flex items-center gap-1 text-xs font-bold px-2 py-0.5 rounded-full bg-accent/20 text-primary">
+                {unreadCount} non vus
+              </span>
             )}
           </p>
         </div>
@@ -104,25 +110,18 @@ export default async function DashboardMatchesPage() {
       {allMatches.length > 0 && (
         <div className="grid grid-cols-3 gap-4 mb-8">
           {[
-            {
-              label: "Total matchs",
-              value: allMatches.length,
-              color: "#F59E0B",
-            },
-            {
-              label: "Score moyen",
-              value: `${Math.round(allMatches.reduce((acc, m) => acc + m.match_score, 0) / allMatches.length)}%`,
-              color: "#818CF8",
-            },
-            {
-              label: "Non vus",
-              value: unreadCount,
-              color: unreadCount > 0 ? "#EF4444" : "#4A5568",
-            },
+            { label: "Total matchs", value: allMatches.length, icon: "psychology" },
+            { label: "Score moyen", value: `${avgScore}%`, icon: "query_stats" },
+            { label: "Non vus", value: unreadCount, icon: "mark_email_unread" },
           ].map((s) => (
-            <div key={s.label} className="card p-4" style={{ borderColor: "var(--border)" }}>
-              <div className="stat-number" style={{ color: s.color }}>{s.value}</div>
-              <div className="text-xs text-slate-500 mt-1">{s.label}</div>
+            <div key={s.label} className="bg-white rounded-2xl p-5 border border-black/5 flex items-center gap-4">
+              <div className="size-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                <span className="material-symbols-outlined">{s.icon}</span>
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-primary font-display">{s.value}</p>
+                <p className="text-xs text-slate-500 font-medium uppercase tracking-tight">{s.label}</p>
+              </div>
             </div>
           ))}
         </div>

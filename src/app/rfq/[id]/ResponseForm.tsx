@@ -19,6 +19,8 @@ interface Props {
   existingResponse: ExistingResponse | null;
 }
 
+const inputClass = "w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all";
+
 export default function ResponseForm({ rfqId, isLoggedIn, isOpen, isLimitReached, existingResponse }: Props) {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
@@ -30,11 +32,23 @@ export default function ResponseForm({ rfqId, isLoggedIn, isOpen, isLimitReached
 
   if (!isLoggedIn) {
     return (
-      <div className="card p-6 text-center">
-        <p className="text-slate-400 mb-4">Connectez-vous pour répondre à cet appel d'offres</p>
+      <div className="bg-white rounded-3xl p-8 border border-black/5 text-center">
+        <p className="text-slate-500 mb-6">Connectez-vous pour répondre à cet appel d'offres</p>
         <div className="flex gap-3 justify-center">
-          <Link href="/login" className="btn-primary">Se connecter</Link>
-          <Link href="/register" className="btn-secondary">S'inscrire</Link>
+          <Link
+            href="/login"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm text-white transition-opacity hover:opacity-90"
+            style={{ backgroundColor: "#16523A" }}
+          >
+            Se connecter
+          </Link>
+          <Link
+            href="/register"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm border transition-colors hover:bg-slate-50"
+            style={{ borderColor: "#16523A", color: "#16523A" }}
+          >
+            S'inscrire
+          </Link>
         </div>
       </div>
     );
@@ -42,7 +56,8 @@ export default function ResponseForm({ rfqId, isLoggedIn, isOpen, isLimitReached
 
   if (!isOpen) {
     return (
-      <div className="card p-6 text-center text-slate-500">
+      <div className="bg-white rounded-3xl p-8 border border-black/5 text-center text-slate-500">
+        <span className="material-symbols-outlined text-4xl text-slate-300 block mb-3">lock</span>
         <p>Cet appel d'offres n'accepte plus de réponses.</p>
       </div>
     );
@@ -57,19 +72,31 @@ export default function ResponseForm({ rfqId, isLoggedIn, isOpen, isLimitReached
       submitted_at: new Date().toISOString(),
     } : null);
     return (
-      <div className="card p-6 border-green-400/20">
-        <div className="flex items-center gap-2 mb-4">
-          <span className="text-green-400 text-lg">✓</span>
-          <span className="font-semibold text-white text-sm">
+      <div className="bg-white rounded-3xl p-8 border border-green-200">
+        <div className="flex items-center gap-3 mb-5">
+          <div className="size-10 rounded-full bg-accent flex items-center justify-center">
+            <span className="material-symbols-outlined text-primary text-base">check</span>
+          </div>
+          <span className="font-bold text-primary font-display">
             {success ? "Réponse soumise avec succès !" : "Vous avez déjà répondu"}
           </span>
         </div>
         {displayData && (
-          <div className="space-y-3 text-sm text-slate-400">
+          <div className="space-y-3 text-sm text-slate-600">
             <p className="leading-relaxed">{displayData.message}</p>
-            {displayData.price_range && <p>💰 {displayData.price_range}</p>}
-            {displayData.delivery_timeline && <p>🗓 {displayData.delivery_timeline}</p>}
-            <p className="text-[10px] text-slate-600">
+            {displayData.price_range && (
+              <div className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-primary/50 text-base">payments</span>
+                <span>{displayData.price_range}</span>
+              </div>
+            )}
+            {displayData.delivery_timeline && (
+              <div className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-primary/50 text-base">calendar_today</span>
+                <span>{displayData.delivery_timeline}</span>
+              </div>
+            )}
+            <p className="text-[11px] text-slate-400">
               Soumis le {new Date(displayData.submitted_at).toLocaleDateString("fr-BE")}
             </p>
           </div>
@@ -80,12 +107,22 @@ export default function ResponseForm({ rfqId, isLoggedIn, isOpen, isLimitReached
 
   if (isLimitReached) {
     return (
-      <div className="card p-6 border-yellow-500/20">
-        <p className="text-yellow-500 font-semibold text-sm mb-2">Limite mensuelle atteinte</p>
-        <p className="text-slate-500 text-sm mb-4">
+      <div className="bg-white rounded-3xl p-8 border border-accent/30">
+        <div className="flex items-center gap-2 mb-2">
+          <span className="material-symbols-outlined text-accent text-base">info</span>
+          <p className="font-bold text-primary text-sm">Limite mensuelle atteinte</p>
+        </div>
+        <p className="text-slate-500 text-sm mb-5">
           Le plan Starter permet 1 réponse par mois. Passez au Pro pour répondre sans limite.
         </p>
-        <Link href="/pricing" className="btn-primary text-sm">Voir les offres Pro →</Link>
+        <Link
+          href="/pricing"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm text-white transition-opacity hover:opacity-90"
+          style={{ backgroundColor: "#16523A" }}
+        >
+          <span className="material-symbols-outlined text-base">upgrade</span>
+          Voir les offres Pro
+        </Link>
       </div>
     );
   }
@@ -114,26 +151,28 @@ export default function ResponseForm({ rfqId, isLoggedIn, isOpen, isLimitReached
   }
 
   return (
-    <form onSubmit={handleSubmit} className="card p-6 space-y-4">
-      <h3 className="font-semibold text-white">Soumettre une réponse</h3>
+    <form onSubmit={handleSubmit} className="bg-white rounded-3xl p-8 border border-black/5 space-y-5">
+      <h3 className="font-bold text-primary text-lg font-display">Soumettre une réponse</h3>
 
       <div>
-        <label className="label">Message <span className="text-red-400">*</span></label>
+        <label className="block text-xs font-bold uppercase tracking-widest text-primary/60 mb-2">
+          Message <span className="text-red-500 normal-case">*</span>
+        </label>
         <textarea
-          className="input min-h-[120px] resize-y"
+          className={`${inputClass} min-h-[120px] resize-y`}
           value={message}
           onChange={e => setMessage(e.target.value)}
           placeholder="Décrivez votre approche, vos références, pourquoi vous êtes le bon prestataire... (min 50 caractères)"
           required
           minLength={50}
         />
-        <p className="text-[10px] text-slate-600 mt-1">{message.length} / 50 min</p>
+        <p className="text-[10px] text-slate-400 mt-1">{message.length} / 50 min</p>
       </div>
 
       <div>
-        <label className="label">Fourchette de prix</label>
+        <label className="block text-xs font-bold uppercase tracking-widest text-primary/60 mb-2">Fourchette de prix</label>
         <input
-          className="input"
+          className={inputClass}
           value={priceRange}
           onChange={e => setPriceRange(e.target.value)}
           placeholder="ex: 50 000€ - 80 000€"
@@ -141,23 +180,25 @@ export default function ResponseForm({ rfqId, isLoggedIn, isOpen, isLimitReached
       </div>
 
       <div>
-        <label className="label">Délai de réalisation</label>
+        <label className="block text-xs font-bold uppercase tracking-widest text-primary/60 mb-2">Délai de réalisation</label>
         <input
-          className="input"
+          className={inputClass}
           value={deliveryTimeline}
           onChange={e => setDeliveryTimeline(e.target.value)}
           placeholder="ex: 3 mois"
         />
       </div>
 
-      {error && <p className="text-sm text-red-400">{error}</p>}
+      {error && <p className="text-sm text-red-500">{error}</p>}
 
       <button
         type="submit"
         disabled={isPending || message.trim().length < 50}
-        className="btn-primary w-full disabled:opacity-50"
+        className="flex items-center justify-center gap-2 w-full px-6 py-3 rounded-xl font-bold text-sm text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+        style={{ backgroundColor: "#16523A" }}
       >
-        {isPending ? "Envoi en cours..." : "Soumettre ma réponse →"}
+        <span className="material-symbols-outlined text-base">send</span>
+        {isPending ? "Envoi en cours..." : "Soumettre ma réponse"}
       </button>
     </form>
   );

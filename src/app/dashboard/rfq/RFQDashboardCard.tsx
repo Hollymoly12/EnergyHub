@@ -24,12 +24,12 @@ interface RFQ {
 }
 
 const STATUS_CONFIG: Record<string, { label: string; color: string }> = {
-  draft:           { label: "Brouillon",       color: "text-slate-400 border-slate-600 bg-slate-800" },
-  published:       { label: "Publié",           color: "text-green-400 border-green-400/30 bg-green-400/10" },
-  responses_open:  { label: "Réponses ouvertes", color: "text-green-400 border-green-400/30 bg-green-400/10" },
-  under_review:    { label: "En révision",      color: "text-yellow-500 border-yellow-500/30 bg-yellow-500/10" },
-  closed:          { label: "Clôturé",          color: "text-slate-500 border-slate-700 bg-slate-800" },
-  cancelled:       { label: "Annulé",           color: "text-red-400 border-red-400/30 bg-red-400/10" },
+  draft:           { label: "Brouillon",       color: "text-slate-500 border-slate-200 bg-slate-100" },
+  published:       { label: "Publié",           color: "text-green-600 border-green-200 bg-green-50" },
+  responses_open:  { label: "Réponses ouvertes", color: "text-green-600 border-green-200 bg-green-50" },
+  under_review:    { label: "En révision",      color: "bg-accent/20 text-primary border-accent/30" },
+  closed:          { label: "Clôturé",          color: "text-slate-400 border-slate-200 bg-slate-100" },
+  cancelled:       { label: "Annulé",           color: "text-red-500 border-red-200 bg-red-50" },
 };
 
 const ACTOR_LABELS: Record<string, string> = {
@@ -78,10 +78,10 @@ export default function RFQDashboardCard({ rfq }: { rfq: RFQ }) {
   }
 
   return (
-    <div className={`card p-5 flex flex-col gap-3 ${isPending ? "opacity-60 pointer-events-none" : ""}`}>
+    <div className={`bg-white rounded-3xl p-5 border border-black/5 flex flex-col gap-3 hover:shadow-lg transition-all ${isPending ? "opacity-60 pointer-events-none" : ""}`}>
       {/* Header: type + statut */}
       <div className="flex items-center justify-between gap-2">
-        <span className="text-[10px] font-bold px-2.5 py-1 rounded-full border text-yellow-500 border-yellow-500/30 bg-yellow-500/10">
+        <span className="text-[10px] font-bold px-2.5 py-1 rounded-full border bg-accent/20 text-primary border-accent/30">
           {rfq.type.toUpperCase()}
         </span>
         <span className={`text-[10px] font-semibold px-2.5 py-1 rounded-full border ${statusCfg.color}`}>
@@ -90,58 +90,78 @@ export default function RFQDashboardCard({ rfq }: { rfq: RFQ }) {
       </div>
 
       {/* Titre */}
-      <h3 className="font-semibold text-white text-sm leading-snug">{rfq.title}</h3>
+      <h3 className="font-bold text-primary text-sm leading-snug font-display">{rfq.title}</h3>
 
       {/* Description */}
       {rfq.description && (
-        <p className="text-xs text-slate-400 leading-relaxed line-clamp-3">{rfq.description}</p>
+        <p className="text-xs text-slate-500 leading-relaxed line-clamp-3">{rfq.description}</p>
       )}
 
       {/* Chips */}
       <div className="flex flex-wrap gap-1.5">
         {rfq.budget_range && (
-          <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700">
-            💰 {rfq.budget_range}
+          <span className="flex items-center gap-1 text-[10px] px-2 py-1 rounded bg-slate-100 text-slate-600 font-medium">
+            <span className="material-symbols-outlined text-xs">payments</span>
+            {rfq.budget_range}
           </span>
         )}
         {deadline && (
-          <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700">
-            📅 {deadline}
+          <span className="flex items-center gap-1 text-[10px] px-2 py-1 rounded bg-slate-100 text-slate-600 font-medium">
+            <span className="material-symbols-outlined text-xs">calendar_today</span>
+            {deadline}
           </span>
         )}
         {rfq.location && (
-          <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700">
-            📍 {rfq.location}
+          <span className="flex items-center gap-1 text-[10px] px-2 py-1 rounded bg-slate-100 text-slate-600 font-medium">
+            <span className="material-symbols-outlined text-xs">location_on</span>
+            {rfq.location}
           </span>
         )}
       </div>
 
       {/* Stats bar */}
-      <div className="flex items-center gap-4 text-xs text-slate-500 border-t border-slate-800 pt-3">
-        <span>👁 {rfq.views_count} vues</span>
-        <span>📬 {rfq.responses_count} réponse{rfq.responses_count > 1 ? "s" : ""}</span>
-        <span className={isAIAnalyzed ? "text-green-400" : "text-slate-600"}>
-          🤖 {isAIAnalyzed ? "Analysé" : "En attente"}
+      <div className="flex items-center gap-4 text-xs text-slate-400 border-t border-slate-100 pt-3">
+        <span className="flex items-center gap-1">
+          <span className="material-symbols-outlined text-xs">visibility</span>
+          {rfq.views_count} vues
+        </span>
+        <span className="flex items-center gap-1">
+          <span className="material-symbols-outlined text-xs">mail</span>
+          {rfq.responses_count} réponse{rfq.responses_count > 1 ? "s" : ""}
+        </span>
+        <span className={`flex items-center gap-1 ${isAIAnalyzed ? "text-primary" : "text-slate-300"}`}>
+          <span className="material-symbols-outlined text-xs">auto_awesome</span>
+          {isAIAnalyzed ? "Analysé" : "En attente"}
         </span>
       </div>
 
       {/* Erreur */}
-      {error && <p className="text-xs text-red-400">{error}</p>}
+      {error && <p className="text-xs text-red-500">{error}</p>}
 
       {/* Actions */}
       <div className="flex flex-col gap-2 mt-auto">
-        <Link href={`/rfq/${rfq.id}`} className="btn-secondary text-xs py-2 w-full text-center">
-          Voir le détail →
+        <Link
+          href={`/rfq/${rfq.id}`}
+          className="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold border transition-colors hover:bg-slate-50"
+          style={{ borderColor: "#16523A", color: "#16523A" }}
+        >
+          <span className="material-symbols-outlined text-sm">open_in_new</span>
+          Voir le détail
         </Link>
         {isDraft && (
-          <button onClick={handlePublish} className="btn-primary text-xs py-2 w-full">
+          <button
+            onClick={handlePublish}
+            className="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold text-white transition-opacity hover:opacity-90"
+            style={{ backgroundColor: "#16523A" }}
+          >
+            <span className="material-symbols-outlined text-sm">publish</span>
             Publier
           </button>
         )}
         {isPublished && (
           <button
             onClick={handleClose}
-            className="text-xs py-2 w-full rounded border border-slate-700 text-slate-400 hover:text-white hover:border-slate-500 transition-colors"
+            className="text-xs py-2.5 w-full rounded-xl border border-slate-200 text-slate-500 hover:text-primary hover:border-primary/30 transition-colors"
           >
             Clôturer
           </button>
@@ -151,8 +171,8 @@ export default function RFQDashboardCard({ rfq }: { rfq: RFQ }) {
             onClick={handleDelete}
             className={`text-xs py-1.5 w-full transition-colors ${
               confirmDelete
-                ? "text-red-400 hover:text-red-300 font-semibold"
-                : "text-slate-600 hover:text-red-400"
+                ? "text-red-500 hover:text-red-600 font-semibold"
+                : "text-slate-400 hover:text-red-500"
             }`}
           >
             {confirmDelete ? "Confirmer la suppression ?" : "Supprimer"}
@@ -161,7 +181,7 @@ export default function RFQDashboardCard({ rfq }: { rfq: RFQ }) {
         {confirmDelete && (
           <button
             onClick={() => setConfirmDelete(false)}
-            className="text-xs text-slate-600 hover:text-slate-400 transition-colors"
+            className="text-xs text-slate-400 hover:text-slate-600 transition-colors"
           >
             Annuler
           </button>

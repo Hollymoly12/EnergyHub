@@ -10,6 +10,7 @@ export default function LoginPage() {
   const supabase = createClient();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -31,81 +32,150 @@ export default function LoginPage() {
   }
 
   return (
-    <div style={{ minHeight: "100vh", backgroundColor: "#FAFAF7", display: "flex" }}>
-
-      {/* Left panel */}
-      <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: 48 }}>
-        <div style={{ width: "100%", maxWidth: 380 }}>
-          {/* Logo */}
-          <Link href="/" style={{ display: "inline-flex", alignItems: "center", gap: 8, textDecoration: "none", marginBottom: 48 }}>
-            <div style={{ width: 30, height: 30, borderRadius: 8, backgroundColor: "#16523A", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <path d="M7 1L1 8h5.5L5 13l8-8H7.5L9 1z" fill="#B8FF3C"/>
-              </svg>
+    <div className="min-h-screen flex">
+      {/* Left panel — decorative */}
+      <div className="hidden md:flex w-[45%] relative flex-col justify-between p-12 bg-primary overflow-hidden">
+        {/* Dot grid */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage: "radial-gradient(circle, rgba(184,255,60,0.12) 1px, transparent 1px)",
+            backgroundSize: "28px 28px",
+          }}
+        />
+        {/* Logo */}
+        <div className="relative z-10">
+          <Link href="/" className="inline-flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-accent flex items-center justify-center">
+              <span className="material-symbols-outlined text-primary font-bold text-xl">bolt</span>
             </div>
-            <span style={{ fontFamily: "Bricolage Grotesque, sans-serif", fontWeight: 800, fontSize: 16, color: "#0D0D0D" }}>EnergyHub</span>
+            <span className="text-white font-extrabold text-lg font-display">EnergyHub</span>
           </Link>
+        </div>
 
-          <h1 style={{ fontFamily: "Bricolage Grotesque, sans-serif", fontSize: 32, fontWeight: 800, color: "#0D0D0D", letterSpacing: "-0.025em", marginBottom: 8 }}>Connexion</h1>
-          <p style={{ fontSize: 14, color: "#6B6560", marginBottom: 32 }}>Accédez à votre espace EnergyHub</p>
-
-          {error && (
-            <div style={{ backgroundColor: "#FEE2E2", border: "1px solid #FECACA", borderRadius: 10, padding: "10px 14px", marginBottom: 20, fontSize: 13, color: "#991B1B" }}>
-              {error}
-            </div>
-          )}
-
-          <form onSubmit={handleLogin} style={{ display: "flex", flexDirection: "column" as const, gap: 16 }}>
-            <div>
-              <label className="label">Email</label>
-              <input type="email" className="input" value={email} onChange={e => setEmail(e.target.value)} placeholder="vous@entreprise.be" required />
-            </div>
-            <div>
-              <label className="label">Mot de passe</label>
-              <input type="password" className="input" value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" required />
-            </div>
-            <button type="submit" disabled={loading} className="btn-primary" style={{ marginTop: 4, width: "100%", justifyContent: "center" }}>
-              {loading ? "Connexion..." : "Se connecter →"}
-            </button>
-          </form>
-
-          <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "20px 0" }}>
-            <div style={{ flex: 1, height: 1, backgroundColor: "#E2DDD6" }} />
-            <span style={{ fontSize: 12, color: "#B8B2AB" }}>ou</span>
-            <div style={{ flex: 1, height: 1, backgroundColor: "#E2DDD6" }} />
-          </div>
-
-          <button onClick={handleGoogle} className="btn-secondary" style={{ width: "100%", justifyContent: "center" }}>
-            <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-            Continuer avec Google
-          </button>
-
-          <p style={{ textAlign: "center" as const, fontSize: 14, color: "#6B6560", marginTop: 28 }}>
-            Pas encore de compte ?{" "}
-            <Link href="/register" style={{ color: "#16523A", textDecoration: "none", fontWeight: 600 }}>Créer un compte →</Link>
+        {/* Tagline */}
+        <div className="relative z-10">
+          <p className="text-white font-extrabold text-4xl leading-tight mb-6 font-display">
+            La marketplace de la transition énergétique belge
           </p>
+          <p className="text-white/60 text-sm leading-relaxed">
+            Matching IA, RFQ automatisés et module d&apos;investissement pour accélérer votre transition énergétique.
+          </p>
+        </div>
+
+        {/* Stats */}
+        <div className="relative z-10 flex flex-col gap-4">
+          {[
+            { icon: "factory", label: "6 types d'acteurs" },
+            { icon: "psychology", label: "Score IA 0–100" },
+            { icon: "location_on", label: "3 régions couvertes" },
+          ].map(({ icon, label }) => (
+            <div key={icon} className="flex items-center gap-3">
+              <span className="material-symbols-outlined text-accent text-lg">{icon}</span>
+              <span className="text-white/60 text-sm">{label}</span>
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* Right panel */}
-      <div style={{ width: 440, backgroundColor: "#16523A", display: "flex", flexDirection: "column" as const, alignItems: "center", justifyContent: "center", padding: 48 }}>
-        <div style={{ maxWidth: 320, textAlign: "center" as const }}>
-          <div style={{ width: 60, height: 60, borderRadius: 16, backgroundColor: "rgba(184,255,60,0.15)", border: "1px solid rgba(184,255,60,0.25)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 28px" }}>
-            <svg width="28" height="28" viewBox="0 0 14 14" fill="none">
-              <path d="M7 1L1 8h5.5L5 13l8-8H7.5L9 1z" fill="#B8FF3C"/>
+      {/* Right panel — form */}
+      <div className="flex-1 flex items-center justify-center p-8 bg-background-light">
+        <div className="bg-white rounded-3xl p-10 w-full max-w-md shadow-sm border border-slate-100">
+          {/* Mobile logo */}
+          <div className="flex md:hidden items-center gap-2 mb-8">
+            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
+              <span className="material-symbols-outlined text-accent text-base font-bold">bolt</span>
+            </div>
+            <span className="font-extrabold text-primary text-base font-display">EnergyHub</span>
+          </div>
+
+          <h2 className="text-3xl font-extrabold text-primary mb-1 font-display">Connexion</h2>
+          <p className="text-slate-500 text-sm mb-8">Bienvenue sur EnergyHub</p>
+
+          {error && (
+            <div className="alert-error mb-6">{error}</div>
+          )}
+
+          <form onSubmit={handleLogin} className="flex flex-col gap-5">
+            <div>
+              <label className="label">Email</label>
+              <div className="relative">
+                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">mail</span>
+                <input
+                  type="email"
+                  className="input pl-10"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  placeholder="vous@entreprise.be"
+                  required
+                />
+              </div>
+            </div>
+
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <label className="label" style={{ marginBottom: 0 }}>Mot de passe</label>
+                <Link href="/forgot-password" className="text-primary text-xs font-semibold hover:opacity-70 transition-opacity">
+                  Mot de passe oublié ?
+                </Link>
+              </div>
+              <div className="relative">
+                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">lock</span>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  className="input pl-10 pr-10"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(v => !v)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                  tabIndex={-1}
+                >
+                  <span className="material-symbols-outlined text-lg">
+                    {showPassword ? "visibility_off" : "visibility"}
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-primary text-white py-3 rounded-xl font-bold hover:opacity-90 transition-opacity disabled:opacity-60"
+            >
+              {loading ? "Connexion..." : "Se connecter"}
+            </button>
+          </form>
+
+          <div className="flex items-center gap-3 my-6">
+            <div className="flex-1 h-px bg-slate-100" />
+            <span className="text-slate-400 text-xs">ou</span>
+            <div className="flex-1 h-px bg-slate-100" />
+          </div>
+
+          <button
+            onClick={handleGoogle}
+            className="w-full flex items-center justify-center gap-3 border border-slate-200 bg-white rounded-xl py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
             </svg>
-          </div>
-          <h2 style={{ fontFamily: "Bricolage Grotesque, sans-serif", fontSize: 28, fontWeight: 800, color: "#fff", letterSpacing: "-0.02em", marginBottom: 16, lineHeight: 1.15 }}>
-            La marketplace de l&apos;énergie belge
-          </h2>
-          <p style={{ fontSize: 14, color: "rgba(255,255,255,0.6)", lineHeight: 1.7, marginBottom: 32 }}>
-            Matching IA, RFQ automatisés et module d&apos;investissement pour accélérer la transition énergétique.
+            Continuer avec Google
+          </button>
+
+          <p className="text-center text-sm text-slate-500 mt-8">
+            Pas encore de compte ?{" "}
+            <Link href="/register" className="text-primary font-semibold hover:opacity-70 transition-opacity">
+              Créer un compte
+            </Link>
           </p>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-            {["6 types d'acteurs", "Score IA 0-100", "3 régions", "Gratuit"].map(feat => (
-              <div key={feat} style={{ backgroundColor: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 10, padding: "10px 12px", fontSize: 12, color: "rgba(255,255,255,0.7)", fontWeight: 500 }}>{feat}</div>
-            ))}
-          </div>
         </div>
       </div>
     </div>

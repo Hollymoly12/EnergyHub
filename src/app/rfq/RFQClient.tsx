@@ -37,13 +37,13 @@ interface Props {
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const ACTOR_LABELS: Record<string, { label: string; icon: string }> = {
-  industrial:      { label: "Industriel",           icon: "⚡" },
-  installer:       { label: "Installateur",          icon: "🔧" },
-  software_editor: { label: "Éditeur logiciel",       icon: "💻" },
-  investor:        { label: "Investisseur",           icon: "📈" },
-  energy_provider: { label: "Fournisseur d'énergie",  icon: "🏭" },
-  esco:            { label: "ESCO / Consultant",      icon: "🎯" },
-  greentech:       { label: "GreenTech",              icon: "🌱" },
+  industrial:      { label: "Industriel",           icon: "factory" },
+  installer:       { label: "Installateur",          icon: "handyman" },
+  software_editor: { label: "Éditeur logiciel",       icon: "code" },
+  investor:        { label: "Investisseur",           icon: "trending_up" },
+  energy_provider: { label: "Fournisseur d'énergie",  icon: "bolt" },
+  esco:            { label: "ESCO / Consultant",      icon: "psychology" },
+  greentech:       { label: "GreenTech",              icon: "eco" },
 };
 
 const ACTOR_TYPES = Object.entries(ACTOR_LABELS);
@@ -55,7 +55,7 @@ const PAGE_SIZE = 20;
 
 function RFQCard({ rfq }: { rfq: RFQ }) {
   const org = rfq.organizations;
-  const orgType = org ? (ACTOR_LABELS[org.actor_type] || { label: org.actor_type, icon: "🏢" }) : null;
+  const orgType = org ? (ACTOR_LABELS[org.actor_type] || { label: org.actor_type, icon: "business" }) : null;
 
   const formattedDeadline = rfq.deadline
     ? new Date(rfq.deadline).toLocaleDateString("fr-BE", { day: "numeric", month: "short", year: "numeric" })
@@ -64,70 +64,79 @@ function RFQCard({ rfq }: { rfq: RFQ }) {
   const isRFI = rfq.type === "rfi";
 
   return (
-    <div className="card p-5">
+    <div className="bg-white rounded-3xl p-6 border border-black/5 hover:border-black/20 hover:shadow-xl transition-all flex flex-col gap-4">
       {/* Header: type badge + org */}
-      <div className="flex items-start justify-between gap-3 mb-3">
+      <div className="flex items-start justify-between gap-3">
         <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full border shrink-0 ${
           isRFI
-            ? "text-blue-400 border-blue-400/30 bg-blue-400/8"
-            : "text-yellow-500 border-yellow-500/30 bg-yellow-500/8"
+            ? "bg-blue-50 text-blue-600 border-blue-200"
+            : "bg-accent/20 text-primary border-accent/30"
         }`}>
           {rfq.type.toUpperCase()}
         </span>
         {org && (
           <div className="flex items-center gap-2 min-w-0">
-            <div className="w-6 h-6 rounded bg-slate-800 flex items-center justify-center text-xs shrink-0 overflow-hidden">
+            <div className="w-7 h-7 rounded-lg bg-slate-100 flex items-center justify-center shrink-0 overflow-hidden">
               {org.logo_url
                 ? <img src={org.logo_url} alt={org.name} className="w-full h-full object-contain" />
-                : orgType?.icon || "🏢"}
+                : <span className="material-symbols-outlined text-slate-400 text-sm">{orgType?.icon || "business"}</span>}
             </div>
             <div className="min-w-0">
-              <span className="text-xs text-slate-400 truncate block">
+              <span className="text-xs text-slate-500 truncate block font-medium">
                 {org.name}
-                {org.is_verified && <span className="text-green-400 ml-1">✓</span>}
+                {org.is_verified && (
+                  <span className="material-symbols-outlined text-green-500 text-xs ml-1 align-middle">verified</span>
+                )}
               </span>
-              {org.city && <span className="text-[10px] text-slate-600">{org.city}</span>}
+              {org.city && <span className="text-[10px] text-slate-400">{org.city}</span>}
             </div>
           </div>
         )}
       </div>
 
       {/* Titre */}
-      <h3 className="font-semibold text-white text-sm mb-2 leading-snug">
+      <h3 className="font-bold text-primary text-base leading-snug font-display">
         {rfq.title}
       </h3>
 
       {/* Description */}
       {rfq.description && (
-        <p className="text-xs text-slate-400 leading-relaxed mb-3 line-clamp-5">
+        <p className="text-sm text-slate-500 leading-relaxed line-clamp-3">
           {rfq.description}
         </p>
       )}
 
       {/* Chips: budget · deadline · location */}
-      <div className="flex flex-wrap gap-1.5 mb-3">
+      <div className="flex flex-wrap gap-1.5">
         {rfq.budget_range && (
-          <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700">
-            💰 {rfq.budget_range}
+          <span className="flex items-center gap-1 text-[10px] px-2 py-1 rounded bg-slate-100 text-slate-600 font-medium">
+            <span className="material-symbols-outlined text-xs">payments</span>
+            {rfq.budget_range}
           </span>
         )}
         {formattedDeadline && (
-          <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700">
-            📅 {formattedDeadline}
+          <span className="flex items-center gap-1 text-[10px] px-2 py-1 rounded bg-slate-100 text-slate-600 font-medium">
+            <span className="material-symbols-outlined text-xs">calendar_today</span>
+            {formattedDeadline}
           </span>
         )}
         {rfq.location && (
-          <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700">
-            📍 {rfq.location}
+          <span className="flex items-center gap-1 text-[10px] px-2 py-1 rounded bg-slate-100 text-slate-600 font-medium">
+            <span className="material-symbols-outlined text-xs">location_on</span>
+            {rfq.location}
           </span>
         )}
       </div>
 
       {/* Tags */}
       {rfq.tags?.length > 0 && (
-        <div className="flex flex-wrap gap-1.5 mb-4">
+        <div className="flex flex-wrap gap-1.5">
           {rfq.tags.map(tag => (
-            <span key={tag} className="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700">
+            <span
+              key={tag}
+              className="text-[10px] uppercase font-bold px-2 py-1 rounded"
+              style={{ backgroundColor: "rgba(22,82,58,0.07)", color: "#16523A" }}
+            >
               {tag}
             </span>
           ))}
@@ -137,9 +146,11 @@ function RFQCard({ rfq }: { rfq: RFQ }) {
       {/* CTA */}
       <Link
         href={`/rfq/${rfq.id}`}
-        className="btn-secondary text-xs py-2 w-full block text-center"
+        className="flex items-center justify-center gap-1.5 mt-auto px-4 py-2.5 rounded-xl text-sm font-bold border transition-colors hover:bg-slate-50"
+        style={{ borderColor: "#16523A", color: "#16523A" }}
       >
-        Voir le détail →
+        <span className="material-symbols-outlined text-base">open_in_new</span>
+        Voir le détail
       </Link>
     </div>
   );
@@ -153,11 +164,8 @@ export default function RFQClient({ initialRFQs, totalCount, isLoggedIn }: Props
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(0);
 
-  // Filtres API
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("");
-
-  // Filtres client
   const [actorTypeFilter, setActorTypeFilter] = useState("");
   const [regionFilter, setRegionFilter] = useState("");
   const [budgetFilter, setBudgetFilter] = useState("");
@@ -184,7 +192,6 @@ export default function RFQClient({ initialRFQs, totalCount, isLoggedIn }: Props
     }
   }, []);
 
-  // Debounce sur search + type
   useEffect(() => {
     const t = setTimeout(() => {
       fetchRFQs({ q: search, type: typeFilter, page: 0 });
@@ -193,12 +200,10 @@ export default function RFQClient({ initialRFQs, totalCount, isLoggedIn }: Props
     return () => clearTimeout(t);
   }, [search, typeFilter, fetchRFQs]);
 
-  // Reset page when client-side filters change
   useEffect(() => {
     setPage(0);
   }, [actorTypeFilter, regionFilter, budgetFilter, deadlineBefore, tagFilter]);
 
-  // Filtres client appliqués après fetch
   const filtered = allRFQs.filter(rfq => {
     if (actorTypeFilter && !rfq.target_actor_types?.includes(actorTypeFilter)) return false;
     if (regionFilter && !rfq.location?.toLowerCase().includes(regionFilter.toLowerCase())) return false;
@@ -210,114 +215,110 @@ export default function RFQClient({ initialRFQs, totalCount, isLoggedIn }: Props
 
   const visibleRFQs = isLoggedIn ? filtered : filtered.slice(0, PUBLIC_LIMIT);
   const hiddenCount = isLoggedIn ? 0 : Math.max(0, filtered.length - PUBLIC_LIMIT);
-
   const hasAnyFilter = search || typeFilter || actorTypeFilter || regionFilter || budgetFilter || deadlineBefore || tagFilter;
   const hasClientFilter = !!(actorTypeFilter || regionFilter || budgetFilter || deadlineBefore || tagFilter);
 
   return (
-    <div className="flex gap-6 items-start">
+    <div className="flex gap-8 items-start">
 
       {/* ── Sidebar filtres ── */}
       <aside className="w-64 shrink-0 sticky top-8">
-        <div className="card p-5 space-y-6">
+        <div className="bg-white rounded-3xl p-6 border border-black/5 space-y-6">
 
-          {/* Recherche */}
           <div>
-            <label className="label">Recherche</label>
-            <input
-              className="input"
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              placeholder="Titre, mot-clé..."
-            />
+            <label className="block text-xs font-bold uppercase tracking-widest text-primary/60 mb-2">Recherche</label>
+            <div className="relative">
+              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-base pointer-events-none">search</span>
+              <input
+                className="w-full rounded-xl border border-slate-200 pl-9 pr-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all"
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                placeholder="Titre, mot-clé..."
+              />
+            </div>
           </div>
 
-          {/* Type */}
           <div>
-            <label className="label">Type</label>
+            <label className="block text-xs font-bold uppercase tracking-widest text-primary/60 mb-2">Type</label>
             <div className="space-y-1.5 mt-2">
               {[["", "Tous"], ["rfq", "RFQ"], ["rfi", "RFI"]].map(([val, lbl]) => (
                 <label key={val} className="flex items-center gap-2.5 cursor-pointer group">
                   <input type="radio" name="rfq-type" checked={typeFilter === val}
                     onChange={() => setTypeFilter(val)}
-                    className="accent-yellow-500" />
-                  <span className="text-sm text-slate-400 group-hover:text-white transition-colors">{lbl}</span>
+                    className="accent-primary" />
+                  <span className="text-sm text-slate-600 group-hover:text-primary transition-colors">{lbl}</span>
                 </label>
               ))}
             </div>
           </div>
 
-          {/* Acteur ciblé */}
           <div>
-            <label className="label">Acteur ciblé</label>
+            <label className="block text-xs font-bold uppercase tracking-widest text-primary/60 mb-2">Acteur ciblé</label>
             <div className="space-y-1.5 mt-2">
               <label className="flex items-center gap-2.5 cursor-pointer group">
                 <input type="radio" name="actor-type" checked={actorTypeFilter === ""}
                   onChange={() => setActorTypeFilter("")}
-                  className="accent-yellow-500" />
-                <span className="text-sm text-slate-400 group-hover:text-white transition-colors">Tous</span>
+                  className="accent-primary" />
+                <span className="text-sm text-slate-600 group-hover:text-primary transition-colors">Tous</span>
               </label>
               {ACTOR_TYPES.map(([value, { label, icon }]) => (
                 <label key={value} className="flex items-center gap-2.5 cursor-pointer group">
                   <input type="radio" name="actor-type" checked={actorTypeFilter === value}
                     onChange={() => setActorTypeFilter(value)}
-                    className="accent-yellow-500" />
-                  <span className="text-sm text-slate-400 group-hover:text-white transition-colors">
-                    {icon} {label}
+                    className="accent-primary" />
+                  <span className="flex items-center gap-1.5 text-sm text-slate-600 group-hover:text-primary transition-colors">
+                    <span className="material-symbols-outlined text-xs">{icon}</span>
+                    {label}
                   </span>
                 </label>
               ))}
             </div>
           </div>
 
-          {/* Région */}
           <div>
-            <label className="label">Région</label>
+            <label className="block text-xs font-bold uppercase tracking-widest text-primary/60 mb-2">Région</label>
             <div className="space-y-1.5 mt-2">
               <label className="flex items-center gap-2.5 cursor-pointer group">
                 <input type="radio" name="region" checked={regionFilter === ""}
                   onChange={() => setRegionFilter("")}
-                  className="accent-yellow-500" />
-                <span className="text-sm text-slate-400 group-hover:text-white transition-colors">Toutes</span>
+                  className="accent-primary" />
+                <span className="text-sm text-slate-600 group-hover:text-primary transition-colors">Toutes</span>
               </label>
               {REGIONS.map(r => (
                 <label key={r} className="flex items-center gap-2.5 cursor-pointer group">
                   <input type="radio" name="region" checked={regionFilter === r}
                     onChange={() => setRegionFilter(r)}
-                    className="accent-yellow-500" />
-                  <span className="text-sm text-slate-400 group-hover:text-white transition-colors">{r}</span>
+                    className="accent-primary" />
+                  <span className="text-sm text-slate-600 group-hover:text-primary transition-colors">{r}</span>
                 </label>
               ))}
             </div>
           </div>
 
-          {/* Budget */}
           <div>
-            <label className="label">Budget (contient)</label>
+            <label className="block text-xs font-bold uppercase tracking-widest text-primary/60 mb-2">Budget</label>
             <input
-              className="input"
+              className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-primary/20 transition-all"
               value={budgetFilter}
               onChange={e => setBudgetFilter(e.target.value)}
-              placeholder="ex: 50k, €, 100 000..."
+              placeholder="ex: 50k, €..."
             />
           </div>
 
-          {/* Deadline */}
           <div>
-            <label className="label">Deadline avant le</label>
+            <label className="block text-xs font-bold uppercase tracking-widest text-primary/60 mb-2">Deadline avant le</label>
             <input
               type="date"
-              className="input"
+              className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-primary/20 transition-all"
               value={deadlineBefore}
               onChange={e => setDeadlineBefore(e.target.value)}
             />
           </div>
 
-          {/* Tag */}
           <div>
-            <label className="label">Tag</label>
+            <label className="block text-xs font-bold uppercase tracking-widest text-primary/60 mb-2">Tag</label>
             <input
-              className="input"
+              className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-primary/20 transition-all"
               value={tagFilter}
               onChange={e => setTagFilter(e.target.value)}
               placeholder="ex: solaire, audit..."
@@ -330,9 +331,10 @@ export default function RFQClient({ initialRFQs, totalCount, isLoggedIn }: Props
                 setSearch(""); setTypeFilter(""); setActorTypeFilter("");
                 setRegionFilter(""); setBudgetFilter(""); setDeadlineBefore(""); setTagFilter("");
               }}
-              className="text-xs text-slate-500 hover:text-white transition-colors"
+              className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-primary transition-colors"
             >
-              ↺ Réinitialiser les filtres
+              <span className="material-symbols-outlined text-sm">refresh</span>
+              Réinitialiser les filtres
             </button>
           )}
         </div>
@@ -341,50 +343,69 @@ export default function RFQClient({ initialRFQs, totalCount, isLoggedIn }: Props
       {/* ── Grille ── */}
       <div className="flex-1 min-w-0">
 
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-6">
           <span className="text-sm text-slate-500">
             {loading
               ? "Recherche..."
               : `${filtered.length} résultat${filtered.length > 1 ? "s" : ""}`}
           </span>
           {isLoggedIn && (
-            <Link href="/rfq/create" className="btn-primary text-xs py-2 px-4">
-              + Publier un RFQ
+            <Link
+              href="/rfq/create"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm text-white transition-opacity hover:opacity-90"
+              style={{ backgroundColor: "#16523A" }}
+            >
+              <span className="material-symbols-outlined text-base">add_circle</span>
+              Publier un RFQ
             </Link>
           )}
         </div>
 
-        <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 transition-opacity ${loading ? "opacity-50" : ""}`}>
+        <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 transition-opacity ${loading ? "opacity-50" : ""}`}>
           {visibleRFQs.map(rfq => (
             <RFQCard key={rfq.id} rfq={rfq} />
           ))}
         </div>
 
         {visibleRFQs.length === 0 && !loading && (
-          <div className="text-center py-16 text-slate-600">
-            <div className="text-4xl mb-3">📋</div>
-            <p>Aucun appel d'offres trouvé</p>
+          <div className="text-center py-16">
+            <div className="size-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+              <span className="material-symbols-outlined text-3xl text-primary">assignment</span>
+            </div>
+            <p className="text-primary font-bold font-display">Aucun appel d'offres trouvé</p>
           </div>
         )}
 
         {!isLoggedIn && hiddenCount > 0 && (
-          <div className="mt-6 card p-8 text-center border-yellow-500/20">
-            <div className="text-3xl mb-3">🔒</div>
-            <div className="text-white font-semibold mb-1">
+          <div className="mt-10 rounded-3xl p-10 text-center border" style={{ backgroundColor: "#fff", borderColor: "rgba(22,82,58,0.15)" }}>
+            <span className="material-symbols-outlined text-5xl block mb-4" style={{ color: "#16523A" }}>lock</span>
+            <p className="text-xl font-bold mb-2 font-display" style={{ color: "#16523A" }}>
               +{hiddenCount} appel{hiddenCount > 1 ? "s" : ""} d'offres disponible{hiddenCount > 1 ? "s" : ""}
-            </div>
-            <div className="text-slate-500 text-sm mb-4">
+            </p>
+            <p className="text-sm text-slate-500 mb-6">
               Inscrivez-vous gratuitement pour accéder à tous les appels d'offres
-            </div>
+            </p>
             <div className="flex gap-3 justify-center">
-              <Link href="/register" className="btn-primary">S'inscrire gratuitement →</Link>
-              <Link href="/login" className="btn-secondary">Se connecter</Link>
+              <Link
+                href="/register"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm text-white transition-opacity hover:opacity-90"
+                style={{ backgroundColor: "#16523A" }}
+              >
+                S'inscrire gratuitement
+              </Link>
+              <Link
+                href="/login"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm border transition-colors hover:bg-slate-50"
+                style={{ borderColor: "#16523A", color: "#16523A" }}
+              >
+                Se connecter
+              </Link>
             </div>
           </div>
         )}
 
         {isLoggedIn && !hasClientFilter && total > PAGE_SIZE && (
-          <div className="flex justify-center gap-2 mt-8">
+          <div className="flex justify-center items-center gap-3 mt-10">
             <button
               disabled={page === 0}
               onClick={() => {
@@ -392,11 +413,13 @@ export default function RFQClient({ initialRFQs, totalCount, isLoggedIn }: Props
                 setPage(p);
                 fetchRFQs({ q: search, type: typeFilter, page: p });
               }}
-              className="btn-secondary py-2 px-4 text-xs disabled:opacity-30"
+              className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-bold border transition-colors hover:bg-slate-50 disabled:opacity-30"
+              style={{ borderColor: "#16523A", color: "#16523A" }}
             >
-              ← Précédent
+              <span className="material-symbols-outlined text-base">chevron_left</span>
+              Précédent
             </button>
-            <span className="text-sm text-slate-500 flex items-center px-4">
+            <span className="text-sm text-slate-500 px-4">
               Page {page + 1} / {Math.ceil(total / PAGE_SIZE)}
             </span>
             <button
@@ -406,9 +429,11 @@ export default function RFQClient({ initialRFQs, totalCount, isLoggedIn }: Props
                 setPage(p);
                 fetchRFQs({ q: search, type: typeFilter, page: p });
               }}
-              className="btn-secondary py-2 px-4 text-xs disabled:opacity-30"
+              className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-bold border transition-colors hover:bg-slate-50 disabled:opacity-30"
+              style={{ borderColor: "#16523A", color: "#16523A" }}
             >
-              Suivant →
+              Suivant
+              <span className="material-symbols-outlined text-base">chevron_right</span>
             </button>
           </div>
         )}

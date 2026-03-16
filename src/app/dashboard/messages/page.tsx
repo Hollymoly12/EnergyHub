@@ -71,9 +71,9 @@ export default async function DashboardMessagesPage({
 
   return (
     <div className="flex flex-col h-screen">
-      <div className="px-8 py-5 border-b border-slate-800 shrink-0">
-        <h1 className="font-display text-xl font-bold text-white">Messages</h1>
-        <p className="text-slate-500 text-sm mt-0.5">
+      <div className="px-8 py-5 border-b border-slate-200 bg-white shrink-0">
+        <h1 className="font-display text-xl font-bold text-primary">Messages</h1>
+        <p className="text-slate-400 text-sm mt-0.5">
           {enriched.length} conversation{enriched.length > 1 ? "s" : ""}
         </p>
       </div>

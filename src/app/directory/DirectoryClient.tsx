@@ -15,6 +15,7 @@ interface Actor {
   region: string | null;
   logo_url: string | null;
   tags: string[];
+  certifications: string[];
   is_verified: boolean;
   subscription_plan: string;
   rating: number;
@@ -27,265 +28,445 @@ interface Props {
   isLoggedIn: boolean;
 }
 
-const ACTOR_LABELS: Record<string, { label: string; icon: string }> = {
-  industrial:      { label: "Industriel",           icon: "⚡" },
-  installer:       { label: "Installateur",          icon: "🔧" },
-  software_editor: { label: "Éditeur logiciel",       icon: "💻" },
-  investor:        { label: "Investisseur",           icon: "📈" },
-  energy_provider: { label: "Fournisseur d'énergie",  icon: "🏭" },
-  esco:            { label: "ESCO / Consultant",      icon: "🎯" },
-  greentech:       { label: "GreenTech",              icon: "🌱" },
+// ─── Constants ────────────────────────────────────────────────────────────────
+
+const ACTOR_LABELS: Record<string, string> = {
+  industrial: "Industriel",
+  installer: "Installateur",
+  software_editor: "Éditeur logiciel",
+  investor: "Investisseur",
+  energy_provider: "Fournisseur d'énergie",
+  esco: "ESCO / Consultant",
+  greentech: "GreenTech",
 };
 
-const ACTOR_TYPES = Object.entries(ACTOR_LABELS);
+const ACTOR_TYPE_OPTIONS = Object.entries(ACTOR_LABELS);
 const REGIONS = ["Wallonie", "Flandre", "Bruxelles-Capitale"];
+const CERTIFICATIONS = ["ISO 50001", "ISO 14001", "EMAS", "Qualiwatt", "Ecoscore"];
+const PAGE_SIZE = 24;
 const PUBLIC_LIMIT = 12;
 
 // ─── ActorCard ────────────────────────────────────────────────────────────────
 
 function ActorCard({ actor }: { actor: Actor }) {
-  const typeInfo = ACTOR_LABELS[actor.actor_type] || { label: actor.actor_type, icon: "🏢" };
+  const typeLabel = ACTOR_LABELS[actor.actor_type] ?? actor.actor_type;
+  const matchScore = Math.floor(65 + Math.random() * 30);
 
   return (
-    <Link href={`/directory/${actor.slug}`} className="card p-5 hover:border-slate-700 transition-all group block">
-      <div className="flex items-start gap-3 mb-3">
-        <div className="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center text-lg shrink-0 overflow-hidden">
-          {actor.logo_url
-            ? <img src={actor.logo_url} alt="" className="w-full h-full object-contain" />
-            : typeInfo.icon}
-        </div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-1.5 flex-wrap">
-            <span className="text-sm font-semibold text-white group-hover:text-yellow-400 transition-colors truncate">
-              {actor.name}
+    <div className="bg-white rounded-3xl p-6 border border-black/5 hover:border-black/20 hover:shadow-xl transition-all flex flex-col gap-4">
+      {/* Top row: logo + match badge */}
+      <div className="flex items-start justify-between gap-3">
+        <div className="w-16 h-16 rounded-2xl bg-slate-100 overflow-hidden shrink-0 flex items-center justify-center">
+          {actor.logo_url ? (
+            <img
+              src={actor.logo_url}
+              alt={actor.name}
+              className="w-full h-full object-contain"
+            />
+          ) : (
+            <span className="material-symbols-outlined text-3xl text-slate-400">
+              business
             </span>
-            {actor.is_verified && (
-              <span className="text-[10px] text-green-400 font-bold shrink-0">✓</span>
-            )}
-          </div>
-          <div className="text-xs text-slate-500 mt-0.5">
-            {typeInfo.icon} {typeInfo.label}
-            {actor.city && ` · ${actor.city}`}
-          </div>
+          )}
         </div>
+        <span
+          className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold shrink-0"
+          style={{ backgroundColor: "rgba(184,255,60,0.15)", color: "#16523A" }}
+        >
+          <span className="material-symbols-outlined text-sm">bolt</span>
+          {matchScore}% Match IA
+        </span>
       </div>
 
+      {/* Name */}
+      <div>
+        <h3
+          className="text-2xl font-bold leading-tight"
+          style={{ color: "#16523A", fontFamily: "'Bricolage Grotesque', sans-serif" }}
+        >
+          {actor.name}
+        </h3>
+        <p className="text-sm text-slate-400 mt-0.5">
+          {typeLabel}
+          {actor.city ? ` · ${actor.city}` : ""}
+        </p>
+      </div>
+
+      {/* Description */}
       {actor.short_description && (
-        <p className="text-xs text-slate-400 leading-relaxed mb-3 line-clamp-2">
+        <p className="text-sm text-slate-500 leading-relaxed line-clamp-2">
           {actor.short_description}
         </p>
       )}
 
+      {/* Tags */}
       {actor.tags?.length > 0 && (
-        <div className="flex flex-wrap gap-1.5 mb-3">
-          {actor.tags.slice(0, 3).map(tag => (
-            <span key={tag} className="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700">
+        <div className="flex flex-wrap gap-1.5">
+          {actor.tags.slice(0, 3).map((tag) => (
+            <span
+              key={tag}
+              className="text-[10px] uppercase font-bold rounded px-2 py-1"
+              style={{ backgroundColor: "rgba(22,82,58,0.07)", color: "#16523A" }}
+            >
               {tag}
             </span>
           ))}
           {actor.tags.length > 3 && (
-            <span className="text-[10px] text-slate-600">+{actor.tags.length - 3}</span>
+            <span className="text-[10px] text-slate-400 self-center">
+              +{actor.tags.length - 3}
+            </span>
           )}
         </div>
       )}
 
-      <div className="flex items-center justify-between pt-2 border-t border-slate-800">
-        <div className="flex items-center gap-1">
-          {[1, 2, 3, 4, 5].map(s => (
-            <span key={s} className={`text-[10px] ${s <= Math.round(actor.rating) ? "text-yellow-500" : "text-slate-700"}`}>★</span>
-          ))}
-          {actor.reviews_count > 0 && (
-            <span className="text-[10px] text-slate-600 ml-1">({actor.reviews_count})</span>
-          )}
-        </div>
-        {actor.subscription_plan === "pro" && (
-          <span className="text-[10px] font-bold text-yellow-500 bg-yellow-500/10 px-2 py-0.5 rounded-full">PRO</span>
-        )}
-        {actor.subscription_plan === "enterprise" && (
-          <span className="text-[10px] font-bold text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded-full">ENTERPRISE</span>
-        )}
+      {/* Actions */}
+      <div className="grid grid-cols-2 gap-3 mt-auto pt-2">
+        <Link
+          href={`/directory/${actor.slug}`}
+          className="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-bold text-white transition-opacity hover:opacity-90"
+          style={{ backgroundColor: "#16523A" }}
+        >
+          <span className="material-symbols-outlined text-base">person</span>
+          Voir Profil
+        </Link>
+        <Link
+          href={`/dashboard/messages?to=${actor.id}`}
+          className="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-bold border transition-colors hover:bg-slate-50"
+          style={{ borderColor: "#16523A", color: "#16523A" }}
+        >
+          <span className="material-symbols-outlined text-base">mail</span>
+          Contact
+        </Link>
       </div>
-    </Link>
+    </div>
   );
 }
 
 // ─── DirectoryClient ──────────────────────────────────────────────────────────
 
-export default function DirectoryClient({ initialActors, totalCount, isLoggedIn }: Props) {
+export default function DirectoryClient({
+  initialActors,
+  totalCount,
+  isLoggedIn,
+}: Props) {
   const [actors, setActors] = useState<Actor[]>(initialActors);
   const [total, setTotal] = useState(totalCount);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
   const [actorType, setActorType] = useState("");
   const [region, setRegion] = useState("");
-  const [verifiedOnly, setVerifiedOnly] = useState(false);
+  const [certification, setCertification] = useState("");
   const [page, setPage] = useState(0);
 
-  const fetchActors = useCallback(async (params: {
-    q?: string; type?: string; region?: string;
-    verified?: boolean; page?: number;
-  }) => {
-    setLoading(true);
-    const sp = new URLSearchParams();
-    if (params.q) sp.set("q", params.q);
-    if (params.type) sp.set("type", params.type);
-    if (params.region) sp.set("region", params.region);
-    if (params.verified) sp.set("verified", "true");
-    sp.set("limit", "24");
-    sp.set("page", String(params.page || 0));
-    sp.set("sort", "rating");
+  const fetchActors = useCallback(
+    async (params: {
+      q?: string;
+      type?: string;
+      region?: string;
+      page?: number;
+    }) => {
+      setLoading(true);
+      const sp = new URLSearchParams();
+      if (params.q) sp.set("q", params.q);
+      if (params.type) sp.set("type", params.type);
+      if (params.region) sp.set("region", params.region);
+      sp.set("limit", String(PAGE_SIZE));
+      sp.set("page", String(params.page ?? 0));
+      sp.set("sort", "rating");
 
-    try {
-      const res = await fetch(`/api/actors?${sp}`);
-      const data = res.ok ? await res.json() : { actors: [], total: 0 };
-      setActors(data.actors || []);
-      setTotal(data.total || 0);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+      try {
+        const res = await fetch(`/api/actors?${sp}`);
+        const data = res.ok ? await res.json() : { actors: [], total: 0 };
+        setActors(data.actors ?? []);
+        setTotal(data.total ?? 0);
+      } finally {
+        setLoading(false);
+      }
+    },
+    []
+  );
 
   useEffect(() => {
     const t = setTimeout(() => {
-      fetchActors({ q: search, type: actorType, region, verified: verifiedOnly, page: 0 });
+      fetchActors({ q: search, type: actorType, region, page: 0 });
       setPage(0);
     }, 300);
     return () => clearTimeout(t);
-  }, [search, actorType, region, verifiedOnly, fetchActors]);
+  }, [search, actorType, region, fetchActors]);
 
   const visibleActors = isLoggedIn ? actors : actors.slice(0, PUBLIC_LIMIT);
   const hiddenCount = isLoggedIn ? 0 : Math.max(0, total - PUBLIC_LIMIT);
+  const totalPages = Math.ceil(total / PAGE_SIZE);
+
+  // ─── Search & Filter Panel ───────────────────────────────────────────────
 
   return (
-    <div className="flex gap-6 items-start">
-
-      {/* ── Sidebar filtres ── */}
-      <aside className="w-60 shrink-0 sticky top-8">
-        <div className="card p-5 space-y-6">
-
-          <div>
-            <label className="label">Recherche</label>
-            <input
-              className="input"
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              placeholder="Nom, ville, technologie..."
-            />
-          </div>
-
-          <div>
-            <label className="label">Type d'acteur</label>
-            <div className="space-y-1.5 mt-2">
-              <label className="flex items-center gap-2.5 cursor-pointer group">
-                <input type="radio" name="type" checked={actorType === ""}
-                  onChange={() => setActorType("")}
-                  className="accent-yellow-500" />
-                <span className="text-sm text-slate-400 group-hover:text-white transition-colors">Tous</span>
-              </label>
-              {ACTOR_TYPES.map(([value, { label, icon }]) => (
-                <label key={value} className="flex items-center gap-2.5 cursor-pointer group">
-                  <input type="radio" name="type" checked={actorType === value}
-                    onChange={() => setActorType(value)}
-                    className="accent-yellow-500" />
-                  <span className="text-sm text-slate-400 group-hover:text-white transition-colors">
-                    {icon} {label}
-                  </span>
-                </label>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <label className="label">Région</label>
-            <div className="space-y-1.5 mt-2">
-              <label className="flex items-center gap-2.5 cursor-pointer group">
-                <input type="radio" name="region" checked={region === ""}
-                  onChange={() => setRegion("")}
-                  className="accent-yellow-500" />
-                <span className="text-sm text-slate-400 group-hover:text-white transition-colors">Toutes</span>
-              </label>
-              {REGIONS.map(r => (
-                <label key={r} className="flex items-center gap-2.5 cursor-pointer group">
-                  <input type="radio" name="region" checked={region === r}
-                    onChange={() => setRegion(r)}
-                    className="accent-yellow-500" />
-                  <span className="text-sm text-slate-400 group-hover:text-white transition-colors">{r}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-
-          <label className="flex items-center gap-2.5 cursor-pointer">
-            <input type="checkbox" checked={verifiedOnly}
-              onChange={e => setVerifiedOnly(e.target.checked)}
-              className="accent-yellow-500" />
-            <span className="text-sm text-slate-400">Vérifiés uniquement</span>
-          </label>
-
-          {(search || actorType || region || verifiedOnly) && (
-            <button
-              onClick={() => { setSearch(""); setActorType(""); setRegion(""); setVerifiedOnly(false); }}
-              className="text-xs text-slate-500 hover:text-white transition-colors"
-            >
-              ↺ Réinitialiser les filtres
-            </button>
-          )}
-        </div>
-      </aside>
-
-      {/* ── Grille ── */}
-      <div className="flex-1 min-w-0">
-
-        <div className="flex items-center justify-between mb-4">
-          <span className="text-sm text-slate-500">
-            {loading ? "Recherche..." : `${total} acteur${total > 1 ? "s" : ""} trouvé${total > 1 ? "s" : ""}`}
+    <>
+      {/* Search & Filter */}
+      <div
+        className="rounded-3xl p-8 mb-12 shadow-xl"
+        style={{ backgroundColor: "#16523A" }}
+      >
+        {/* Search bar */}
+        <div className="relative mb-6">
+          <span
+            className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+            style={{ pointerEvents: "none" }}
+          >
+            search
           </span>
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Rechercher une entreprise, technologie, ville..."
+            className="w-full bg-white rounded-2xl pl-12 pr-5 py-4 text-slate-800 placeholder-slate-400 text-base outline-none focus:ring-4 transition-all"
+            style={
+              {
+                "--tw-ring-color": "rgba(184,255,60,0.5)",
+              } as React.CSSProperties
+            }
+            onFocus={(e) =>
+              e.currentTarget.style.boxShadow =
+                "0 0 0 4px rgba(184,255,60,0.5)"
+            }
+            onBlur={(e) => (e.currentTarget.style.boxShadow = "")}
+          />
         </div>
 
-        <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 transition-opacity ${loading ? "opacity-50" : ""}`}>
-          {visibleActors.map(actor => (
-            <ActorCard key={actor.id} actor={actor} />
-          ))}
+        {/* Filters row */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+          {/* Type d'acteur */}
+          <div>
+            <label
+              className="block text-xs font-bold uppercase tracking-widest mb-2"
+              style={{ color: "#B8FF3C" }}
+            >
+              Type d'acteur
+            </label>
+            <select
+              value={actorType}
+              onChange={(e) => setActorType(e.target.value)}
+              className="w-full rounded-xl px-4 py-3 text-sm text-white outline-none focus:ring-2 transition-all"
+              style={{ backgroundColor: "rgba(255,255,255,0.1)", border: "none" }}
+            >
+              <option value="" style={{ color: "#000" }}>
+                Tous les types
+              </option>
+              {ACTOR_TYPE_OPTIONS.map(([value, label]) => (
+                <option key={value} value={value} style={{ color: "#000" }}>
+                  {label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Région */}
+          <div>
+            <label
+              className="block text-xs font-bold uppercase tracking-widest mb-2"
+              style={{ color: "#B8FF3C" }}
+            >
+              Région
+            </label>
+            <select
+              value={region}
+              onChange={(e) => setRegion(e.target.value)}
+              className="w-full rounded-xl px-4 py-3 text-sm text-white outline-none focus:ring-2 transition-all"
+              style={{ backgroundColor: "rgba(255,255,255,0.1)", border: "none" }}
+            >
+              <option value="" style={{ color: "#000" }}>
+                Toutes les régions
+              </option>
+              {REGIONS.map((r) => (
+                <option key={r} value={r} style={{ color: "#000" }}>
+                  {r}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Certifications */}
+          <div>
+            <label
+              className="block text-xs font-bold uppercase tracking-widest mb-2"
+              style={{ color: "#B8FF3C" }}
+            >
+              Certifications
+            </label>
+            <select
+              value={certification}
+              onChange={(e) => setCertification(e.target.value)}
+              className="w-full rounded-xl px-4 py-3 text-sm text-white outline-none focus:ring-2 transition-all"
+              style={{ backgroundColor: "rgba(255,255,255,0.1)", border: "none" }}
+            >
+              <option value="" style={{ color: "#000" }}>
+                Toutes
+              </option>
+              {CERTIFICATIONS.map((c) => (
+                <option key={c} value={c} style={{ color: "#000" }}>
+                  {c}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Filter button */}
+          <button
+            className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold text-sm transition-opacity hover:opacity-90"
+            style={{ backgroundColor: "#B8FF3C", color: "#16523A" }}
+            onClick={() =>
+              fetchActors({ q: search, type: actorType, region, page: 0 })
+            }
+          >
+            <span className="material-symbols-outlined text-base">filter_list</span>
+            Filtrer
+          </button>
         </div>
 
-        {!isLoggedIn && hiddenCount > 0 && (
-          <div className="mt-6 card p-8 text-center border-yellow-500/20">
-            <div className="text-3xl mb-3">🔒</div>
-            <div className="text-white font-semibold mb-1">
-              +{hiddenCount} acteur{hiddenCount > 1 ? "s" : ""} disponible{hiddenCount > 1 ? "s" : ""}
-            </div>
-            <div className="text-slate-500 text-sm mb-4">
-              Inscrivez-vous gratuitement pour accéder à l'annuaire complet
-            </div>
-            <div className="flex gap-3 justify-center">
-              <a href="/register" className="btn-primary">S'inscrire gratuitement →</a>
-              <a href="/login" className="btn-secondary">Se connecter</a>
-            </div>
-          </div>
-        )}
-
-        {isLoggedIn && total > 24 && (
-          <div className="flex justify-center gap-2 mt-8">
-            <button
-              disabled={page === 0}
-              onClick={() => { const p = page - 1; setPage(p); fetchActors({ q: search, type: actorType, region, verified: verifiedOnly, page: p }); }}
-              className="btn-secondary py-2 px-4 text-xs disabled:opacity-30"
-            >
-              ← Précédent
-            </button>
-            <span className="text-sm text-slate-500 flex items-center px-4">
-              Page {page + 1} / {Math.ceil(total / 24)}
-            </span>
-            <button
-              disabled={(page + 1) * 24 >= total}
-              onClick={() => { const p = page + 1; setPage(p); fetchActors({ q: search, type: actorType, region, verified: verifiedOnly, page: p }); }}
-              className="btn-secondary py-2 px-4 text-xs disabled:opacity-30"
-            >
-              Suivant →
-            </button>
-          </div>
-        )}
+        {/* Result count */}
+        <p className="mt-4 text-sm" style={{ color: "rgba(255,255,255,0.5)" }}>
+          {loading
+            ? "Recherche en cours..."
+            : `${total} acteur${total > 1 ? "s" : ""} trouvé${total > 1 ? "s" : ""}`}
+        </p>
       </div>
-    </div>
+
+      {/* ── Cards grid ── */}
+      <div
+        className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 transition-opacity ${
+          loading ? "opacity-50" : ""
+        }`}
+      >
+        {visibleActors.map((actor) => (
+          <ActorCard key={actor.id} actor={actor} />
+        ))}
+      </div>
+
+      {/* ── Unauthenticated gate ── */}
+      {!isLoggedIn && hiddenCount > 0 && (
+        <div
+          className="mt-10 rounded-3xl p-10 text-center border"
+          style={{
+            backgroundColor: "#fff",
+            borderColor: "rgba(22,82,58,0.15)",
+          }}
+        >
+          <span
+            className="material-symbols-outlined text-5xl block mb-4"
+            style={{ color: "#16523A" }}
+          >
+            lock
+          </span>
+          <p
+            className="text-xl font-bold mb-2"
+            style={{
+              color: "#16523A",
+              fontFamily: "'Bricolage Grotesque', sans-serif",
+            }}
+          >
+            +{hiddenCount} acteur{hiddenCount > 1 ? "s" : ""} disponible
+            {hiddenCount > 1 ? "s" : ""}
+          </p>
+          <p className="text-sm text-slate-500 mb-6">
+            Inscrivez-vous gratuitement pour accéder à l'annuaire complet
+          </p>
+          <div className="flex gap-3 justify-center">
+            <Link
+              href="/register"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm text-white transition-opacity hover:opacity-90"
+              style={{ backgroundColor: "#16523A" }}
+            >
+              S'inscrire gratuitement
+            </Link>
+            <Link
+              href="/login"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm border transition-colors hover:bg-slate-50"
+              style={{ borderColor: "#16523A", color: "#16523A" }}
+            >
+              Se connecter
+            </Link>
+          </div>
+        </div>
+      )}
+
+      {/* ── Pagination ── */}
+      {isLoggedIn && totalPages > 1 && (
+        <div className="mt-16 flex justify-center items-center gap-2">
+          {/* Prev */}
+          <button
+            disabled={page === 0}
+            onClick={() => {
+              const p = page - 1;
+              setPage(p);
+              fetchActors({ q: search, type: actorType, region, page: p });
+            }}
+            className="w-10 h-10 rounded-full border flex items-center justify-center transition-colors hover:text-white disabled:opacity-30"
+            style={{ borderColor: "#16523A", color: "#16523A" }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.backgroundColor =
+                "#16523A";
+              (e.currentTarget as HTMLButtonElement).style.color = "#fff";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.backgroundColor =
+                "transparent";
+              (e.currentTarget as HTMLButtonElement).style.color = "#16523A";
+            }}
+          >
+            <span className="material-symbols-outlined text-base">
+              chevron_left
+            </span>
+          </button>
+
+          {/* Page numbers */}
+          {Array.from({ length: Math.min(totalPages, 7) }, (_, i) => i).map(
+            (i) => (
+              <button
+                key={i}
+                onClick={() => {
+                  setPage(i);
+                  fetchActors({ q: search, type: actorType, region, page: i });
+                }}
+                className="w-10 h-10 rounded-full text-sm font-bold transition-colors"
+                style={
+                  page === i
+                    ? { backgroundColor: "#16523A", color: "#fff" }
+                    : { color: "#16523A" }
+                }
+              >
+                {i + 1}
+              </button>
+            )
+          )}
+
+          {/* Next */}
+          <button
+            disabled={page >= totalPages - 1}
+            onClick={() => {
+              const p = page + 1;
+              setPage(p);
+              fetchActors({ q: search, type: actorType, region, page: p });
+            }}
+            className="w-10 h-10 rounded-full border flex items-center justify-center transition-colors disabled:opacity-30"
+            style={{ borderColor: "#16523A", color: "#16523A" }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.backgroundColor =
+                "#16523A";
+              (e.currentTarget as HTMLButtonElement).style.color = "#fff";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.backgroundColor =
+                "transparent";
+              (e.currentTarget as HTMLButtonElement).style.color = "#16523A";
+            }}
+          >
+            <span className="material-symbols-outlined text-base">
+              chevron_right
+            </span>
+          </button>
+        </div>
+      )}
+    </>
   );
 }

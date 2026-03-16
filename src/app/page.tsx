@@ -1,241 +1,434 @@
 import Link from "next/link";
 
 export default function LandingPage() {
-  const actors = [
-    { n: "01", title: "Industriels", desc: "Publiez vos besoins énergétiques et trouvez des solutions certifiées pour votre transition." },
-    { n: "02", title: "Installateurs", desc: "Répondez aux appels d'offres qualifiés et développez votre portefeuille de projets." },
-    { n: "03", title: "Éditeurs logiciels", desc: "Distribuez vos solutions auprès des acteurs de la transition énergétique belge." },
-    { n: "04", title: "Fonds d'investissement", desc: "Sourcez des projets verts, évaluez les deals avec l'IA et gérez vos intérêts." },
-    { n: "05", title: "Fournisseurs d'énergie", desc: "Connectez-vous aux industriels et proposez vos offres sur-mesure." },
-    { n: "06", title: "Greentechs", desc: "Faites connaître vos innovations et trouvez des partenaires industriels." },
+  const tickerItems = [
+    "Installateurs",
+    "Industriels",
+    "Greentechs",
+    "Investisseurs",
+    "Fournisseurs d'énergie",
+    "Éditeurs SaaS",
   ];
-
-  const steps = [
-    { n: "01", title: "Créez votre profil", desc: "L'agent IA analyse votre organisation et optimise votre visibilité sur la plateforme." },
-    { n: "02", title: "Publiez ou répondez", desc: "Créez des RFQ ciblés ou répondez aux appels d'offres correspondant à vos compétences." },
-    { n: "03", title: "Matching IA", desc: "L'algorithme calcule un score de compatibilité 0-100 et vous met en relation avec les meilleurs partenaires." },
-  ];
-
-  const tickerItems = ["Industriels", "Installateurs", "Éditeurs logiciels", "Fonds d'investissement", "Fournisseurs d'énergie", "Greentechs"];
 
   return (
-    <div style={{ backgroundColor: "#FAFAF7", color: "#0D0D0D", fontFamily: "Plus Jakarta Sans, sans-serif", minHeight: "100vh" }}>
+    <div className="min-h-screen" style={{ backgroundColor: "#FAFAF7", color: "#0D0D0D" }}>
 
-      {/* ── Navbar ── */}
-      <nav style={{ borderBottom: "1px solid #E2DDD6", backgroundColor: "rgba(250,250,247,0.95)", backdropFilter: "blur(12px)", position: "sticky", top: 0, zIndex: 50 }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 24px", height: 60, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <Link href="/" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none" }}>
-            <div style={{ width: 30, height: 30, borderRadius: 8, backgroundColor: "#16523A", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <path d="M7 1L1 8h5.5L5 13l8-8H7.5L9 1z" fill="#B8FF3C" strokeLinejoin="round"/>
-              </svg>
+      {/* ── Sticky Navbar ── */}
+      <nav className="sticky top-0 z-50 h-20 bg-white/80 backdrop-blur border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-2.5 no-underline">
+            <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center flex-shrink-0">
+              <span className="material-symbols-outlined text-accent" style={{ fontSize: 20, fontVariationSettings: "'FILL' 1" }}>bolt</span>
             </div>
-            <span style={{ fontFamily: "Bricolage Grotesque, sans-serif", fontWeight: 800, fontSize: 16, color: "#0D0D0D", letterSpacing: "-0.02em" }}>EnergyHub</span>
+            <span className="font-display font-extrabold text-xl text-primary tracking-tight">EnergyHub</span>
           </Link>
 
-          <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-            {[["Annuaire", "/directory"], ["RFQ", "/rfq"], ["Investissement", "/investment"], ["Tarifs", "/pricing"]].map(([label, href]) => (
-              <Link key={href} href={href} style={{ color: "#6B6560", fontSize: 14, textDecoration: "none", padding: "6px 12px", borderRadius: 8, fontWeight: 500 }}>{label}</Link>
+          {/* Nav links */}
+          <div className="hidden md:flex items-center gap-1">
+            {[
+              ["Marketplace", "/directory"],
+              ["Annuaire", "/directory"],
+              ["Projets", "/rfq"],
+              ["Investissements", "/investment"],
+            ].map(([label, href]) => (
+              <Link
+                key={label}
+                href={href}
+                className="text-sm font-semibold text-slate-600 hover:text-primary px-4 py-2 rounded-full hover:bg-primary/5 transition-colors no-underline"
+              >
+                {label}
+              </Link>
             ))}
           </div>
 
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <Link href="/login" style={{ color: "#3A3632", fontSize: 14, textDecoration: "none", padding: "8px 16px", borderRadius: 100, border: "1.5px solid #E2DDD6", fontWeight: 500 }}>Connexion</Link>
-            <Link href="/register" style={{ backgroundColor: "#16523A", color: "#fff", fontSize: 14, fontWeight: 600, textDecoration: "none", padding: "8px 18px", borderRadius: 100 }}>Rejoindre →</Link>
+          {/* Right actions */}
+          <div className="flex items-center gap-2">
+            <button className="rounded-full p-2 hover:bg-primary/5 transition-colors text-slate-500">
+              <span className="material-symbols-outlined" style={{ fontSize: 20 }}>search</span>
+            </button>
+            <Link
+              href="/login"
+              className="bg-primary text-white text-sm font-semibold px-6 py-2.5 rounded-full hover:opacity-90 transition-opacity no-underline"
+            >
+              Mon Compte
+            </Link>
+            <div className="w-9 h-9 rounded-full bg-slate-100 border-2 border-slate-200 flex items-center justify-center ml-1">
+              <span className="material-symbols-outlined text-slate-400" style={{ fontSize: 18 }}>person</span>
+            </div>
           </div>
         </div>
       </nav>
 
-      {/* ── Hero ── */}
-      <section style={{ padding: "80px 24px 60px", maxWidth: 1200, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 420px", gap: 64, alignItems: "center" }}>
-        {/* Left */}
-        <div>
-          {/* Badge */}
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, backgroundColor: "#D4E8DF", borderRadius: 100, padding: "5px 14px", marginBottom: 28 }}>
-            <span style={{ width: 6, height: 6, borderRadius: "50%", backgroundColor: "#16523A", display: "inline-block" }} />
-            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" as const, color: "#16523A", fontFamily: "Bricolage Grotesque, sans-serif" }}>Marketplace B2B · Belgique</span>
-          </div>
+      {/* ── Hero Section ── */}
+      <section className="max-w-7xl mx-auto px-6 pt-20 pb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
-          <h1 style={{ fontFamily: "Bricolage Grotesque, sans-serif", fontSize: "clamp(44px, 5.5vw, 72px)", fontWeight: 800, lineHeight: 1.02, letterSpacing: "-0.035em", marginBottom: 24, color: "#0D0D0D" }}>
-            La marketplace<br />
-            de l&apos;énergie<br />
-            <span style={{ color: "#16523A" }}>belge.</span>
-          </h1>
+          {/* Left column */}
+          <div>
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary rounded-full px-4 py-2 mb-8">
+              <span className="material-symbols-outlined" style={{ fontSize: 16, fontVariationSettings: "'FILL' 1" }}>auto_awesome</span>
+              <span className="text-sm font-semibold">Plateforme IA B2B · Belgique</span>
+            </div>
 
-          <p style={{ fontSize: 17, color: "#6B6560", maxWidth: 460, lineHeight: 1.7, marginBottom: 36 }}>
-            Connectez industriels, installateurs, investisseurs et greentechs. Matching IA, RFQ automatisés, module d&apos;investissement.
-          </p>
+            {/* H1 */}
+            <h1 className="font-display font-extrabold text-5xl lg:text-7xl text-primary leading-tight tracking-tight mb-6">
+              La marketplace<br />
+              de la transition<br />
+              énergétique belge
+            </h1>
 
-          <div style={{ display: "flex", gap: 12, flexWrap: "wrap" as const, marginBottom: 52 }}>
-            <Link href="/register" style={{ backgroundColor: "#16523A", color: "#fff", fontWeight: 700, fontSize: 15, textDecoration: "none", padding: "12px 26px", borderRadius: 100, display: "inline-flex", alignItems: "center", gap: 8 }}>
-              Créer un compte gratuit →
-            </Link>
-            <Link href="/directory" style={{ color: "#0D0D0D", fontWeight: 500, fontSize: 15, textDecoration: "none", padding: "12px 26px", borderRadius: 100, border: "1.5px solid #E2DDD6", display: "inline-flex", alignItems: "center", gap: 8 }}>
-              Voir l&apos;annuaire
-            </Link>
-          </div>
+            {/* Subtitle */}
+            <p className="text-lg text-slate-600 max-w-lg leading-relaxed mb-10">
+              Connectez industriels, installateurs, investisseurs et greentechs. Matching IA 0-100, RFQ automatisés, module d&apos;investissement intégré.
+            </p>
 
-          {/* Stats */}
-          <div style={{ display: "flex", gap: 32, flexWrap: "wrap" as const }}>
-            {[
-              { value: "6", label: "types d'acteurs" },
-              { value: "3", label: "régions belges" },
-              { value: "0—100", label: "score IA" },
-              { value: "€0", label: "pour démarrer" },
-            ].map((s) => (
-              <div key={s.label}>
-                <div style={{ fontFamily: "Fira Code, monospace", fontSize: 22, fontWeight: 500, color: "#0D0D0D", lineHeight: 1 }}>{s.value}</div>
-                <div style={{ fontSize: 12, color: "#6B6560", marginTop: 3 }}>{s.label}</div>
+            {/* CTAs */}
+            <div className="flex flex-wrap gap-3 mb-10">
+              <Link
+                href="/register"
+                className="bg-accent text-primary px-8 py-4 rounded-2xl font-bold text-base hover:opacity-90 transition-opacity no-underline inline-flex items-center gap-2"
+              >
+                Créer un compte gratuit
+                <span className="material-symbols-outlined" style={{ fontSize: 18 }}>arrow_forward</span>
+              </Link>
+              <Link
+                href="/directory"
+                className="border-2 border-slate-200 text-primary px-8 py-4 rounded-2xl font-semibold text-base hover:border-primary/30 hover:bg-primary/5 transition-colors no-underline inline-flex items-center gap-2"
+              >
+                Voir l&apos;annuaire
+              </Link>
+            </div>
+
+            {/* Avatar row + social proof */}
+            <div className="flex items-center gap-3">
+              <div className="flex -space-x-3">
+                {["bg-emerald-500", "bg-blue-500", "bg-purple-500", "bg-orange-500", "bg-rose-500"].map((color, i) => (
+                  <div
+                    key={i}
+                    className={`w-9 h-9 rounded-full ${color} border-2 border-white flex items-center justify-center`}
+                  >
+                    <span className="material-symbols-outlined text-white" style={{ fontSize: 14, fontVariationSettings: "'FILL' 1" }}>person</span>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Right: Preview card */}
-        <div style={{ display: "flex", flexDirection: "column" as const, gap: 12 }}>
-          {/* Mock match card 1 */}
-          <div style={{ backgroundColor: "#fff", border: "1px solid #E2DDD6", borderRadius: 16, padding: 20, boxShadow: "0 4px 16px rgba(13,13,13,0.08)" }}>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 14 }}>
               <div>
-                <div style={{ fontSize: 11, fontWeight: 600, color: "#16523A", letterSpacing: "0.08em", textTransform: "uppercase" as const, fontFamily: "Bricolage Grotesque, sans-serif", marginBottom: 4 }}>Match IA</div>
-                <div style={{ fontFamily: "Bricolage Grotesque, sans-serif", fontWeight: 700, fontSize: 16, color: "#0D0D0D" }}>SolarNRG Belgium</div>
-                <div style={{ fontSize: 12, color: "#6B6560", marginTop: 2 }}>Installateur · Bruxelles</div>
+                <span className="text-sm font-semibold text-primary">1 200+ entreprises connectées</span>
               </div>
-              <div style={{ textAlign: "right" as const }}>
-                <div style={{ fontFamily: "Fira Code, monospace", fontSize: 32, fontWeight: 500, color: "#0D0D0D", lineHeight: 1 }}>87</div>
-                <div style={{ fontSize: 11, color: "#6B6560" }}>/ 100</div>
-              </div>
-            </div>
-            <div style={{ height: 4, backgroundColor: "#F3F1EC", borderRadius: 2, overflow: "hidden" }}>
-              <div style={{ height: "100%", width: "87%", backgroundColor: "#B8FF3C", borderRadius: 2 }} />
-            </div>
-            <div style={{ display: "flex", gap: 6, marginTop: 12, flexWrap: "wrap" as const }}>
-              {["Certification RGE", "Région Wallonie", "PME"].map(tag => (
-                <span key={tag} style={{ backgroundColor: "#D4E8DF", color: "#16523A", fontSize: 10, fontWeight: 600, padding: "3px 8px", borderRadius: 100 }}>{tag}</span>
-              ))}
             </div>
           </div>
 
-          {/* Mock match card 2 */}
-          <div style={{ backgroundColor: "#F3F1EC", border: "1px solid #E2DDD6", borderRadius: 16, padding: 20 }}>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-              <div>
-                <div style={{ fontSize: 11, fontWeight: 600, color: "#6B6560", letterSpacing: "0.08em", textTransform: "uppercase" as const, fontFamily: "Bricolage Grotesque, sans-serif", marginBottom: 4 }}>Match IA</div>
-                <div style={{ fontFamily: "Bricolage Grotesque, sans-serif", fontWeight: 700, fontSize: 15, color: "#0D0D0D" }}>EnergiaTech SPRL</div>
-                <div style={{ fontSize: 12, color: "#6B6560", marginTop: 2 }}>Greentech · Liège</div>
+          {/* Right column: Match card UI */}
+          <div className="flex justify-center lg:justify-end">
+            <div className="bg-white rounded-3xl shadow-xl border border-slate-200 p-6 w-full max-w-sm">
+              {/* Card header */}
+              <div className="flex items-center justify-between mb-5">
+                <div className="flex items-center gap-3">
+                  <div className="w-14 h-14 bg-slate-100 rounded-2xl flex items-center justify-center flex-shrink-0">
+                    <span className="material-symbols-outlined text-slate-400" style={{ fontSize: 28, fontVariationSettings: "'FILL' 1" }}>factory</span>
+                  </div>
+                  <div>
+                    <div className="font-display font-bold text-primary text-base">SolarNRG Belgium</div>
+                    <div className="flex gap-1.5 mt-1">
+                      <span className="text-xs bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full font-medium">Installateur</span>
+                      <span className="text-xs bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full font-medium">Bruxelles</span>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div style={{ textAlign: "right" as const }}>
-                <div style={{ fontFamily: "Fira Code, monospace", fontSize: 28, fontWeight: 500, color: "#3A3632", lineHeight: 1 }}>72</div>
-                <div style={{ fontSize: 11, color: "#6B6560" }}>/ 100</div>
+
+              {/* AI match badge */}
+              <div className="flex items-center gap-2 bg-accent/10 text-primary rounded-full px-4 py-2 mb-5 w-fit">
+                <span className="material-symbols-outlined" style={{ fontSize: 16, fontVariationSettings: "'FILL' 1" }}>bolt</span>
+                <span className="text-sm font-bold">98% Match IA</span>
               </div>
-            </div>
-            <div style={{ height: 4, backgroundColor: "#EAE7E0", borderRadius: 2, overflow: "hidden" }}>
-              <div style={{ height: "100%", width: "72%", backgroundColor: "#B8FF3C", borderRadius: 2, opacity: 0.7 }} />
+
+              {/* Score bar */}
+              <div className="mb-5">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs text-slate-500 font-medium">Score de compatibilité</span>
+                  <span className="font-display font-extrabold text-primary text-2xl">98/100</span>
+                </div>
+                <div className="h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                  <div className="h-full rounded-full bg-accent" style={{ width: "98%" }} />
+                </div>
+              </div>
+
+              {/* Tags */}
+              <div className="flex flex-wrap gap-2 mb-5">
+                {["Certification RGE", "Wallonie", "Panneaux solaires"].map((tag) => (
+                  <span key={tag} className="text-xs bg-primary/5 text-primary px-3 py-1 rounded-full font-semibold">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+
+              {/* CTA */}
+              <Link
+                href="/directory"
+                className="w-full bg-primary text-white text-sm font-bold py-3 rounded-2xl text-center hover:opacity-90 transition-opacity no-underline flex items-center justify-center gap-2"
+              >
+                Voir le profil
+                <span className="material-symbols-outlined" style={{ fontSize: 16 }}>arrow_forward</span>
+              </Link>
+
+              {/* Second card preview */}
+              <div className="mt-4 bg-slate-50 rounded-2xl p-4 border border-slate-100">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-10 h-10 bg-slate-200 rounded-xl flex items-center justify-center">
+                      <span className="material-symbols-outlined text-slate-400" style={{ fontSize: 20, fontVariationSettings: "'FILL' 1" }}>eco</span>
+                    </div>
+                    <div>
+                      <div className="font-semibold text-primary text-sm">EnergiaTech SPRL</div>
+                      <div className="text-xs text-slate-400">Greentech · Liège</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1 bg-accent/10 text-primary rounded-full px-3 py-1">
+                    <span className="material-symbols-outlined" style={{ fontSize: 14, fontVariationSettings: "'FILL' 1" }}>bolt</span>
+                    <span className="text-xs font-bold">72%</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Label */}
-          <div style={{ textAlign: "center" as const, fontSize: 12, color: "#B8B2AB" }}>
-            Matching IA · Scores en temps réel
-          </div>
         </div>
       </section>
 
-      {/* ── Ticker ── */}
-      <div style={{ borderTop: "1px solid #E2DDD6", borderBottom: "1px solid #E2DDD6", backgroundColor: "#F3F1EC", overflow: "hidden", padding: "14px 0" }}>
-        <div style={{ display: "flex", width: "max-content", animation: "ticker 25s linear infinite" }}>
-          {[...tickerItems, ...tickerItems, ...tickerItems].map((item, i) => (
-            <span key={i} style={{ display: "inline-flex", alignItems: "center", gap: 20, padding: "0 20px", whiteSpace: "nowrap" as const, fontSize: 13, fontWeight: 600, color: "#3A3632", fontFamily: "Bricolage Grotesque, sans-serif", letterSpacing: "0.02em" }}>
+      {/* ── Trust Ticker Bar ── */}
+      <div className="bg-primary overflow-hidden py-4">
+        <div className="flex" style={{ width: "max-content", animation: "ticker 28s linear infinite" }}>
+          {[...tickerItems, ...tickerItems, ...tickerItems, ...tickerItems].map((item, i) => (
+            <span
+              key={i}
+              className="inline-flex items-center gap-5 px-6 text-white/70 uppercase text-sm font-semibold tracking-wider whitespace-nowrap"
+            >
               {item}
-              <span style={{ width: 4, height: 4, borderRadius: "50%", backgroundColor: "#B8FF3C", display: "inline-block", flexShrink: 0 }} />
+              <span className="material-symbols-outlined text-white/30" style={{ fontSize: 10, fontVariationSettings: "'FILL' 1" }}>fiber_manual_record</span>
             </span>
           ))}
         </div>
       </div>
 
-      {/* ── How it works ── */}
-      <section style={{ padding: "100px 24px", maxWidth: 1200, margin: "0 auto" }}>
-        <div style={{ marginBottom: 56 }}>
-          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" as const, color: "#16523A", fontFamily: "Bricolage Grotesque, sans-serif", marginBottom: 14 }}>Comment ça marche</div>
-          <h2 style={{ fontFamily: "Bricolage Grotesque, sans-serif", fontSize: "clamp(32px, 4vw, 52px)", fontWeight: 800, color: "#0D0D0D", letterSpacing: "-0.025em", maxWidth: 480, lineHeight: 1.1 }}>
-            Opérationnel en 3 étapes
-          </h2>
-        </div>
-
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 2 }}>
-          {steps.map((step, i) => (
-            <div key={step.n} style={{ padding: "36px 32px", backgroundColor: i === 1 ? "#16523A" : "#F3F1EC", borderRadius: i === 0 ? "16px 0 0 16px" : i === 2 ? "0 16px 16px 0" : 0 }}>
-              <div style={{ fontFamily: "Fira Code, monospace", fontSize: 11, fontWeight: 500, color: i === 1 ? "rgba(184,255,60,0.8)" : "#B8B2AB", letterSpacing: "0.05em", marginBottom: 20 }}>{step.n}</div>
-              <h3 style={{ fontFamily: "Bricolage Grotesque, sans-serif", fontSize: 22, fontWeight: 700, color: i === 1 ? "#fff" : "#0D0D0D", marginBottom: 12, lineHeight: 1.2 }}>{step.title}</h3>
-              <p style={{ fontSize: 14, color: i === 1 ? "rgba(255,255,255,0.65)" : "#6B6560", lineHeight: 1.7 }}>{step.desc}</p>
+      {/* ── Value Proposition ── */}
+      <section className="bg-white py-24">
+        <div className="max-w-7xl mx-auto px-6">
+          {/* Section header */}
+          <div className="mb-14">
+            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary rounded-full px-4 py-1.5 mb-5">
+              <span className="material-symbols-outlined" style={{ fontSize: 14, fontVariationSettings: "'FILL' 1" }}>psychology</span>
+              <span className="text-xs font-bold uppercase tracking-wider">Matching Intelligent</span>
             </div>
-          ))}
-        </div>
-      </section>
+            <h2 className="font-display font-extrabold text-4xl text-primary tracking-tight max-w-lg leading-tight">
+              Trouvez le partenaire idéal
+            </h2>
+          </div>
 
-      {/* ── Actors ── */}
-      <section style={{ padding: "0 24px 100px", maxWidth: 1200, margin: "0 auto" }}>
-        <div style={{ marginBottom: 48 }}>
-          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" as const, color: "#16523A", fontFamily: "Bricolage Grotesque, sans-serif", marginBottom: 14 }}>Les acteurs</div>
-          <h2 style={{ fontFamily: "Bricolage Grotesque, sans-serif", fontSize: "clamp(28px, 3.5vw, 44px)", fontWeight: 800, color: "#0D0D0D", letterSpacing: "-0.025em", lineHeight: 1.1 }}>
-            Une plateforme pour<br />tout l&apos;écosystème
-          </h2>
-        </div>
-
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12 }}>
-          {actors.map((actor) => (
-            <div key={actor.n} style={{ backgroundColor: "#F3F1EC", border: "1px solid #E2DDD6", borderRadius: 16, padding: "28px 24px", transition: "border-color 0.2s" }}>
-              <div style={{ fontFamily: "Fira Code, monospace", fontSize: 11, color: "#B8B2AB", marginBottom: 12 }}>{actor.n}</div>
-              <h3 style={{ fontFamily: "Bricolage Grotesque, sans-serif", fontSize: 18, fontWeight: 700, color: "#0D0D0D", marginBottom: 8 }}>{actor.title}</h3>
-              <p style={{ fontSize: 13, color: "#6B6560", lineHeight: 1.65 }}>{actor.desc}</p>
+          {/* 3 cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Card 1 */}
+            <div className="rounded-3xl border border-primary/5 hover:border-primary/20 p-8 transition-colors bg-slate-50">
+              <div className="w-14 h-14 bg-accent/10 rounded-2xl flex items-center justify-center mb-6">
+                <span className="material-symbols-outlined text-primary" style={{ fontSize: 28, fontVariationSettings: "'FILL' 1" }}>bolt</span>
+              </div>
+              <h3 className="font-display font-bold text-xl text-primary mb-3">Matching IA 0-100</h3>
+              <p className="text-slate-500 text-sm leading-relaxed">
+                Notre algorithme calcule un score de compatibilité entre chaque acteur. Fini les cold emails — seuls les bons profils remontent.
+              </p>
             </div>
-          ))}
+
+            {/* Card 2 */}
+            <div className="rounded-3xl border border-primary/5 hover:border-primary/20 p-8 transition-colors bg-slate-50">
+              <div className="w-14 h-14 bg-primary/5 rounded-2xl flex items-center justify-center mb-6">
+                <span className="material-symbols-outlined text-primary" style={{ fontSize: 28, fontVariationSettings: "'FILL' 1" }}>assignment</span>
+              </div>
+              <h3 className="font-display font-bold text-xl text-primary mb-3">RFQ Automatisés</h3>
+              <p className="text-slate-500 text-sm leading-relaxed">
+                Publiez un appel d&apos;offres en 2 minutes. L&apos;IA analyse les réponses, les note et vous présente un classement objectif.
+              </p>
+            </div>
+
+            {/* Card 3 */}
+            <div className="rounded-3xl border border-primary/5 hover:border-primary/20 p-8 transition-colors bg-slate-50">
+              <div className="w-14 h-14 bg-primary/5 rounded-2xl flex items-center justify-center mb-6">
+                <span className="material-symbols-outlined text-primary" style={{ fontSize: 28, fontVariationSettings: "'FILL' 1" }}>trending_up</span>
+              </div>
+              <h3 className="font-display font-bold text-xl text-primary mb-3">Module Investissement</h3>
+              <p className="text-slate-500 text-sm leading-relaxed">
+                Déposez vos deals, gérez les NDA et intéressez les fonds qualifiés. Un pipeline structuré du sourcing à la clôture.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* ── CTA ── */}
-      <section style={{ backgroundColor: "#16523A", padding: "100px 24px", textAlign: "center" as const }}>
-        <div style={{ maxWidth: 640, margin: "0 auto" }}>
-          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" as const, color: "#B8FF3C", fontFamily: "Bricolage Grotesque, sans-serif", marginBottom: 20 }}>Rejoindre la plateforme</div>
-          <h2 style={{ fontFamily: "Bricolage Grotesque, sans-serif", fontSize: "clamp(36px, 5vw, 60px)", fontWeight: 800, color: "#fff", letterSpacing: "-0.03em", lineHeight: 1.05, marginBottom: 20 }}>
-            L&apos;énergie belge se<br />connecte ici.
-          </h2>
-          <p style={{ fontSize: 16, color: "rgba(255,255,255,0.6)", marginBottom: 36 }}>
-            Gratuit pour démarrer. Aucune carte de crédit requise.
-          </p>
-          <Link href="/register" style={{ display: "inline-flex", alignItems: "center", gap: 10, backgroundColor: "#B8FF3C", color: "#0D3324", fontWeight: 700, fontSize: 15, textDecoration: "none", padding: "14px 30px", borderRadius: 100, fontFamily: "Plus Jakarta Sans, sans-serif" }}>
-            Créer un compte gratuit →
-          </Link>
+      {/* ── How It Works ── */}
+      <section className="bg-primary py-24">
+        <div className="max-w-7xl mx-auto px-6">
+          {/* Section header */}
+          <div className="mb-16">
+            <div className="inline-flex items-center gap-2 bg-accent/10 text-accent/80 rounded-full px-4 py-1.5 mb-5">
+              <span className="material-symbols-outlined text-accent/80" style={{ fontSize: 14, fontVariationSettings: "'FILL' 1" }}>route</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-accent/80">Processus</span>
+            </div>
+            <h2 className="font-display font-extrabold text-4xl text-white tracking-tight leading-tight">
+              Comment ça marche
+            </h2>
+          </div>
+
+          {/* 3 steps */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              {
+                num: "1",
+                icon: "person_add",
+                title: "Créez votre profil",
+                desc: "L'agent IA analyse votre organisation et optimise votre visibilité sur la plateforme en quelques minutes.",
+              },
+              {
+                num: "2",
+                icon: "description",
+                title: "Publiez ou répondez",
+                desc: "Créez des RFQ ciblés ou répondez aux appels d'offres correspondant exactement à vos compétences.",
+              },
+              {
+                num: "3",
+                icon: "handshake",
+                title: "Matching & connexion",
+                desc: "L'algorithme calcule un score 0-100 et vous met en relation avec les meilleurs partenaires de l'écosystème.",
+              },
+            ].map((step) => (
+              <div key={step.num} className="relative">
+                {/* Ghost number */}
+                <div
+                  className="font-display font-black text-white/5 leading-none select-none mb-2"
+                  style={{ fontSize: 120 }}
+                >
+                  {step.num}
+                </div>
+                <div className="-mt-16 relative z-10">
+                  <div className="w-14 h-14 bg-accent rounded-2xl flex items-center justify-center mb-5">
+                    <span className="material-symbols-outlined text-primary" style={{ fontSize: 26, fontVariationSettings: "'FILL' 1" }}>{step.icon}</span>
+                  </div>
+                  <h3 className="font-display font-bold text-white text-xl mb-3">{step.title}</h3>
+                  <p className="text-white/70 text-sm leading-relaxed">{step.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
+
+      {/* ── CTA Section ── */}
+      <div className="px-6 mb-12 pt-12" style={{ backgroundColor: "#FAFAF7" }}>
+        <div
+          className="bg-accent rounded-[3rem] mx-auto max-w-6xl py-20 px-8 text-center relative overflow-hidden"
+          style={{
+            backgroundImage: "radial-gradient(circle, rgba(22,82,58,0.08) 1px, transparent 1px)",
+            backgroundSize: "24px 24px",
+          }}
+        >
+          <div className="relative z-10">
+            <h2 className="font-display font-extrabold text-primary text-4xl lg:text-5xl leading-tight tracking-tight mb-4">
+              L&apos;énergie belge<br />se connecte ici
+            </h2>
+            <p className="text-primary/70 text-lg font-medium mb-10">
+              Gratuit pour démarrer · Aucune carte de crédit requise
+            </p>
+            <Link
+              href="/register"
+              className="inline-flex items-center gap-2 bg-primary text-white font-bold text-base px-8 py-4 rounded-2xl hover:opacity-90 transition-opacity no-underline"
+            >
+              Créer un compte gratuit
+              <span className="material-symbols-outlined" style={{ fontSize: 18 }}>arrow_forward</span>
+            </Link>
+          </div>
+        </div>
+      </div>
 
       {/* ── Footer ── */}
-      <footer style={{ borderTop: "1px solid #E2DDD6", padding: "28px 24px", backgroundColor: "#FAFAF7" }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap" as const, gap: 16 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <div style={{ width: 24, height: 24, borderRadius: 6, backgroundColor: "#16523A", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <svg width="11" height="11" viewBox="0 0 14 14" fill="none">
-                <path d="M7 1L1 8h5.5L5 13l8-8H7.5L9 1z" fill="#B8FF3C"/>
-              </svg>
+      <footer className="bg-primary text-white py-20">
+        <div className="max-w-7xl mx-auto px-6">
+          {/* Top row */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 pb-12 border-b border-white/10">
+            {/* Logo + description */}
+            <div className="md:col-span-1">
+              <div className="flex items-center gap-2.5 mb-5">
+                <div className="w-9 h-9 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center flex-shrink-0">
+                  <span className="material-symbols-outlined text-accent" style={{ fontSize: 20, fontVariationSettings: "'FILL' 1" }}>bolt</span>
+                </div>
+                <span className="font-display font-extrabold text-xl text-white tracking-tight">EnergyHub</span>
+              </div>
+              <p className="text-white/50 text-sm leading-relaxed">
+                La marketplace B2B de la transition énergétique belge. Connectez-vous avec les bons partenaires grâce à l&apos;IA.
+              </p>
             </div>
-            <span style={{ fontFamily: "Bricolage Grotesque, sans-serif", fontWeight: 800, fontSize: 14, color: "#0D0D0D" }}>EnergyHub</span>
-            <span style={{ color: "#E2DDD6", margin: "0 8px" }}>|</span>
-            <span style={{ fontSize: 13, color: "#B8B2AB" }}>Marketplace B2B · Belgique</span>
+
+            {/* Nav col 1 */}
+            <div>
+              <div className="text-xs font-bold uppercase tracking-widest text-white/30 mb-5">Plateforme</div>
+              <ul className="space-y-3">
+                {[["Annuaire", "/directory"], ["Appels d'offres", "/rfq"], ["Investissement", "/investment"], ["Tarifs", "/pricing"]].map(([label, href]) => (
+                  <li key={label}>
+                    <Link href={href} className="text-white/60 text-sm hover:text-white transition-colors no-underline">
+                      {label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Nav col 2 */}
+            <div>
+              <div className="text-xs font-bold uppercase tracking-widest text-white/30 mb-5">Acteurs</div>
+              <ul className="space-y-3">
+                {["Industriels", "Installateurs", "Greentechs", "Investisseurs", "Fournisseurs d'énergie"].map((label) => (
+                  <li key={label}>
+                    <Link href="/directory" className="text-white/60 text-sm hover:text-white transition-colors no-underline">
+                      {label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Legal col */}
+            <div>
+              <div className="text-xs font-bold uppercase tracking-widest text-white/30 mb-5">Légal</div>
+              <ul className="space-y-3">
+                {[["Mentions légales", "#"], ["Politique de confidentialité", "#"], ["CGU", "#"], ["RGPD", "#"]].map(([label, href]) => (
+                  <li key={label}>
+                    <Link href={href} className="text-white/60 text-sm hover:text-white transition-colors no-underline">
+                      {label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
-          <div style={{ display: "flex", gap: 24 }}>
-            {[["Annuaire", "/directory"], ["RFQ", "/rfq"], ["Investissement", "/investment"], ["Tarifs", "/pricing"]].map(([label, href]) => (
-              <Link key={href} href={href} style={{ fontSize: 13, color: "#B8B2AB", textDecoration: "none" }}>{label}</Link>
-            ))}
+
+          {/* Bottom row */}
+          <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+            <p className="text-white/30 text-sm">
+              © 2026 EnergyHub. Tous droits réservés. Belgique.
+            </p>
+            <p className="text-white/20 text-xs">
+              Transition énergétique · IA · B2B
+            </p>
           </div>
         </div>
       </footer>
 
+      {/* Ticker animation */}
       <style>{`
         @keyframes ticker {
           0% { transform: translateX(0); }
-          100% { transform: translateX(-33.333%); }
+          100% { transform: translateX(-25%); }
         }
       `}</style>
+
     </div>
   );
 }

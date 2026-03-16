@@ -8,17 +8,11 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        cream: "#FAFAF7",
-        ink: {
-          DEFAULT: "#0D0D0D",
-          2: "#3A3632",
-          3: "#6B6560",
-        },
-        surface: {
-          DEFAULT: "#F3F1EC",
-          2: "#EAE7E0",
-          3: "#E2DDD6",
-        },
+        primary: "#16523A",
+        accent: "#B8FF3C",
+        "background-light": "#FAFAF7",
+        "background-dark": "#121815",
+        // Legacy aliases kept for backward compat
         forest: {
           DEFAULT: "#16523A",
           light: "#1D6B4C",
@@ -30,35 +24,31 @@ module.exports = {
           dark: "#8ACC2A",
           muted: "#E8FAC8",
         },
-        // Keep these for any remaining components
-        slate: {
-          400: "#94A3B8",
-          500: "#64748B",
-          600: "#475569",
-          700: "#334155",
-          800: "#1E293B",
-          900: "#0F172A",
-        },
       },
       fontFamily: {
         display: ["Bricolage Grotesque", "sans-serif"],
-        body: ["Plus Jakarta Sans", "sans-serif"],
+        sans: ["Public Sans", "sans-serif"],
+        body: ["Public Sans", "sans-serif"],
         mono: ["Fira Code", "monospace"],
       },
       borderRadius: {
+        "2xl": "1rem",
+        "3xl": "1.5rem",
         "4xl": "2rem",
         "5xl": "2.5rem",
       },
       boxShadow: {
-        "card": "0 1px 3px rgba(13,13,13,0.06), 0 1px 2px rgba(13,13,13,0.04)",
-        "card-md": "0 4px 16px rgba(13,13,13,0.08), 0 1px 4px rgba(13,13,13,0.04)",
-        "card-lg": "0 8px 32px rgba(13,13,13,0.10), 0 2px 8px rgba(13,13,13,0.06)",
-        "lime": "0 0 20px rgba(184,255,60,0.3)",
+        card: "0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04)",
+        "card-md": "0 4px 16px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04)",
+        "card-lg": "0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06)",
+        primary: "0 8px 32px rgba(22,82,58,0.25)",
+        lime: "0 0 20px rgba(184,255,60,0.3)",
       },
       animation: {
-        "ticker": "ticker 30s linear infinite",
+        ticker: "ticker 30s linear infinite",
         "fade-up": "fadeUp 0.5s ease forwards",
         "fade-in": "fadeIn 0.4s ease forwards",
+        ping: "ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite",
       },
       keyframes: {
         ticker: {

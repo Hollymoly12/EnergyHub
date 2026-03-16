@@ -23,16 +23,16 @@ export default async function PricingPage() {
   }
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#FAFAF7" }}>
+    <div className="min-h-screen bg-background-light">
       <div className="max-w-7xl mx-auto px-6 py-16">
 
         {/* Header */}
         <div className="text-center mb-16">
-          <div className="text-xs font-bold tracking-widest uppercase mb-3" style={{ color: "#16523A" }}>Tarifs</div>
-          <h1 className="text-4xl font-bold mb-4" style={{ color: "#0D0D0D" }}>
+          <p className="text-xs font-bold tracking-widest uppercase text-primary/50 mb-3">Tarifs</p>
+          <h1 className="text-5xl font-extrabold text-primary mb-4 font-display leading-tight">
             Choisissez votre plan
           </h1>
-          <p className="text-slate-400 max-w-xl mx-auto">
+          <p className="text-slate-500 max-w-xl mx-auto">
             Accédez aux outils de la marketplace B2B de la transition énergétique belge.
             Sans engagement, résiliable à tout moment.
           </p>
@@ -42,10 +42,19 @@ export default async function PricingPage() {
         <PricingClient currentPlan={currentPlan} isLoggedIn={!!user} />
 
         {/* Trust signals */}
-        <div className="mt-16 text-center text-slate-600 text-sm space-x-6">
-          <span>🔒 Paiement sécurisé Stripe</span>
-          <span>📄 Facturation mensuelle</span>
-          <span>❌ Sans engagement</span>
+        <div className="mt-16 flex items-center justify-center gap-8 text-slate-400 text-sm flex-wrap">
+          <span className="flex items-center gap-2">
+            <span className="material-symbols-outlined text-base text-primary/50">lock</span>
+            Paiement sécurisé Stripe
+          </span>
+          <span className="flex items-center gap-2">
+            <span className="material-symbols-outlined text-base text-primary/50">receipt_long</span>
+            Facturation mensuelle
+          </span>
+          <span className="flex items-center gap-2">
+            <span className="material-symbols-outlined text-base text-primary/50">close</span>
+            Sans engagement
+          </span>
         </div>
       </div>
     </div>

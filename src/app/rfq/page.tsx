@@ -17,13 +17,11 @@ export default async function RFQPage() {
   const { rfqs, total } = res.ok ? await res.json() : { rfqs: [], total: 0 };
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#FAFAF7" }}>
+    <div className="min-h-screen bg-background-light">
       <div className="max-w-7xl mx-auto px-6 py-10">
-        <div className="mb-8">
-          <div className="text-xs font-bold tracking-widest uppercase mb-2" style={{ color: "#16523A" }}>
-            Appels d'offres
-          </div>
-          <h1 className="text-3xl font-bold" style={{ color: "#0D0D0D" }}>
+        <div className="mb-10">
+          <p className="text-xs font-bold uppercase tracking-widest text-primary/50 mb-2">Appels d'offres</p>
+          <h1 className="text-4xl font-extrabold text-primary font-display leading-tight">
             Trouvez des projets à répondre
           </h1>
           <p className="text-slate-500 mt-2 text-sm">

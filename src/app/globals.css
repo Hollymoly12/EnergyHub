@@ -2,9 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Fira+Code:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Fira+Code:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
 :root {
+  --primary: #16523A;
+  --accent: #B8FF3C;
+  --background-light: #FAFAF7;
+  --background-dark: #121815;
+  /* Legacy */
   --cream: #FAFAF7;
   --surface: #F3F1EC;
   --surface-2: #EAE7E0;
@@ -19,19 +25,26 @@
 
 * { box-sizing: border-box; }
 
-html { background-color: var(--cream); }
+html { background-color: var(--background-light); }
 
 body {
-  background-color: var(--cream);
-  color: var(--ink);
-  font-family: "Plus Jakarta Sans", sans-serif;
+  background-color: var(--background-light);
+  color: #0D0D0D;
+  font-family: "Public Sans", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: "Bricolage Grotesque", sans-serif;
-  color: var(--ink);
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  font-size: inherit;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
 }
 
 /* Scrollbar */
@@ -45,99 +58,75 @@ h1, h2, h3, h4, h5, h6 {
   /* ── Buttons ── */
   .btn-primary {
     @apply inline-flex items-center justify-center gap-2 rounded-full font-semibold text-sm transition-all duration-200 cursor-pointer;
-    background-color: var(--forest);
+    background-color: var(--primary);
     color: #fff;
     padding: 10px 22px;
-    font-family: "Plus Jakarta Sans", sans-serif;
+    font-family: "Public Sans", sans-serif;
   }
-  .btn-primary:hover {
-    background-color: var(--forest-light);
-  }
-  .btn-primary:active {
-    transform: scale(0.98);
-  }
+  .btn-primary:hover { opacity: 0.9; }
+  .btn-primary:active { transform: scale(0.98); }
 
   .btn-secondary {
     @apply inline-flex items-center justify-center gap-2 rounded-full font-medium text-sm transition-all duration-200 cursor-pointer bg-transparent;
-    color: var(--ink);
+    color: #0D0D0D;
     border: 1.5px solid var(--border);
     padding: 10px 22px;
-    font-family: "Plus Jakarta Sans", sans-serif;
+    font-family: "Public Sans", sans-serif;
   }
   .btn-secondary:hover {
-    border-color: var(--ink-2);
+    border-color: var(--primary);
     background-color: var(--surface);
   }
-  .btn-secondary:active {
-    transform: scale(0.98);
-  }
+  .btn-secondary:active { transform: scale(0.98); }
 
-  .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 rounded-full font-medium text-sm transition-all duration-200 cursor-pointer;
-    color: var(--muted);
-    padding: 8px 16px;
-    font-family: "Plus Jakarta Sans", sans-serif;
-  }
-  .btn-ghost:hover {
-    color: var(--ink);
-    background-color: var(--surface);
-  }
-
-  .btn-lime {
+  .btn-accent {
     @apply inline-flex items-center justify-center gap-2 rounded-full font-bold text-sm transition-all duration-200 cursor-pointer;
-    background-color: var(--lime);
-    color: var(--forest-dark, #0D3324);
+    background-color: var(--accent);
+    color: var(--primary);
     padding: 10px 22px;
-    font-family: "Plus Jakarta Sans", sans-serif;
+    font-family: "Public Sans", sans-serif;
   }
-  .btn-lime:hover {
-    background-color: #C5FF5A;
-  }
-  .btn-lime:active {
-    transform: scale(0.98);
-  }
+  .btn-accent:hover { background-color: #c5ff5a; }
+  .btn-accent:active { transform: scale(0.98); }
+
+  /* Legacy alias */
+  .btn-lime { @apply btn-accent; }
 
   /* ── Cards ── */
   .card {
-    background-color: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
+    background-color: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 1rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
   }
 
-  .card-white {
-    background-color: #fff;
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    box-shadow: 0 1px 3px rgba(13,13,13,0.06), 0 1px 2px rgba(13,13,13,0.04);
-  }
+  .card-white { @apply card; }
 
   .card-hover {
-    background-color: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
+    background-color: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 1rem;
     transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
   }
   .card-hover:hover {
-    border-color: #C8C3BA;
-    box-shadow: 0 4px 16px rgba(13,13,13,0.08);
-    transform: translateY(-1px);
+    border-color: rgba(22,82,58,0.2);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    transform: translateY(-2px);
   }
 
   /* ── Forms ── */
   .input {
     @apply w-full rounded-xl text-sm transition-all duration-200;
     background-color: #fff;
-    border: 1.5px solid var(--border);
-    color: var(--ink);
+    border: 1.5px solid #e2e8f0;
+    color: #0D0D0D;
     padding: 10px 14px;
-    font-family: "Plus Jakarta Sans", sans-serif;
+    font-family: "Public Sans", sans-serif;
     outline: none;
   }
-  .input::placeholder {
-    color: #B8B2AB;
-  }
+  .input::placeholder { color: #94a3b8; }
   .input:focus {
-    border-color: var(--forest);
+    border-color: var(--primary);
     box-shadow: 0 0 0 3px rgba(22,82,58,0.08);
   }
 
@@ -146,24 +135,15 @@ h1, h2, h3, h4, h5, h6 {
     min-height: 88px;
   }
 
-  select.input {
-    cursor: pointer;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B6560' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 14px center;
-    padding-right: 36px;
-  }
-
   .label {
     display: block;
     font-size: 11px;
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--muted);
+    color: #64748b;
     margin-bottom: 6px;
-    font-family: "Plus Jakarta Sans", sans-serif;
+    font-family: "Public Sans", sans-serif;
   }
 
   /* ── Typography helpers ── */
@@ -175,65 +155,46 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--forest);
-    font-family: "Bricolage Grotesque", sans-serif;
-  }
-
-  .stat-number {
-    font-family: "Fira Code", monospace;
-    font-size: 2rem;
-    font-weight: 500;
-    color: var(--ink);
-    line-height: 1;
+    color: var(--primary);
+    font-family: "Public Sans", sans-serif;
   }
 
   /* ── Badges ── */
   .badge {
     @apply inline-flex items-center gap-1.5 rounded-full text-xs font-semibold;
     padding: 3px 10px;
-    font-family: "Plus Jakarta Sans", sans-serif;
+    font-family: "Public Sans", sans-serif;
   }
-
   .badge-green {
     background-color: #D4E8DF;
-    color: var(--forest);
+    color: var(--primary);
   }
-
   .badge-lime {
-    background-color: #E8FAC8;
-    color: #3A6B00;
+    background-color: var(--accent);
+    color: var(--primary);
   }
-
   .badge-amber {
     background-color: #FEF3C7;
     color: #92400E;
   }
-
   .badge-red {
     background-color: #FEE2E2;
     color: #991B1B;
   }
-
   .badge-muted {
-    background-color: var(--surface-2);
-    color: var(--muted);
-  }
-
-  .badge-purple {
-    background-color: #EDE9FE;
-    color: #5B21B6;
+    background-color: #f1f5f9;
+    color: #64748b;
   }
 
   /* ── Alerts ── */
   .alert-success {
     background-color: #D4E8DF;
-    border: 1px solid #A8D4C0;
-    color: var(--forest);
+    border: 1px solid rgba(22,82,58,0.2);
+    color: var(--primary);
     border-radius: 12px;
     padding: 12px 16px;
     font-size: 14px;
   }
-
   .alert-error {
     background-color: #FEE2E2;
     border: 1px solid #FECACA;
@@ -242,7 +203,6 @@ h1, h2, h3, h4, h5, h6 {
     padding: 12px 16px;
     font-size: 14px;
   }
-
   .alert-info {
     background-color: #E8FAC8;
     border: 1px solid #C8F07A;
@@ -252,12 +212,7 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 14px;
   }
 
-  /* ── Divider ── */
-  .divider {
-    border-top: 1px solid var(--border);
-  }
-
-  /* ── Ticker (marquee) ── */
+  /* ── Ticker ── */
   .ticker-wrapper {
     overflow: hidden;
     width: 100%;
@@ -271,24 +226,10 @@ h1, h2, h3, h4, h5, h6 {
     animation-play-state: paused;
   }
 
-  /* ── Score bar ── */
-  .score-bar {
-    height: 4px;
-    background-color: var(--surface-2);
-    border-radius: 2px;
-    overflow: hidden;
-  }
-  .score-bar-fill {
-    height: 100%;
-    background-color: var(--lime);
-    border-radius: 2px;
-    transition: width 0.8s ease;
-  }
-
   /* ── Page layout helpers ── */
   .page-shell {
     min-height: 100vh;
-    background-color: var(--cream);
+    background-color: var(--background-light);
   }
 
   .container-lg {
@@ -296,18 +237,16 @@ h1, h2, h3, h4, h5, h6 {
     margin: 0 auto;
     padding: 0 24px;
   }
+
+  /* ── Glass effect ── */
+  .glass-effect {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+  }
 }
 
-/* ── Utility aliases for old code ── */
 @layer utilities {
   .font-display { font-family: "Bricolage Grotesque", sans-serif; }
-  .font-body { font-family: "Plus Jakarta Sans", sans-serif; }
+  .font-body { font-family: "Public Sans", sans-serif; }
   .font-mono { font-family: "Fira Code", monospace; }
-  .bg-surface-DEFAULT { background-color: var(--cream); }
-  .bg-surface-2 { background-color: var(--surface-2); }
-  .bg-surface-3 { background-color: var(--surface-2); }
-  .border-surface-3 { border-color: var(--border); }
-  .text-brand-amber { color: #F59E0B; }
-  .text-brand-purple { color: #7C3AED; }
-  .bg-brand-amber\/8 { background-color: rgba(245,158,11,0.08); }
 }

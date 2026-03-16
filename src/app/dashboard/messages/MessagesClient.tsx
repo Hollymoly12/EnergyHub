@@ -110,13 +110,22 @@ export default function MessagesClient({ conversations, currentUserId, initialCo
   if (conversations.length === 0) {
     return (
       <div className="flex-1 flex items-center justify-center">
-        <div className="text-center text-slate-600">
-          <div className="text-4xl mb-4">✉️</div>
-          <p className="text-white font-semibold mb-2">Aucune conversation</p>
+        <div className="text-center">
+          <div className="size-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+            <span className="material-symbols-outlined text-3xl text-primary">mail</span>
+          </div>
+          <p className="text-primary font-bold text-lg font-display mb-2">Aucune conversation</p>
           <p className="text-slate-500 text-sm mb-6">
             Contactez une organisation depuis vos matchs pour démarrer une conversation.
           </p>
-          <a href="/dashboard/matches" className="btn-primary text-sm">Voir mes matchs →</a>
+          <a
+            href="/dashboard/matches"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm text-white transition-opacity hover:opacity-90"
+            style={{ backgroundColor: "#16523A" }}
+          >
+            <span className="material-symbols-outlined text-base">psychology</span>
+            Voir mes matchs
+          </a>
         </div>
       </div>
     );
@@ -125,36 +134,41 @@ export default function MessagesClient({ conversations, currentUserId, initialCo
   return (
     <div className="flex h-full">
       {/* Liste conversations */}
-      <div className="w-80 shrink-0 border-r border-slate-800 overflow-y-auto">
+      <div className="w-80 shrink-0 border-r border-slate-200 overflow-y-auto bg-white">
+        <div className="px-4 py-4 border-b border-slate-100">
+          <p className="text-xs font-bold uppercase tracking-widest text-primary/50">Conversations</p>
+        </div>
         {conversations.map(conv => (
           <button
             key={conv.id}
             onClick={() => setActiveConvId(conv.id)}
-            className={`w-full text-left px-4 py-3 border-b border-slate-800 hover:bg-slate-800/50 transition-colors ${
-              activeConvId === conv.id ? "bg-slate-800" : ""
+            className={`w-full text-left px-4 py-3.5 border-b border-slate-100 transition-colors ${
+              activeConvId === conv.id
+                ? "bg-primary/5 border-l-2 border-l-primary"
+                : "hover:bg-slate-50"
             }`}
           >
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-full bg-slate-700 flex items-center justify-center text-sm shrink-0 overflow-hidden">
+              <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center shrink-0 overflow-hidden">
                 {conv.other_org?.logo_url
                   ? <img src={conv.other_org.logo_url} alt="" className="w-full h-full object-cover" />
-                  : "🏢"}
+                  : <span className="material-symbols-outlined text-slate-400">business</span>}
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between gap-1">
-                  <span className="text-sm font-medium text-white truncate">
+                  <span className={`text-sm font-semibold truncate ${activeConvId === conv.id ? "text-primary" : "text-slate-800"}`}>
                     {conv.other_org?.name || "Organisation"}
                   </span>
-                  <span className="text-[10px] text-slate-600 shrink-0">
+                  <span className="text-[10px] text-slate-400 shrink-0">
                     {new Date(conv.last_message_at).toLocaleDateString("fr-BE", { day: "numeric", month: "short" })}
                   </span>
                 </div>
-                <p className="text-xs text-slate-500 truncate mt-0.5">
+                <p className="text-xs text-slate-400 truncate mt-0.5">
                   {conv.last_message_preview || conv.subject || "Nouvelle conversation"}
                 </p>
               </div>
               {conv.unread_count > 0 && (
-                <span className="w-4 h-4 rounded-full bg-yellow-500 text-[10px] text-black font-bold flex items-center justify-center shrink-0">
+                <span className="w-5 h-5 rounded-full bg-accent text-[10px] text-primary font-bold flex items-center justify-center shrink-0">
                   {conv.unread_count}
                 </span>
               )}
@@ -164,26 +178,26 @@ export default function MessagesClient({ conversations, currentUserId, initialCo
       </div>
 
       {/* Zone messages */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 bg-background-light">
         {activeConv ? (
           <>
-            <div className="px-6 py-4 border-b border-slate-800 flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-sm overflow-hidden">
+            <div className="px-6 py-4 border-b border-slate-200 bg-white flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center overflow-hidden">
                 {activeConv.other_org?.logo_url
                   ? <img src={activeConv.other_org.logo_url} alt="" className="w-full h-full object-cover" />
-                  : "🏢"}
+                  : <span className="material-symbols-outlined text-slate-400">business</span>}
               </div>
               <div>
-                <div className="font-semibold text-white text-sm">{activeConv.other_org?.name}</div>
-                {activeConv.subject && <div className="text-xs text-slate-500">{activeConv.subject}</div>}
+                <div className="font-bold text-primary text-sm font-display">{activeConv.other_org?.name}</div>
+                {activeConv.subject && <div className="text-xs text-slate-400">{activeConv.subject}</div>}
               </div>
             </div>
 
             <div className="flex-1 overflow-y-auto px-6 py-4 space-y-3">
               {loadingMessages ? (
-                <div className="text-center text-slate-600 text-sm py-8">Chargement...</div>
+                <div className="text-center text-slate-400 text-sm py-8">Chargement...</div>
               ) : messages.length === 0 ? (
-                <div className="text-center text-slate-600 text-sm py-8">Aucun message</div>
+                <div className="text-center text-slate-400 text-sm py-8">Aucun message</div>
               ) : (
                 messages.map(msg => {
                   const isOwn = msg.sender_id === currentUserId;
@@ -191,11 +205,11 @@ export default function MessagesClient({ conversations, currentUserId, initialCo
                     <div key={msg.id} className={`flex ${isOwn ? "justify-end" : "justify-start"}`}>
                       <div className={`max-w-[70%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed ${
                         isOwn
-                          ? "bg-yellow-500/20 text-yellow-100 rounded-br-sm"
-                          : "bg-slate-800 text-slate-300 rounded-bl-sm"
+                          ? "bg-primary text-white rounded-br-sm"
+                          : "bg-white text-slate-700 border border-slate-200 rounded-bl-sm shadow-sm"
                       }`}>
                         {msg.content}
-                        <div className={`text-[10px] mt-1 ${isOwn ? "text-yellow-500/60 text-right" : "text-slate-600"}`}>
+                        <div className={`text-[10px] mt-1 ${isOwn ? "text-white/60 text-right" : "text-slate-400"}`}>
                           {new Date(msg.created_at).toLocaleTimeString("fr-BE", { hour: "2-digit", minute: "2-digit" })}
                         </div>
                       </div>
@@ -206,11 +220,11 @@ export default function MessagesClient({ conversations, currentUserId, initialCo
               <div ref={messagesEndRef} />
             </div>
 
-            <form onSubmit={handleSend} className="px-6 py-4 border-t border-slate-800">
-              {error && <p className="text-red-400 text-xs mb-2">{error}</p>}
+            <form onSubmit={handleSend} className="px-6 py-4 border-t border-slate-200 bg-white">
+              {error && <p className="text-red-500 text-xs mb-2">{error}</p>}
               <div className="flex gap-3">
                 <input
-                  className="input flex-1"
+                  className="flex-1 rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all"
                   value={newMessage}
                   onChange={e => setNewMessage(e.target.value)}
                   placeholder="Écrire un message..."
@@ -219,16 +233,21 @@ export default function MessagesClient({ conversations, currentUserId, initialCo
                 <button
                   type="submit"
                   disabled={isPending || !newMessage.trim()}
-                  className="btn-primary px-5 disabled:opacity-50"
+                  className="flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-sm text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+                  style={{ backgroundColor: "#16523A" }}
                 >
+                  <span className="material-symbols-outlined text-base">send</span>
                   {isPending ? "..." : "Envoyer"}
                 </button>
               </div>
             </form>
           </>
         ) : (
-          <div className="flex-1 flex items-center justify-center text-slate-600 text-sm">
-            Sélectionnez une conversation
+          <div className="flex-1 flex items-center justify-center">
+            <div className="text-center text-slate-400">
+              <span className="material-symbols-outlined text-4xl block mb-2">chat_bubble</span>
+              <p className="text-sm">Sélectionnez une conversation</p>
+            </div>
           </div>
         )}
       </div>

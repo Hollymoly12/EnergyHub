@@ -350,17 +350,17 @@ export default function ProfileForm({ org, agentSuggestion }: Props) {
 
         {/* Agent suggestions */}
         {suggestion && (suggestion.next_actions as unknown[])?.length > 0 && (
-          <div className="card p-4 border-yellow-500/20">
+          <div className="bg-primary rounded-2xl p-4">
             <div className="flex items-center gap-2 mb-3">
-              <span className="text-base">🤖</span>
-              <span className="text-xs font-semibold text-yellow-400">Suggestions IA</span>
+              <span className="material-symbols-outlined text-accent text-base">auto_awesome</span>
+              <span className="text-xs font-bold text-accent uppercase tracking-widest">Suggestions IA</span>
             </div>
             <div className="space-y-2">
               {(suggestion.next_actions as Array<{ action: string; reason: string }>)
                 .slice(0, 3)
                 .map((a, i) => (
-                  <div key={i} className="text-[11px] text-slate-400 flex gap-2">
-                    <span className="text-yellow-600 shrink-0">→</span>
+                  <div key={i} className="text-[11px] text-white/60 flex gap-2">
+                    <span className="material-symbols-outlined text-accent text-xs shrink-0">arrow_forward</span>
                     <span>{a.action}</span>
                   </div>
                 ))}

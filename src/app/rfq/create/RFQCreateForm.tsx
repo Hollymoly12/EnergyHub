@@ -22,13 +22,13 @@ interface FormData {
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const ACTOR_LABELS: Record<string, { label: string; icon: string }> = {
-  industrial:      { label: "Industriel",          icon: "⚡" },
-  installer:       { label: "Installateur",         icon: "🔧" },
-  software_editor: { label: "Éditeur logiciel",      icon: "💻" },
-  investor:        { label: "Investisseur",          icon: "📈" },
-  energy_provider: { label: "Fournisseur d'énergie", icon: "🏭" },
-  esco:            { label: "ESCO / Consultant",     icon: "🎯" },
-  greentech:       { label: "GreenTech",             icon: "🌱" },
+  industrial:      { label: "Industriel",           icon: "factory" },
+  installer:       { label: "Installateur",          icon: "handyman" },
+  software_editor: { label: "Éditeur logiciel",       icon: "code" },
+  investor:        { label: "Investisseur",           icon: "trending_up" },
+  energy_provider: { label: "Fournisseur d'énergie",  icon: "bolt" },
+  esco:            { label: "ESCO / Consultant",      icon: "psychology" },
+  greentech:       { label: "GreenTech",              icon: "eco" },
 };
 const ACTOR_TYPES = Object.entries(ACTOR_LABELS);
 const REGIONS = ["Wallonie", "Flandre", "Bruxelles-Capitale"];
@@ -55,27 +55,28 @@ function TagInput({
 
   return (
     <div>
-      <label className="label">{label}</label>
+      <label className="block text-xs font-bold uppercase tracking-widest text-primary/60 mb-2">{label}</label>
       <div className="flex flex-wrap gap-2 mb-2 min-h-[32px]">
         {values.map((v, i) => (
           <span
             key={i}
-            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700"
+            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold"
+            style={{ backgroundColor: "rgba(22,82,58,0.1)", color: "#16523A" }}
           >
             {v}
             <button
               type="button"
               onClick={() => remove(i)}
-              className="text-slate-500 hover:text-white transition-colors ml-0.5"
+              className="hover:opacity-60 transition-opacity"
             >
-              ×
+              <span className="material-symbols-outlined text-xs">close</span>
             </button>
           </span>
         ))}
       </div>
       <div className="flex gap-2">
         <input
-          className="input flex-1"
+          className="flex-1 rounded-xl border border-slate-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all"
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => { if (e.key === "Enter") { e.preventDefault(); add(); } }}
@@ -84,9 +85,10 @@ function TagInput({
         <button
           type="button"
           onClick={add}
-          className="btn-secondary text-xs px-3 py-2"
+          className="flex items-center justify-center gap-1 px-4 py-2.5 rounded-xl text-sm font-bold border transition-colors hover:bg-slate-50"
+          style={{ borderColor: "#16523A", color: "#16523A" }}
         >
-          +
+          <span className="material-symbols-outlined text-base">add</span>
         </button>
       </div>
     </div>
@@ -105,18 +107,20 @@ function StepIndicator({ step }: { step: number }) {
         const done = step > n;
         return (
           <div key={n} className="flex items-center gap-2">
-            <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${
-              done ? "bg-green-400 text-black" :
-              active ? "bg-yellow-500 text-black" :
-              "bg-slate-800 text-slate-500"
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${
+              done ? "bg-accent text-primary" :
+              active ? "bg-primary text-white" :
+              "bg-slate-200 text-slate-400"
             }`}>
-              {done ? "✓" : n}
+              {done
+                ? <span className="material-symbols-outlined text-sm">check</span>
+                : n}
             </div>
-            <span className={`text-sm hidden sm:block ${active ? "text-white" : done ? "text-green-400" : "text-slate-600"}`}>
+            <span className={`text-sm font-medium hidden sm:block ${active ? "text-primary" : done ? "text-primary/60" : "text-slate-400"}`}>
               {label}
             </span>
             {i < steps.length - 1 && (
-              <div className={`w-8 h-px mx-1 ${done ? "bg-green-400" : "bg-slate-800"}`} />
+              <div className={`w-8 h-px mx-1 ${done ? "bg-accent" : "bg-slate-200"}`} />
             )}
           </div>
         );
@@ -129,9 +133,9 @@ function StepIndicator({ step }: { step: number }) {
 
 function Row({ label, value, multiline }: { label: string; value: string; multiline?: boolean }) {
   return (
-    <div className="flex gap-4 py-2 border-b border-slate-800 last:border-0">
-      <span className="text-xs text-slate-500 w-32 shrink-0 pt-0.5">{label}</span>
-      <span className={`text-sm text-slate-300 flex-1 ${multiline ? "whitespace-pre-wrap" : ""}`}>{value}</span>
+    <div className="flex gap-4 py-3 border-b border-slate-100 last:border-0">
+      <span className="text-xs font-bold uppercase tracking-wide text-primary/50 w-36 shrink-0 pt-0.5">{label}</span>
+      <span className={`text-sm text-slate-700 flex-1 ${multiline ? "whitespace-pre-wrap" : ""}`}>{value}</span>
     </div>
   );
 }
@@ -196,18 +200,22 @@ export default function RFQCreateForm() {
     if (redirectId) router.push(`/rfq/${redirectId}`);
   };
 
+  const inputClass = "w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-all";
+
   // ── Étape 1 ──
   if (step === 1) {
     return (
       <div>
         <StepIndicator step={1} />
-        <div className="card p-6 space-y-5">
+        <div className="bg-white rounded-3xl p-8 border border-black/5 space-y-6">
           <div>
-            <label className="label">Type d'appel d'offres</label>
-            <div className="flex gap-3 mt-2">
+            <label className="block text-xs font-bold uppercase tracking-widest text-primary/60 mb-3">Type d'appel d'offres</label>
+            <div className="flex gap-3">
               {[["rfq", "RFQ", "Appel d'offres"], ["rfi", "RFI", "Demande d'info"], ["rfp", "RFP", "Proposition"]].map(([val, badge, desc]) => (
-                <label key={val} className={`flex-1 cursor-pointer card p-3 text-center transition-colors ${
-                  form.type === val ? "border-yellow-500/50 bg-yellow-500/5" : "hover:border-slate-700"
+                <label key={val} className={`flex-1 cursor-pointer rounded-2xl p-4 text-center border-2 transition-all ${
+                  form.type === val
+                    ? "border-accent bg-accent/10"
+                    : "border-slate-200 hover:border-primary/30"
                 }`}>
                   <input
                     type="radio"
@@ -217,17 +225,19 @@ export default function RFQCreateForm() {
                     onChange={() => set("type", val)}
                     className="sr-only"
                   />
-                  <div className={`text-xs font-bold mb-0.5 ${form.type === val ? "text-yellow-500" : "text-slate-400"}`}>{badge}</div>
-                  <div className="text-[10px] text-slate-600">{desc}</div>
+                  <div className={`text-sm font-bold mb-0.5 ${form.type === val ? "text-primary" : "text-slate-500"}`}>{badge}</div>
+                  <div className="text-[11px] text-slate-400">{desc}</div>
                 </label>
               ))}
             </div>
           </div>
 
           <div>
-            <label className="label">Titre <span className="text-red-400">*</span></label>
+            <label className="block text-xs font-bold uppercase tracking-widest text-primary/60 mb-2">
+              Titre <span className="text-red-500 normal-case">*</span>
+            </label>
             <input
-              className="input"
+              className={inputClass}
               value={form.title}
               onChange={e => set("title", e.target.value)}
               placeholder="Ex: Recherche installateur bornes de recharge Wallonie"
@@ -236,9 +246,11 @@ export default function RFQCreateForm() {
           </div>
 
           <div>
-            <label className="label">Description <span className="text-red-400">*</span></label>
+            <label className="block text-xs font-bold uppercase tracking-widest text-primary/60 mb-2">
+              Description <span className="text-red-500 normal-case">*</span>
+            </label>
             <textarea
-              className="input min-h-[120px] resize-y"
+              className={`${inputClass} min-h-[120px] resize-y`}
               value={form.description}
               onChange={e => set("description", e.target.value)}
               placeholder="Décrivez le contexte, les objectifs et les livrables attendus..."
@@ -246,9 +258,11 @@ export default function RFQCreateForm() {
           </div>
 
           <div>
-            <label className="label">Exigences techniques <span className="text-slate-600 font-normal">(optionnel)</span></label>
+            <label className="block text-xs font-bold uppercase tracking-widest text-primary/60 mb-2">
+              Exigences techniques <span className="text-slate-400 font-normal normal-case">(optionnel)</span>
+            </label>
             <textarea
-              className="input min-h-[80px] resize-y"
+              className={`${inputClass} min-h-[80px] resize-y`}
               value={form.requirements}
               onChange={e => set("requirements", e.target.value)}
               placeholder="Certifications requises, normes, contraintes techniques..."
@@ -256,14 +270,16 @@ export default function RFQCreateForm() {
           </div>
         </div>
 
-        <div className="flex justify-end mt-4">
+        <div className="flex justify-end mt-6">
           <button
             onClick={() => setStep(2)}
             disabled={!step1Valid}
             title={!step1Valid ? "Titre requis et description (min. 20 caractères)" : undefined}
-            className="btn-primary disabled:opacity-30 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm text-white transition-opacity hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed"
+            style={{ backgroundColor: "#16523A" }}
           >
-            Suivant →
+            Suivant
+            <span className="material-symbols-outlined text-base">arrow_forward</span>
           </button>
         </div>
       </div>
@@ -275,42 +291,45 @@ export default function RFQCreateForm() {
     return (
       <div>
         <StepIndicator step={2} />
-        <div className="card p-6 space-y-6">
+        <div className="bg-white rounded-3xl p-8 border border-black/5 space-y-6">
           <div>
-            <label className="label">Types d'acteurs ciblés</label>
-            <div className="grid grid-cols-2 gap-2 mt-2">
+            <label className="block text-xs font-bold uppercase tracking-widest text-primary/60 mb-3">Types d'acteurs ciblés</label>
+            <div className="grid grid-cols-2 gap-2">
               {ACTOR_TYPES.map(([value, { label, icon }]) => (
-                <label key={value} className={`flex items-center gap-2.5 cursor-pointer p-2 rounded-lg border transition-colors ${
+                <label key={value} className={`flex items-center gap-2.5 cursor-pointer p-3 rounded-xl border-2 transition-all ${
                   form.target_actor_types.includes(value)
-                    ? "border-yellow-500/40 bg-yellow-500/5 text-white"
-                    : "border-slate-800 hover:border-slate-700 text-slate-400"
+                    ? "border-accent bg-accent/10 text-primary"
+                    : "border-slate-200 hover:border-primary/30 text-slate-600"
                 }`}>
                   <input
                     type="checkbox"
                     checked={form.target_actor_types.includes(value)}
                     onChange={() => toggleArray("target_actor_types", value)}
-                    className="accent-yellow-500 shrink-0"
+                    className="accent-primary shrink-0"
                   />
-                  <span className="text-sm">{icon} {label}</span>
+                  <span className="flex items-center gap-1.5 text-sm font-medium">
+                    <span className="material-symbols-outlined text-sm">{icon}</span>
+                    {label}
+                  </span>
                 </label>
               ))}
             </div>
           </div>
 
           <div>
-            <label className="label">Régions ciblées</label>
-            <div className="flex gap-3 mt-2">
+            <label className="block text-xs font-bold uppercase tracking-widest text-primary/60 mb-3">Régions ciblées</label>
+            <div className="flex flex-wrap gap-2">
               {REGIONS.map(r => (
-                <label key={r} className={`flex items-center gap-2 cursor-pointer px-3 py-2 rounded-lg border text-sm transition-colors ${
+                <label key={r} className={`flex items-center gap-2 cursor-pointer px-4 py-2.5 rounded-xl border-2 text-sm font-medium transition-all ${
                   form.target_regions.includes(r)
-                    ? "border-yellow-500/40 bg-yellow-500/5 text-white"
-                    : "border-slate-800 hover:border-slate-700 text-slate-400"
+                    ? "border-accent bg-accent/10 text-primary"
+                    : "border-slate-200 hover:border-primary/30 text-slate-600"
                 }`}>
                   <input
                     type="checkbox"
                     checked={form.target_regions.includes(r)}
                     onChange={() => toggleArray("target_regions", r)}
-                    className="accent-yellow-500"
+                    className="accent-primary"
                   />
                   {r}
                 </label>
@@ -326,9 +345,11 @@ export default function RFQCreateForm() {
           />
 
           <div>
-            <label className="label">Budget <span className="text-slate-600 font-normal">(optionnel)</span></label>
+            <label className="block text-xs font-bold uppercase tracking-widest text-primary/60 mb-2">
+              Budget <span className="text-slate-400 font-normal normal-case">(optionnel)</span>
+            </label>
             <input
-              className="input"
+              className={inputClass}
               value={form.budget_range}
               onChange={e => set("budget_range", e.target.value)}
               placeholder="Ex: 50k–100k€, < 20 000€..."
@@ -336,10 +357,12 @@ export default function RFQCreateForm() {
           </div>
 
           <div>
-            <label className="label">Date limite <span className="text-slate-600 font-normal">(optionnel)</span></label>
+            <label className="block text-xs font-bold uppercase tracking-widest text-primary/60 mb-2">
+              Date limite <span className="text-slate-400 font-normal normal-case">(optionnel)</span>
+            </label>
             <input
               type="date"
-              className="input"
+              className={inputClass}
               value={form.deadline}
               min={new Date().toISOString().split("T")[0]}
               onChange={e => set("deadline", e.target.value)}
@@ -347,9 +370,11 @@ export default function RFQCreateForm() {
           </div>
 
           <div>
-            <label className="label">Localisation <span className="text-slate-600 font-normal">(optionnel)</span></label>
+            <label className="block text-xs font-bold uppercase tracking-widest text-primary/60 mb-2">
+              Localisation <span className="text-slate-400 font-normal normal-case">(optionnel)</span>
+            </label>
             <input
-              className="input"
+              className={inputClass}
               value={form.location}
               onChange={e => set("location", e.target.value)}
               placeholder="Ex: Liège, Wallonie"
@@ -364,12 +389,22 @@ export default function RFQCreateForm() {
           />
         </div>
 
-        <div className="flex justify-between mt-4">
-          <button onClick={() => setStep(1)} className="btn-secondary">
-            ← Précédent
+        <div className="flex justify-between mt-6">
+          <button
+            onClick={() => setStep(1)}
+            className="flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-sm border transition-colors hover:bg-slate-50"
+            style={{ borderColor: "#16523A", color: "#16523A" }}
+          >
+            <span className="material-symbols-outlined text-base">arrow_back</span>
+            Précédent
           </button>
-          <button onClick={() => setStep(3)} className="btn-primary">
-            Suivant →
+          <button
+            onClick={() => setStep(3)}
+            className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm text-white transition-opacity hover:opacity-90"
+            style={{ backgroundColor: "#16523A" }}
+          >
+            Suivant
+            <span className="material-symbols-outlined text-base">arrow_forward</span>
           </button>
         </div>
       </div>
@@ -380,8 +415,8 @@ export default function RFQCreateForm() {
   return (
     <div>
       <StepIndicator step={3} />
-      <div className="card p-6 space-y-4">
-        <h2 className="text-sm font-semibold text-white mb-4">Récapitulatif</h2>
+      <div className="bg-white rounded-3xl p-8 border border-black/5 space-y-1">
+        <h2 className="text-sm font-bold text-primary uppercase tracking-widest mb-4">Récapitulatif</h2>
 
         <Row label="Type" value={form.type.toUpperCase()} />
         <Row label="Titre" value={form.title} />
@@ -403,21 +438,39 @@ export default function RFQCreateForm() {
       </div>
 
       {error && (
-        <div className="mt-4 p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
+        <div className="mt-4 p-4 rounded-xl border border-red-200 bg-red-50 text-red-600 text-sm">
           {error}
         </div>
       )}
 
-      <div className="flex justify-between mt-4 gap-3">
-        <button onClick={() => setStep(2)} className="btn-secondary" disabled={loadingAction !== null}>
-          ← Précédent
+      <div className="flex justify-between mt-6 gap-3">
+        <button
+          onClick={() => setStep(2)}
+          disabled={loadingAction !== null}
+          className="flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-sm border transition-colors hover:bg-slate-50"
+          style={{ borderColor: "#16523A", color: "#16523A" }}
+        >
+          <span className="material-symbols-outlined text-base">arrow_back</span>
+          Précédent
         </button>
         <div className="flex gap-3">
-          <button onClick={() => submit(false)} className="btn-secondary" disabled={loadingAction !== null}>
+          <button
+            onClick={() => submit(false)}
+            disabled={loadingAction !== null}
+            className="flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-sm border transition-colors hover:bg-slate-50 disabled:opacity-50"
+            style={{ borderColor: "#16523A", color: "#16523A" }}
+          >
+            <span className="material-symbols-outlined text-base">save</span>
             {loadingAction === "draft" ? "Enregistrement..." : "Sauvegarder en draft"}
           </button>
-          <button onClick={() => submit(true)} className="btn-primary" disabled={loadingAction !== null}>
-            {loadingAction === "publish" ? "Publication..." : "Publier maintenant →"}
+          <button
+            onClick={() => submit(true)}
+            disabled={loadingAction !== null}
+            className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+            style={{ backgroundColor: "#16523A" }}
+          >
+            <span className="material-symbols-outlined text-base">publish</span>
+            {loadingAction === "publish" ? "Publication..." : "Publier maintenant"}
           </button>
         </div>
       </div>
