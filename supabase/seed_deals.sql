@@ -31,7 +31,7 @@ BEGIN
     funding_amount, funding_type, series, irr_target, duration_years,
     current_investors,
     status, published_at, requires_nda,
-    interests_count, ai_score,
+    interests_count, ai_risk_score,
     ai_summary
   ) VALUES
 
