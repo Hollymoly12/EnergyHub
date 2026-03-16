@@ -74,7 +74,7 @@ export default function PublicNavbar({ activePath, isLoggedIn }: PublicNavbarPro
                 Connexion
               </Link>
               <Link
-                href="/register"
+                href="/pricing"
                 className="bg-primary text-white text-sm font-semibold px-5 py-2 rounded-full hover:opacity-90 transition-opacity no-underline"
               >
                 Rejoindre
