@@ -43,9 +43,9 @@ export default async function PricingPage() {
 
         {/* Trust signals */}
         <div className="mt-16 text-center text-slate-600 text-sm space-x-6">
-          <span>Paiement sécurisé Stripe</span>
-          <span>Facturation mensuelle</span>
-          <span>Sans engagement</span>
+          <span>🔒 Paiement sécurisé Stripe</span>
+          <span>📄 Facturation mensuelle</span>
+          <span>❌ Sans engagement</span>
         </div>
       </div>
     </div>
