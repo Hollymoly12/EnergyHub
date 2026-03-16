@@ -107,9 +107,15 @@ export default async function DashboardLayout({ children }: { children: React.Re
               <p className="text-sm font-semibold text-white truncate m-0">{displayName}</p>
               <p className="text-xs text-white/50 truncate m-0">{user.email}</p>
             </div>
-            <span className="text-xs font-semibold text-accent bg-accent/10 px-2 py-0.5 rounded-full flex-shrink-0">
-              {planLabel}
-            </span>
+            <form action="/auth/signout" method="POST">
+              <button
+                type="submit"
+                title="Se déconnecter"
+                className="p-1.5 rounded-lg hover:bg-white/10 transition-colors text-white/50 hover:text-white"
+              >
+                <span className="material-symbols-outlined text-lg">logout</span>
+              </button>
+            </form>
           </div>
         </div>
       </aside>
