@@ -66,13 +66,13 @@ export default async function InvestmentPage() {
   const totalFunding = deals.reduce((sum, d) => sum + (d.funding_amount ?? 0), 0);
 
   return (
-    <div className="min-h-screen bg-[#FAFAF7]" style={{ fontFamily: "'Public Sans', sans-serif" }}>
+    <div className="min-h-screen bg-background-light" className="font-sans">
       {/* Navbar */}
-      <nav className="sticky top-0 z-50 bg-[#16523A] border-b border-white/10 px-6 py-4">
+      <nav className="sticky top-0 z-50 bg-primary border-b border-white/10 px-6 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-6">
           {/* Logo */}
           <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-[#B8FF3C] text-2xl">bolt</span>
+            <span className="material-symbols-outlined text-accent text-2xl">bolt</span>
             <span className="text-white font-extrabold text-xl tracking-tight">EnergyHub</span>
           </div>
 
@@ -82,7 +82,7 @@ export default async function InvestmentPage() {
             <Link href="/directory" className="hover:text-white transition-colors">Projets</Link>
             <Link
               href="/investment"
-              className="text-white border-b-2 border-[#B8FF3C] pb-0.5"
+              className="text-white border-b-2 border-accent pb-0.5"
             >
               Investissements
             </Link>
@@ -98,8 +98,8 @@ export default async function InvestmentPage() {
             <button className="relative text-white/70 hover:text-white transition-colors">
               <span className="material-symbols-outlined text-xl">notifications</span>
             </button>
-            <div className="size-8 rounded-full bg-[#B8FF3C] flex items-center justify-center">
-              <span className="material-symbols-outlined text-[#16523A] text-base">person</span>
+            <div className="size-8 rounded-full bg-accent flex items-center justify-center">
+              <span className="material-symbols-outlined text-primary text-base">person</span>
             </div>
           </div>
         </div>
@@ -109,14 +109,14 @@ export default async function InvestmentPage() {
         {/* Dashboard Summary Hero */}
         <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
           <h2
-            className="text-3xl font-extrabold text-[#16523A]"
-            style={{ fontFamily: "'Bricolage Grotesque', sans-serif" }}
+            className="text-3xl font-extrabold text-primary"
+           
           >
             Tableau de Bord
           </h2>
           <Link
             href="/investment/submit"
-            className="flex items-center gap-2 bg-[#16523A] text-white px-5 py-2.5 rounded-xl font-semibold text-sm hover:bg-[#1a6347] transition-colors"
+            className="flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-xl font-semibold text-sm hover:bg-[#1a6347] transition-colors"
           >
             <span className="material-symbols-outlined text-base">add</span>
             Nouvel Investissement
@@ -129,7 +129,7 @@ export default async function InvestmentPage() {
           <div className="bg-white rounded-2xl border border-slate-100 p-6 flex items-start justify-between">
             <div>
               <p className="text-sm text-slate-500 mb-1">Total en Financement</p>
-              <p className="text-2xl font-extrabold text-[#16523A]" style={{ fontFamily: "'Bricolage Grotesque', sans-serif" }}>
+              <p className="text-2xl font-extrabold text-primary">
                 {formatAmount(totalFunding)}
               </p>
               <span className="inline-flex items-center gap-1 mt-2 bg-green-50 text-green-700 text-xs font-bold px-2 py-0.5 rounded-lg">
@@ -137,8 +137,8 @@ export default async function InvestmentPage() {
                 Actif
               </span>
             </div>
-            <div className="size-12 rounded-xl bg-[#16523A]/10 flex items-center justify-center">
-              <span className="material-symbols-outlined text-[#16523A]">account_balance_wallet</span>
+            <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center">
+              <span className="material-symbols-outlined text-primary">account_balance_wallet</span>
             </div>
           </div>
 
@@ -146,7 +146,7 @@ export default async function InvestmentPage() {
           <div className="bg-white rounded-2xl border border-slate-100 p-6 flex items-start justify-between">
             <div>
               <p className="text-sm text-slate-500 mb-1">ROI Moyen Cible</p>
-              <p className="text-2xl font-extrabold text-[#16523A]" style={{ fontFamily: "'Bricolage Grotesque', sans-serif" }}>
+              <p className="text-2xl font-extrabold text-primary">
                 {deals.length > 0 && deals.some((d) => d.irr_target)
                   ? `${(
                       deals
@@ -160,8 +160,8 @@ export default async function InvestmentPage() {
                 IRR annuel
               </span>
             </div>
-            <div className="size-12 rounded-xl bg-[#16523A]/10 flex items-center justify-center">
-              <span className="material-symbols-outlined text-[#16523A]">show_chart</span>
+            <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center">
+              <span className="material-symbols-outlined text-primary">show_chart</span>
             </div>
           </div>
 
@@ -169,16 +169,16 @@ export default async function InvestmentPage() {
           <div className="bg-white rounded-2xl border border-slate-100 p-6 flex items-start justify-between">
             <div>
               <p className="text-sm text-slate-500 mb-1">Projets Actifs</p>
-              <p className="text-2xl font-extrabold text-[#16523A]" style={{ fontFamily: "'Bricolage Grotesque', sans-serif" }}>
+              <p className="text-2xl font-extrabold text-primary">
                 {totalDeals}
               </p>
-              <span className="inline-flex items-center gap-1 mt-2 bg-[#B8FF3C]/30 text-[#16523A] text-xs font-bold px-2 py-0.5 rounded-lg">
+              <span className="inline-flex items-center gap-1 mt-2 bg-accent/30 text-primary text-xs font-bold px-2 py-0.5 rounded-lg">
                 <span className="material-symbols-outlined text-xs">electric_bolt</span>
                 En cours
               </span>
             </div>
-            <div className="size-12 rounded-xl bg-[#B8FF3C]/30 flex items-center justify-center">
-              <span className="material-symbols-outlined text-[#16523A]">electric_bolt</span>
+            <div className="size-12 rounded-xl bg-accent/30 flex items-center justify-center">
+              <span className="material-symbols-outlined text-primary">electric_bolt</span>
             </div>
           </div>
         </div>
@@ -189,8 +189,8 @@ export default async function InvestmentPage() {
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between mb-5 flex-wrap gap-3">
               <h3
-                className="text-xl font-extrabold text-[#16523A]"
-                style={{ fontFamily: "'Bricolage Grotesque', sans-serif" }}
+                className="text-xl font-extrabold text-primary"
+               
               >
                 Marketplace des Projets
               </h3>
@@ -200,8 +200,8 @@ export default async function InvestmentPage() {
                     key={filter}
                     className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-colors ${
                       filter === "Tous"
-                        ? "bg-[#16523A] text-white border-[#16523A]"
-                        : "bg-white text-slate-600 border-slate-200 hover:border-[#16523A] hover:text-[#16523A]"
+                        ? "bg-primary text-white border-primary"
+                        : "bg-white text-slate-600 border-slate-200 hover:border-primary hover:text-primary"
                     }`}
                   >
                     {filter}
@@ -244,13 +244,13 @@ export default async function InvestmentPage() {
                         </div>
                         {/* Category badge */}
                         {deal.project_type && (
-                          <span className="absolute top-4 left-4 bg-[#B8FF3C] text-[#16523A] text-xs font-bold uppercase tracking-wide px-2.5 py-1 rounded-lg">
+                          <span className="absolute top-4 left-4 bg-accent text-primary text-xs font-bold uppercase tracking-wide px-2.5 py-1 rounded-lg">
                             {PROJECT_TYPE_LABELS[deal.project_type] ?? deal.project_type}
                           </span>
                         )}
                         {/* IA Score badge */}
                         {deal.ai_score != null && (
-                          <span className="absolute top-4 right-4 flex items-center gap-1 bg-[#16523A] text-white text-xs font-bold px-2.5 py-1 rounded-xl">
+                          <span className="absolute top-4 right-4 flex items-center gap-1 bg-primary text-white text-xs font-bold px-2.5 py-1 rounded-xl">
                             <span className="material-symbols-outlined text-xs">psychology</span>
                             {deal.ai_score}/100
                           </span>
@@ -260,8 +260,8 @@ export default async function InvestmentPage() {
                       {/* Card content */}
                       <div className="p-5">
                         <h4
-                          className="text-base font-bold text-[#16523A] mb-1 group-hover:underline line-clamp-2"
-                          style={{ fontFamily: "'Bricolage Grotesque', sans-serif" }}
+                          className="text-base font-bold text-primary mb-1 group-hover:underline line-clamp-2"
+                         
                         >
                           {deal.title}
                         </h4>
@@ -277,13 +277,13 @@ export default async function InvestmentPage() {
                         <div className="grid grid-cols-2 gap-3 text-sm mb-4">
                           <div>
                             <p className="text-xs text-slate-400 mb-0.5">ROI Cible</p>
-                            <p className="font-bold text-[#16523A]">
+                            <p className="font-bold text-primary">
                               {deal.irr_target != null ? `${deal.irr_target}%` : "—"}
                             </p>
                           </div>
                           <div>
                             <p className="text-xs text-slate-400 mb-0.5">Objectif</p>
-                            <p className="font-bold text-[#16523A]">{formatAmount(deal.funding_amount)}</p>
+                            <p className="font-bold text-primary">{formatAmount(deal.funding_amount)}</p>
                           </div>
                         </div>
 
@@ -295,7 +295,7 @@ export default async function InvestmentPage() {
                           </div>
                           <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
                             <div
-                              className="h-full bg-[#16523A] rounded-full transition-all"
+                              className="h-full bg-primary rounded-full transition-all"
                               style={{ width: `${progress}%` }}
                             />
                           </div>
@@ -311,12 +311,12 @@ export default async function InvestmentPage() {
           {/* IA Insights Sidebar */}
           <div className="w-96 shrink-0 space-y-5">
             {/* IA Insights */}
-            <div className="bg-[#16523A] rounded-2xl p-6 text-white">
+            <div className="bg-primary rounded-2xl p-6 text-white">
               <div className="flex items-center gap-2 mb-5">
-                <span className="material-symbols-outlined text-[#B8FF3C]">auto_awesome</span>
+                <span className="material-symbols-outlined text-accent">auto_awesome</span>
                 <h3
                   className="font-extrabold text-lg"
-                  style={{ fontFamily: "'Bricolage Grotesque', sans-serif" }}
+                 
                 >
                   IA Insights
                 </h3>
@@ -326,7 +326,7 @@ export default async function InvestmentPage() {
                 {/* Insight 1 */}
                 <div className="bg-white/10 p-4 rounded-xl">
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="material-symbols-outlined text-[#B8FF3C] text-base">trending_up</span>
+                    <span className="material-symbols-outlined text-accent text-base">trending_up</span>
                     <span className="text-xs font-bold text-white/80 uppercase tracking-wide">
                       Secteur Tendance
                     </span>
@@ -340,7 +340,7 @@ export default async function InvestmentPage() {
                 {/* Insight 2 */}
                 <div className="bg-white/10 p-4 rounded-xl">
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="material-symbols-outlined text-[#B8FF3C] text-base">shield</span>
+                    <span className="material-symbols-outlined text-accent text-base">shield</span>
                     <span className="text-xs font-bold text-white/80 uppercase tracking-wide">
                       Évaluation Risque
                     </span>
@@ -352,7 +352,7 @@ export default async function InvestmentPage() {
                 </div>
               </div>
 
-              <button className="w-full bg-[#B8FF3C] text-[#16523A] font-bold text-sm py-2.5 rounded-xl hover:bg-[#a8ef2c] transition-colors flex items-center justify-center gap-2">
+              <button className="w-full bg-accent text-primary font-bold text-sm py-2.5 rounded-xl hover:bg-[#a8ef2c] transition-colors flex items-center justify-center gap-2">
                 <span className="material-symbols-outlined text-base">description</span>
                 Rapport Complet
               </button>
@@ -361,8 +361,8 @@ export default async function InvestmentPage() {
             {/* Opportunités d'Arbitrage */}
             <div className="bg-white rounded-2xl border border-slate-100 p-6">
               <h3
-                className="font-extrabold text-base text-[#16523A] mb-4"
-                style={{ fontFamily: "'Bricolage Grotesque', sans-serif" }}
+                className="font-extrabold text-base text-primary mb-4"
+               
               >
                 Opportunités d&apos;Arbitrage
               </h3>
@@ -374,10 +374,10 @@ export default async function InvestmentPage() {
                 ].map((opp) => (
                   <div
                     key={opp.label}
-                    className="flex items-center justify-between p-3 rounded-xl bg-[#FAFAF7] border border-slate-100"
+                    className="flex items-center justify-between p-3 rounded-xl bg-background-light border border-slate-100"
                   >
                     <div className="flex items-center gap-2">
-                      <span className="material-symbols-outlined text-[#16523A] text-base">{opp.icon}</span>
+                      <span className="material-symbols-outlined text-primary text-base">{opp.icon}</span>
                       <span className="text-sm font-medium text-slate-700">{opp.label}</span>
                     </div>
                     <span className="text-xs font-bold text-green-700 bg-green-50 px-2 py-0.5 rounded-lg">

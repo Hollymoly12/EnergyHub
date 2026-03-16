@@ -42,20 +42,20 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const initials = displayName.split(" ").map((w: string) => w[0]).join("").slice(0, 2).toUpperCase();
 
   return (
-    <div className="flex h-screen bg-[#FAFAF7] overflow-hidden">
+    <div className="flex h-screen bg-background-light overflow-hidden">
 
       {/* ── Sidebar ── */}
-      <aside className="w-72 bg-[#16523A] text-white fixed h-full flex flex-col z-20">
+      <aside className="w-72 bg-primary text-white fixed h-full flex flex-col z-20">
 
         {/* Logo section */}
         <div className="p-6 border-b border-white/10">
           <Link href="/" className="flex items-center gap-3 no-underline">
-            <div className="size-10 bg-[#B8FF3C] rounded-xl flex items-center justify-center text-[#16523A]">
+            <div className="size-10 bg-accent rounded-xl flex items-center justify-center text-primary">
               <span className="material-symbols-outlined font-bold">bolt</span>
             </div>
             <div>
               <h1 className="font-bold text-lg text-white leading-tight m-0">EnergyHub</h1>
-              <p className="text-[#B8FF3C]/80 text-xs uppercase tracking-wider m-0">Solutions Énergétiques</p>
+              <p className="text-accent/80 text-xs uppercase tracking-wider m-0">Solutions Énergétiques</p>
             </div>
           </Link>
         </div>
@@ -87,12 +87,12 @@ export default async function DashboardLayout({ children }: { children: React.Re
           </Link>
 
           {/* Upgrade card */}
-          <div className="bg-[#B8FF3C]/10 border border-[#B8FF3C]/20 rounded-2xl p-4">
-            <p className="text-xs font-bold text-[#B8FF3C] mb-1">Support Premium</p>
+          <div className="bg-accent/10 border border-accent/20 rounded-2xl p-4">
+            <p className="text-xs font-bold text-accent mb-1">Support Premium</p>
             <p className="text-xs text-white/60 mb-3 leading-relaxed">Accédez à notre équipe d&apos;experts en transition énergétique.</p>
             <Link
               href="/pricing"
-              className="block text-center bg-[#B8FF3C] text-[#16523A] font-bold rounded-lg py-2 text-xs no-underline hover:opacity-90 transition-opacity"
+              className="block text-center bg-accent text-primary font-bold rounded-lg py-2 text-xs no-underline hover:opacity-90 transition-opacity"
             >
               Contacter un Expert
             </Link>
@@ -100,14 +100,14 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
           {/* User section */}
           <div className="flex items-center gap-3 px-2 pt-2 border-t border-white/10">
-            <div className="size-9 bg-[#B8FF3C]/20 border border-[#B8FF3C]/30 rounded-full flex items-center justify-center text-xs font-bold text-[#B8FF3C] flex-shrink-0">
+            <div className="size-9 bg-accent/20 border border-accent/30 rounded-full flex items-center justify-center text-xs font-bold text-accent flex-shrink-0">
               {initials}
             </div>
             <div className="min-w-0 flex-1">
               <p className="text-sm font-semibold text-white truncate m-0">{displayName}</p>
               <p className="text-xs text-white/50 truncate m-0">{user.email}</p>
             </div>
-            <span className="text-xs font-semibold text-[#B8FF3C] bg-[#B8FF3C]/10 px-2 py-0.5 rounded-full flex-shrink-0">
+            <span className="text-xs font-semibold text-accent bg-accent/10 px-2 py-0.5 rounded-full flex-shrink-0">
               {planLabel}
             </span>
           </div>
@@ -115,7 +115,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
       </aside>
 
       {/* ── Main content ── */}
-      <main className="flex-1 ml-72 overflow-y-auto bg-[#FAFAF7] min-h-screen">
+      <main className="flex-1 ml-72 overflow-y-auto bg-background-light min-h-screen">
 
         {/* Top header bar */}
         <header className="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-8 sticky top-0 z-10">
@@ -140,7 +140,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
             <div className="w-px h-6 bg-slate-200"></div>
             <div className="flex items-center gap-2">
               <span className="text-sm font-medium text-slate-700">{displayName}</span>
-              <div className="size-8 bg-[#16523A]/10 border border-[#16523A]/20 rounded-full flex items-center justify-center text-xs font-bold text-[#16523A]">
+              <div className="size-8 bg-primary/10 border border-primary/20 rounded-full flex items-center justify-center text-xs font-bold text-primary">
                 {initials}
               </div>
             </div>
