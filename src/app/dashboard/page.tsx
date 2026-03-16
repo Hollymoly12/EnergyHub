@@ -104,7 +104,7 @@ export default async function DashboardPage() {
   const rfqCount = rfqResult.count ?? 0;
   const matchCount = matchResult.count ?? 0;
   const unreadCount = unreadResult.count ?? 0;
-  const topMatches = (topMatchesResult.data ?? []) as Match[];
+  const topMatches = (topMatchesResult.data ?? []) as unknown as Match[];
   const rfqList = (rfqListResult.data ?? []) as Rfq[];
 
   const avgScore =
