@@ -80,12 +80,7 @@ export default async function DirectoryPage() {
           </Link>
         </div>
 
-        {/* DEBUG — à supprimer */}
-        <pre className="bg-red-50 border border-red-200 rounded p-4 text-xs mb-6 text-red-800">
-          count: {total} | error: {error?.message ?? "none"} | actors: {actors.length}
-        </pre>
-
-        <DirectoryClient
+<DirectoryClient
           initialActors={actors || []}
           totalCount={total || 0}
           isLoggedIn={!!user}
