@@ -23,12 +23,11 @@ interface Deal {
   irr_target: number | null;
   published_at: string | null;
   interests_count: number | null;
-  ai_score: number | null;
+  ai_risk_score: number | null;
   status: string | null;
   capacity_mw: number | null;
-  efficiency_pct: number | null;
-  progress_pct: number | null;
-  region: string | null;
+  location: string | null;
+  series: string | null;
   organizations: DealOrg | null;
 }
 
@@ -40,8 +39,8 @@ export default async function InvestmentPage() {
     .from("deals")
     .select(`
       id, title, description, project_type, funding_amount, funding_type,
-      irr_target, published_at, interests_count, ai_score, status,
-      capacity_mw, efficiency_pct, progress_pct, region,
+      irr_target, published_at, interests_count, ai_risk_score, status,
+      capacity_mw, location, series,
       organizations (name, city)
     `)
     .eq("status", "published")

@@ -13,12 +13,11 @@ interface Deal {
   irr_target: number | null;
   published_at: string | null;
   interests_count: number | null;
-  ai_score: number | null;
+  ai_risk_score: number | null;
   status: string | null;
   capacity_mw: number | null;
-  efficiency_pct: number | null;
-  progress_pct: number | null;
-  region: string | null;
+  location: string | null;
+  series: string | null;
   organizations: { name: string; city: string | null } | null;
 }
 
@@ -95,9 +94,9 @@ export default function ProjectsClient({ deals }: { deals: Deal[] }) {
       list = list.filter((d) => d.project_type && selectedTypes.includes(d.project_type));
     }
     if (selectedRegions.length > 0) {
-      list = list.filter((d) => d.region && selectedRegions.includes(d.region));
+      list = list.filter((d) => selectedRegions.some(r => d.location?.includes(r)));
     }
-    if (sortBy === "score") list.sort((a, b) => (b.ai_score ?? 0) - (a.ai_score ?? 0));
+    if (sortBy === "score") list.sort((a, b) => (b.ai_risk_score ?? 0) - (a.ai_risk_score ?? 0));
     else if (sortBy === "funding") list.sort((a, b) => (b.funding_amount ?? 0) - (a.funding_amount ?? 0));
     return list;
   }, [deals, search, selectedTypes, selectedRegions, sortBy]);
@@ -271,7 +270,7 @@ export default function ProjectsClient({ deals }: { deals: Deal[] }) {
                 const typeCfg = TYPE_LABELS[deal.project_type ?? "other"] ?? TYPE_LABELS.other;
                 const statusCfg = STATUS_CONFIG[deal.status ?? "published"] ?? STATUS_CONFIG.published;
                 const gradient = GRADIENT_BY_TYPE[deal.project_type ?? "other"] ?? GRADIENT_BY_TYPE.other;
-                const progress = deal.progress_pct ?? Math.min(100, (deal.interests_count ?? 0) * 10);
+                const progress = Math.min(100, (deal.interests_count ?? 0) * 10);
                 const progressLabel = deal.project_type === "storage" ? "Progression" : "Avancement Financement";
 
                 return (
@@ -299,11 +298,11 @@ export default function ProjectsClient({ deals }: { deals: Deal[] }) {
                       </span>
 
                       {/* IA Score badge */}
-                      {deal.ai_score != null && (
+                      {deal.ai_risk_score != null && (
                         <div className="absolute top-4 right-4 rounded-full px-3 py-1 text-xs font-extrabold text-primary flex flex-col items-center leading-tight"
                           style={{ backgroundColor: "#B8FF3C" }}>
                           <span className="text-[9px] uppercase tracking-wide font-bold">IA Score</span>
-                          <span className="text-sm leading-none">{deal.ai_score}%</span>
+                          <span className="text-sm leading-none">{deal.ai_risk_score}%</span>
                         </div>
                       )}
                     </div>
@@ -338,8 +337,8 @@ export default function ProjectsClient({ deals }: { deals: Deal[] }) {
                             {deal.project_type === "storage" ? "Rendement" : "Efficacité"}
                           </p>
                           <p className="font-extrabold text-primary text-base">
-                            {deal.efficiency_pct != null
-                              ? `${deal.efficiency_pct} %`
+                            {deal.irr_target != null
+                              ? `${deal.irr_target} %`
                               : deal.irr_target != null
                               ? `${deal.irr_target}%`
                               : "—"}
