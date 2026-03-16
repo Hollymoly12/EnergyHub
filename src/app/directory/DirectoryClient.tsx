@@ -163,6 +163,7 @@ export default function DirectoryClient({
       q?: string;
       type?: string;
       region?: string;
+      certification?: string;
       page?: number;
     }) => {
       setLoading(true);
@@ -170,6 +171,7 @@ export default function DirectoryClient({
       if (params.q) sp.set("q", params.q);
       if (params.type) sp.set("type", params.type);
       if (params.region) sp.set("region", params.region);
+      if (params.certification) sp.set("certification", params.certification);
       sp.set("limit", String(PAGE_SIZE));
       sp.set("page", String(params.page ?? 0));
       sp.set("sort", "rating");
@@ -188,11 +190,11 @@ export default function DirectoryClient({
 
   useEffect(() => {
     const t = setTimeout(() => {
-      fetchActors({ q: search, type: actorType, region, page: 0 });
+      fetchActors({ q: search, type: actorType, region, certification, page: 0 });
       setPage(0);
     }, 300);
     return () => clearTimeout(t);
-  }, [search, actorType, region, fetchActors]);
+  }, [search, actorType, region, certification, fetchActors]);
 
   const visibleActors = isLoggedIn ? actors : actors.slice(0, PUBLIC_LIMIT);
   const hiddenCount = isLoggedIn ? 0 : Math.max(0, total - PUBLIC_LIMIT);
