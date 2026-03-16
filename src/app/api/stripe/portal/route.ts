@@ -23,7 +23,10 @@ export async function POST(_req: NextRequest) {
       return NextResponse.json({ error: "No active subscription" }, { status: 400 });
     }
 
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL!;
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+    if (!appUrl) {
+      return NextResponse.json({ error: "App URL not configured" }, { status: 500 });
+    }
     const url = await createBillingPortalSession(
       org.stripe_customer_id,
       `${appUrl}/dashboard/billing`
