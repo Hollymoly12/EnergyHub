@@ -42,14 +42,13 @@ export async function GET(req: NextRequest) {
   if (plan) query = query.eq("subscription_plan", plan);
   if (certification) query = query.contains("certifications", [certification]);
 
-  // Tri : Pro et Enterprise en premier (boost visibility), puis par rating
-  if (sortBy === "rating") {
-    query = query.order("subscription_plan", { ascending: false })
-                 .order("rating", { ascending: false });
-  } else if (sortBy === "recent") {
+  // Tri
+  if (sortBy === "recent") {
     query = query.order("created_at", { ascending: false });
   } else if (sortBy === "views") {
     query = query.order("profile_views", { ascending: false });
+  } else {
+    query = query.order("rating", { ascending: false });
   }
 
   query = query.range(page * limit, (page + 1) * limit - 1);

@@ -7,7 +7,7 @@ import { NextResponse, type NextRequest } from "next/server";
 // Routes qui nécessitent d'être connecté
 const PROTECTED_ROUTES = ["/dashboard", "/rfq/create", "/investment/submit", "/profile"];
 // Routes réservées aux plans payants
-const PRO_ROUTES = ["/rfq/create", "/rfq/respond", "/investment", "/analytics"];
+const PRO_ROUTES = ["/rfq/create", "/rfq/respond", "/investment/submit", "/analytics"];
 
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({ request });
