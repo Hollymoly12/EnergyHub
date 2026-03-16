@@ -47,6 +47,17 @@ const ACTOR_LABELS: Record<string, { label: string; icon: string }> = {
 };
 
 const ACTOR_TYPES = Object.entries(ACTOR_LABELS);
+
+// Budget steps en milliers d'euros (index 5 = pas de limite)
+const BUDGET_STEPS = [50, 100, 250, 500, 1000, Infinity];
+const BUDGET_LABELS = ["50k€", "100k€", "250k€", "500k€", "1M€", "Tout"];
+
+function parseBudgetMax(range: string | null): number {
+  if (!range) return Infinity;
+  const nums = range.replace(/\s/g, "").match(/[\d]+/g);
+  if (!nums) return Infinity;
+  return Math.max(...nums.map(Number));
+}
 const REGIONS = ["Wallonie", "Flandre", "Bruxelles-Capitale"];
 const PUBLIC_LIMIT = 12;
 const PAGE_SIZE = 20;
@@ -168,7 +179,7 @@ export default function RFQClient({ initialRFQs, totalCount, isLoggedIn }: Props
   const [typeFilter, setTypeFilter] = useState("");
   const [actorTypeFilter, setActorTypeFilter] = useState("");
   const [regionFilter, setRegionFilter] = useState("");
-  const [budgetFilter, setBudgetFilter] = useState("");
+  const [budgetMax, setBudgetMax] = useState(5); // index dans BUDGET_STEPS
   const [deadlineBefore, setDeadlineBefore] = useState("");
   const [tagFilter, setTagFilter] = useState("");
 
@@ -202,12 +213,13 @@ export default function RFQClient({ initialRFQs, totalCount, isLoggedIn }: Props
 
   useEffect(() => {
     setPage(0);
-  }, [actorTypeFilter, regionFilter, budgetFilter, deadlineBefore, tagFilter]);
+  }, [actorTypeFilter, regionFilter, budgetMax, deadlineBefore, tagFilter]);
 
   const filtered = allRFQs.filter(rfq => {
     if (actorTypeFilter && !rfq.target_actor_types?.includes(actorTypeFilter)) return false;
     if (regionFilter && !rfq.location?.toLowerCase().includes(regionFilter.toLowerCase())) return false;
-    if (budgetFilter && !rfq.budget_range?.toLowerCase().includes(budgetFilter.toLowerCase())) return false;
+    const maxBudget = BUDGET_STEPS[budgetMax];
+    if (maxBudget !== Infinity && parseBudgetMax(rfq.budget_range) > maxBudget * 1000) return false;
     if (deadlineBefore && rfq.deadline && new Date(rfq.deadline) > new Date(deadlineBefore)) return false;
     if (tagFilter && !rfq.tags?.some(t => t.toLowerCase().includes(tagFilter.toLowerCase()))) return false;
     return true;
@@ -215,8 +227,8 @@ export default function RFQClient({ initialRFQs, totalCount, isLoggedIn }: Props
 
   const visibleRFQs = isLoggedIn ? filtered : filtered.slice(0, PUBLIC_LIMIT);
   const hiddenCount = isLoggedIn ? 0 : Math.max(0, filtered.length - PUBLIC_LIMIT);
-  const hasAnyFilter = search || typeFilter || actorTypeFilter || regionFilter || budgetFilter || deadlineBefore || tagFilter;
-  const hasClientFilter = !!(actorTypeFilter || regionFilter || budgetFilter || deadlineBefore || tagFilter);
+  const hasAnyFilter = search || typeFilter || actorTypeFilter || regionFilter || budgetMax < 5 || deadlineBefore || tagFilter;
+  const hasClientFilter = !!(actorTypeFilter || regionFilter || budgetMax < 5 || deadlineBefore || tagFilter);
 
   return (
     <div className="flex gap-8 items-start">
@@ -296,13 +308,23 @@ export default function RFQClient({ initialRFQs, totalCount, isLoggedIn }: Props
           </div>
 
           <div>
-            <label className="block text-xs font-bold uppercase tracking-widest text-primary/60 mb-2">Budget</label>
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-xs font-bold uppercase tracking-widest text-primary/60">Budget max</label>
+              <span className="text-xs font-bold text-primary">{BUDGET_LABELS[budgetMax]}</span>
+            </div>
             <input
-              className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-primary/20 transition-all"
-              value={budgetFilter}
-              onChange={e => setBudgetFilter(e.target.value)}
-              placeholder="ex: 50k, €..."
+              type="range"
+              min={0}
+              max={5}
+              step={1}
+              value={budgetMax}
+              onChange={e => setBudgetMax(Number(e.target.value))}
+              className="w-full accent-primary"
             />
+            <div className="flex justify-between text-[10px] text-slate-400 mt-1">
+              <span>50k€</span>
+              <span>Tout</span>
+            </div>
           </div>
 
           <div>
@@ -329,7 +351,7 @@ export default function RFQClient({ initialRFQs, totalCount, isLoggedIn }: Props
             <button
               onClick={() => {
                 setSearch(""); setTypeFilter(""); setActorTypeFilter("");
-                setRegionFilter(""); setBudgetFilter(""); setDeadlineBefore(""); setTagFilter("");
+                setRegionFilter(""); setBudgetMax(5); setDeadlineBefore(""); setTagFilter("");
               }}
               className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-primary transition-colors"
             >
