@@ -11,7 +11,7 @@ export default async function DirectoryPage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  const { data, count } = await supabase
+  const { data, count, error } = await supabase
     .from("organizations")
     .select(`
       id, name, slug, actor_type, short_description, city, region,
@@ -19,9 +19,10 @@ export default async function DirectoryPage() {
       is_verified, subscription_plan, rating, reviews_count,
       profile_views, founded_year, team_size
     `, { count: "exact" })
-    .order("subscription_plan", { ascending: false })
     .order("rating", { ascending: false })
     .range(0, 23);
+
+  console.log("[directory] count:", count, "error:", error?.message);
 
   const actors = data ?? [];
   const total = count ?? 0;
